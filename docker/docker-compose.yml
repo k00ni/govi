@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+    goi:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: goi
+        ports:
+            - 8080:80
+        volumes:
+            - ./../:/var/www/html/
