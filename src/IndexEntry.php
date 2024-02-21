@@ -2,6 +2,9 @@
 
 namespace App;
 
+use DateTime;
+use DateTimeZone;
+
 class IndexEntry
 {
     private ?string $ontologyTitle;
@@ -9,13 +12,23 @@ class IndexEntry
     private ?string $latestNtFile;
     private ?string $latestOwlFile;
     private ?string $latestTtlFile;
+
+    /**
+     * Date Time of the access in format Y-m-d H:i:s
+     */
+    private string $latestAccess;
     private string $sourceTitle;
     private string $sourceUrl;
 
+    /**
+     * @throws \Exception if DateTime creation fails.
+     */
     public function __construct(string $sourceTitle, string $sourceUrl)
     {
         $this->sourceTitle = $sourceTitle;
         $this->sourceUrl = $sourceUrl;
+
+        $this->latestAccess = (new DateTime('now', new DateTimeZone('UTC')))->format('Y-m-d H:i:s');
     }
 
     /**
@@ -33,6 +46,7 @@ class IndexEntry
             $this->latestTtlFile,
             $this->sourceTitle,
             $this->sourceUrl,
+            $this->latestAccess,
         ];
     }
 

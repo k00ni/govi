@@ -37,8 +37,6 @@ if (0 < $numberOfOntologyEntries) {
     // this structure contains a temporary index which only holds data about received ontologies
     $temporaryIndex = [];
 
-    echo $numberOfOntologyEntries.' entries'.PHP_EOL;
-
     // go through received ontologies
     foreach ($ontologyEntries[1] as $ontologyEntryHtml) {
         if (str_contains($ontologyEntryHtml, '<th ')) {
@@ -88,3 +86,5 @@ $temporaryIndexWithoutKeys = array_values($temporaryIndex);
  * 4. Merge in entries into index.csv
  */
 mergeEntriesIntoIndexCSV($url, $temporaryIndexWithoutKeys);
+
+echo $url.' => '. $numberOfOntologyEntries.' entries'.PHP_EOL;
