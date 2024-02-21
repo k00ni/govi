@@ -6,13 +6,13 @@ The index is basically a list of links (URLs) to ontologies and vocabularies, pl
 ## Why?
 
 There is **no** search engine or even a basic list of all ontologies/vocabularies available right now (*LOD graph and Internet in general*).
-To answer the question **What ontologies/vocabularies exist and where can I find them?** people have to manually check ontology portals (such as BioPortal), online catalogs and similar services, each covering a different set of domains but only link to a subset of ontlogies/vocabularies.
+To answer the question **What ontologies/vocabularies exist and where can I find them?** people have to manually check ontology portals (such as BioPortal), online catalogs and similar services, each covering a different set of domains but only link to a subset of ontologies/vocabularies.
 This project aims to answer the question by providing a simplified list of ontologies/vocabularies.
 
-**Important note:** Websites like BioPortal and DBpedia Archivo play an important role for the community, because they allow people to browse and search ontologies as well as providr additional services such as versioning, archives etc.
-This project is not meant to replace them, on the contrary, we endorse services like [DBpedia Archivo](https://archivo.dbpedia.org/), because they use the underlying infrastructure tackle important challanges, such as link rot and inconsistent versioning.
-Portals like BioPortal are important, but they provide ontologies as data dumps instead of an URL which leads to the source code.
-As long as the portal is online, people can browse its ontologies and download the source code, but as soon as it goes offline, all ontologies are gone if there is no copy somewhere else.
+**Important note:** Websites like BioPortal and DBpedia Archivo play an important role for the community, because they allow people to browse and search ontologies as well as provide additional services such as versioning, archives etc.
+This project is not meant to replace them, on the contrary, we endorse services like [DBpedia Archivo](https://archivo.dbpedia.org/), because they tackle important challanges, such as link rot and inconsistent versioning.
+Portals like BioPortal are important too, but they often provide ontologies as data dump or SPARQL endpoint instead of an URL which leads to the source code (e.g. OWL, N3 or TTL).
+As long as the portal is online, everything is fine but as soon as it goes offline, all ontologies are gone if there is no copy somewhere else.
 
 ```
 
