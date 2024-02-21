@@ -1,6 +1,12 @@
 default:
-	docker-compose up --build -d --remove-orphans
-	docker exec -it goi bash
+	docker build . -t govi \
+	&& \
+	docker run -it \
+			   -v $(PWD)/../:/govi \
+			   --name govi \
+			   --user govi \
+			   govi \
+			   /bin/bash
 
 clean:
 	-@docker ps -a -q | xargs docker stop

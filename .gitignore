@@ -1,2 +1,5 @@
+cache
 vendor
+.~lock.*
+.php-cs-fixer.cache
 composer.lock

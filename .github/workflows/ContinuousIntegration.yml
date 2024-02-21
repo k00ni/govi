@@ -1,0 +1,14 @@
+# This action provides a few helpers to ease the maintenance
+name: Continuous Integration
+on: [push]
+jobs:
+  build_latex:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Git repository
+        uses: actions/checkout@v3
+      # CSV linter
+      - name: Lint index.csv
+        uses: blackstar257/docker-csvlint@master
+        env:
+          ACTION_STATE_NAME: "index.csv"
