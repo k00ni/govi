@@ -2,6 +2,24 @@
 
 declare(strict_types=1);
 
+namespace App;
+
+use Exception;
+
+/**
+ * Removes certain characters from title string.
+ */
+function cleanTitle(string $str): string
+{
+    // remove HTML entities like &nbsp;
+    $str = html_entity_decode($str);
+
+    // remove trailing whitespaces
+    $str = trim($str);
+
+    return $str;
+}
+
 /**
  * It seems that empty() is not enough to check, if something is really empty.
  * This function takes care of the edge cases.
@@ -57,8 +75,12 @@ function mergeEntriesIntoIndexCSV(string $sourceUrl, array $temporaryIndex): voi
 
             // sort entries by name
             usort($indexCSV, function ($a, $b) {
-                $aTitle = $a[0] ?? '';
-                $bTitle = $b[0] ?? '';
+                /** @var array<int,string|null>|\App\IndexEntry */
+                $a = $a;
+                /** @var array<int,string|null>|\App\IndexEntry */
+                $b = $b;
+                $aTitle = is_array($a) ? $a[0] : $a->getOntologyTitle();
+                $bTitle = is_array($b) ? $b[0] : $b->getOntologyTitle();
 
                 return $aTitle < $bTitle ? -1 : 1;
             });
@@ -70,7 +92,10 @@ function mergeEntriesIntoIndexCSV(string $sourceUrl, array $temporaryIndex): voi
                 fputcsv($fp, $head);
 
                 foreach ($indexCSV as $fields) {
-                    fputcsv($fp, $fields);
+                    /** @var array<int,string|null>|\App\IndexEntry */
+                    $fields = $fields;
+
+                    fputcsv($fp, (array) $fields);
                 }
                 fclose($fp);
             } else {

@@ -8,7 +8,13 @@
  * https://archivo.dbpedia.org/list
  */
 
-require __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR.'functions.php';
+use App\IndexEntry;
+
+use function App\cleanTitle;
+use function App\isEmpty;
+use function App\mergeEntriesIntoIndexCSV;
+
+require __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php';
 
 // no time limit for script
 \set_time_limit(3600);
@@ -40,28 +46,12 @@ if (0 < $numberOfOntologyEntries) {
         }
 
         // new entry in temporary index
-        $newEntry = [
-            'ontology_title' => null,
-            'ontology_uri' => null,
-            'latest_nt_file' => null,
-            'latest_owl_file' => null,
-            'latest_ttl_file' => null,
-            'source_title' => 'DBpedia Archivo',
-            'source_url' => $url,
-        ];
+        $newEntry = new IndexEntry('DBpedia Archivo', $url);
 
         // title/name of ontology
         preg_match('/<td>\s*\n*<a href="\/info\?o=.*?">(.*?)</sim', $ontologyEntryHtml, $title);
         if (isset($title[1]) && false === isEmpty($title[1])) {
-            // remove HTML entities like &nbsp;
-            $title[1] = html_entity_decode($title[1]);
-
-            $title[1] = preg_replace('/[^0-9a-zA-Z\s\(\)\-\.]/', '', $title[1]);
-
-            // remove trailing whitespaces
-            $title[1] = trim($title[1]);
-
-            $newEntry['ontology_title'] = $title[1];
+            $newEntry->setOntologyTitle(cleanTitle($title[1]));
         } else {
             // no title means, no valid meta data, therefore stop
             continue;
@@ -70,7 +60,7 @@ if (0 < $numberOfOntologyEntries) {
         // URI of ontology
         preg_match('/<td>\s*<a href="\/info\?o=(.*?)"/sim', $ontologyEntryHtml, $uri);
         if (isset($uri[1]) && false === isEmpty($uri[1])) {
-            $newEntry['ontology_uri'] = $uri[1];
+            $newEntry->setOntologyUri($uri[1]);
         } else {
             // no URI means, no valid meta data, therefore stop
             continue;
@@ -79,12 +69,12 @@ if (0 < $numberOfOntologyEntries) {
         /*
          * latest OWL/NT,TTL,... file
          */
-        $newEntry['latest_owl_file'] = 'http://archivo.dbpedia.org/download?o='.$newEntry['ontology_uri'].'&f=owl';
-        $newEntry['latest_nt_file'] = 'http://archivo.dbpedia.org/download?o='.$newEntry['ontology_uri'].'&f=nt';
-        $newEntry['latest_ttl_file'] = 'http://archivo.dbpedia.org/download?o='.$newEntry['ontology_uri'].'&f=ttl';
+        $newEntry->setLatestOwlFile('http://archivo.dbpedia.org/download?o='.$newEntry->getOntologyUri().'&f=owl');
+        $newEntry->setLatestNtFile('http://archivo.dbpedia.org/download?o='.$newEntry->getOntologyUri().'&f=nt');
+        $newEntry->setLatestTtlFile('http://archivo.dbpedia.org/download?o='.$newEntry->getOntologyUri().'&f=ttl');
 
-        // store
-        $temporaryIndex[$newEntry['ontology_title']] = $newEntry;
+        // store (use title as key to avoid doublings)
+        $temporaryIndex[$newEntry->getOntologyTitle()] = $newEntry;
     }
 } else {
     // nothing found or error

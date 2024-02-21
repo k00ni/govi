@@ -2,6 +2,9 @@ includes:
     - vendor/phpstan/phpstan-strict-rules/rules.neon
 
 parameters:
+    bootstrapFiles:
+        - vendor/autoload.php
+
     fileExtensions:
         - php
 

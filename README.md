@@ -5,14 +5,15 @@ The index is basically a list of links (URLs, URIs) to ontologies and vocabulari
 
 ## Why?
 
-There is no central endpoint or search engine for ontologies out there, which covers (almost) all ontologies out there.
-Instead there are many ontology portals with different UIs, APIs and different coverage of ontologies and domains.
+There is no central endpoint or search engine for ontologies out there, which covers the whole LOD graph / Internet.
+Instead there are many ontology portals with different UIs or APIs, each covering a different set of domains.
 If you want to get an overview over (almost) all available ontologies you have to manually check all these portals.
 
 **Important note:** Ontology portals like BioPortal or DBpedia Archivo play an important role, because they provide easier access to ontology information.
 This project is not meant to replace them! Instead, the objective is to provide an neutral and as complete as possible map of existing ontologies.
 
-We endorse services like [DBpedia Archivo](https://archivo.dbpedia.org/), because they provide basic yet powerful way to serve ontologies to the world. Portals can be useful and serve an important purpose, but if they close, all their data will be gone and not accessible anymore.
+We endorse services like [DBpedia Archivo](https://archivo.dbpedia.org/), because they provide a basic yet powerful way to serve ontologies to the world.
+Portals such as BioPortal can be useful and provide an important service, but if they ever close, all their data will be gone and not accessible anymore.
 
 ## Versions
 
