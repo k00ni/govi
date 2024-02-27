@@ -65,10 +65,10 @@ if (0 < $numberOfOntologyEntries) {
         }
 
         /*
-         * latest OWL/NT,TTL,... file
+         * latest OWL,TTL,... file
          */
-        $newEntry->setLatestOwlFile('http://archivo.dbpedia.org/download?o='.$newEntry->getOntologyUri().'&f=owl');
         $newEntry->setLatestNtFile('http://archivo.dbpedia.org/download?o='.$newEntry->getOntologyUri().'&f=nt');
+        $newEntry->setLatestRdfXmlFile('http://archivo.dbpedia.org/download?o='.$newEntry->getOntologyUri().'&f=owl');
         $newEntry->setLatestTtlFile('http://archivo.dbpedia.org/download?o='.$newEntry->getOntologyUri().'&f=ttl');
 
         // store (use title as key to avoid doublings)

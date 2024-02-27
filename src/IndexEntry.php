@@ -10,7 +10,7 @@ class IndexEntry
     private ?string $ontologyTitle;
     private ?string $ontologyUri;
     private ?string $latestNtFile;
-    private ?string $latestOwlFile;
+    private ?string $latestRdfXmlFile;
     private ?string $latestTtlFile;
 
     /**
@@ -20,9 +20,6 @@ class IndexEntry
     private string $sourceTitle;
     private string $sourceUrl;
 
-    /**
-     * @throws \Exception if DateTime creation fails.
-     */
     public function __construct(string $sourceTitle, string $sourceUrl)
     {
         $this->sourceTitle = $sourceTitle;
@@ -42,7 +39,7 @@ class IndexEntry
             $this->ontologyTitle,
             $this->ontologyUri,
             $this->latestNtFile,
-            $this->latestOwlFile,
+            $this->latestRdfXmlFile,
             $this->latestTtlFile,
             $this->sourceTitle,
             $this->sourceUrl,
@@ -86,14 +83,14 @@ class IndexEntry
         return $this;
     }
 
-    public function getLatestOwlFile(): ?string
+    public function getLatestRdfXmlFile(): ?string
     {
-        return $this->latestOwlFile;
+        return $this->latestRdfXmlFile;
     }
 
-    public function setLatestOwlFile(string $latestOwlFile): self
+    public function setLatestRdfXmlFile(string $latestRdfXmlFile): self
     {
-        $this->latestOwlFile = $latestOwlFile;
+        $this->latestRdfXmlFile = $latestRdfXmlFile;
 
         return $this;
     }

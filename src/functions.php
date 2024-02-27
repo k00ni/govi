@@ -58,7 +58,7 @@ function mergeEntriesIntoIndexCSV(string $sourceUrl, array $temporaryIndex): voi
         if (is_array($fileArr)) {
             $indexCSV = array_map('str_getcsv', $fileArr);
 
-            // save head
+            // save head of CSV file for later usage
             $head = $indexCSV[0];
             unset($indexCSV[0]);
 
@@ -104,7 +104,6 @@ function mergeEntriesIntoIndexCSV(string $sourceUrl, array $temporaryIndex): voi
         } else {
             throw new Exception('file($pathToIndexCSV) failed.');
         }
-
     } else {
         throw new Exception('File '. $pathToIndexCSV .' does not exist!');
     }

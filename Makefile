@@ -1,11 +1,11 @@
 default:
 	@echo ""
 	@echo "Available commands:"
-	@echo "  - make crawl       - Crawl portals and services"
+	@echo "  - make index       - Crawl portals and services and create index.csv"
 	@echo "  - make prepare     - Prepare for commit"
 	@echo ""
 
-crawl:
+index:
 	bin/read-dbpedia-archivo
 
 prepare:

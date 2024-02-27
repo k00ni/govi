@@ -45,7 +45,7 @@ As long as the portal is online, everything is fine but as soon as it goes offli
   * [ ] include LOV (Linked Open Vocabularies): https://lov.linkeddata.es/dataset/lov/vocabs
   * [ ] ...
 * the following meta data are of interest:
-  * [ ] URL to latest version of OWL-, TTL- and/or NT file
+  * [ ] URL to latest version of RDF/XML-, Turtle-, NTriples- or KIF-file
   * [x] name / title
   * [x] date time of last check
 
@@ -61,12 +61,14 @@ As long as the portal is online, everything is fine but as soon as it goes offli
   * [ ] covered domain
   * [ ] used keywords
 * [ ] crawl Github repositories tagged with "ontology" etc.
+* [ ] Ping service: on update call a list of URLs to let them know that there was a change
 
 ## What this project is not
 
 ### No versioning information
 
-[...]
+Version information of ontologies are not part of the index.
+Instead, the latest version of the ontology is getting used.
 
 ## Contributions and Local development
 
