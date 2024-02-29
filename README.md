@@ -134,4 +134,5 @@ Copyright (C) 2024 [Konrad Abicht](https://inspirito.de) and contributors.
 
 The code and development material (e.g. documentation) of GOVI is licenced under the terms of the [GNU GPL v2](./LICENSE).
 
-The content of the [index.csv](./index.csv) is licenced under the terms of the [CC0 1.0 DEED (Public Domain)](https://creativecommons.org/publicdomain/zero/1.0/).
+The content of the [index.csv](./index.csv) is licenced under the terms of the [CC0 1.0 DEED (Public Domain)](https://creativecommons.org/publicdomain/zero/1.0/), because it only contains content which was already published on the Internet.
+The rights of the ontology/vocabulary authors shall remain reserved.
