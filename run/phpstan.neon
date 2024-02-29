@@ -1,9 +1,9 @@
 includes:
-    - vendor/phpstan/phpstan-strict-rules/rules.neon
+    - ./vendor/phpstan/phpstan-strict-rules/rules.neon
 
 parameters:
     bootstrapFiles:
-        - vendor/autoload.php
+        - ./vendor/autoload.php
 
     fileExtensions:
         - php
@@ -11,8 +11,8 @@ parameters:
     level: max
 
     paths:
-        - bin
-        - src
+        - ./bin
+        - ./src
 
     parallel:
         maximumNumberOfProcesses: 2
