@@ -7,6 +7,21 @@ jobs:
     steps:
       - name: Set up Git repository
         uses: actions/checkout@v3
+      - name: Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          ini-values: memory_limit=1G
+          tools: cs2pr
+      # Validate composer.json
+      - name: Validate Composer files
+        run: composer validate --no-check-all --strict
+      # Setup PHP environment (install dependencies etc.)
+      - name: Install Composer dependencies
+        run: composer install --no-progress --no-suggest --prefer-dist --optimize-autoloader
+      # Static code analyser
+      - name: Static Code Analysis
+        run: vendor/bin/phpstan analyse
       # CSV linter
       - name: Lint index.csv
         uses: blackstar257/docker-csvlint@master
