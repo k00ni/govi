@@ -64,13 +64,15 @@ As long as the portal is online everything is fine but as soon as it goes offlin
 
 Related script: [bin/read-dbpedia-archivo](bin/read-dbpedia-archivo)
 
+**Notes:**
 * Used value of "Latest Timestamp" for latest access, "2020.06.10-175249" is interpreted as "2020-06-10 00:00:00"
 
 ### Linked Open Vocabularies (LOV)
 
 Related script: [bin/read-linked-open-vocabularies](bin/read-linked-open-vocabularies)
 
-* ...
+**Notes:**
+* Used value of `dct:modified` for latest access; because the field only contains the date, the time is always set to `00:00:00`.
 
 ## FAQ
 
@@ -88,7 +90,8 @@ For now we only aim to provide an index which is as complete as possible.
 **Low entry barrier.**
 CSV files are universally readable and easy to work with.
 People need almost no prior knowledge to understand the file structure.
-Another advantage is the low memory footprint when parsing a CSV file, because you can read them line by line.
+Another advantage is the low memory footprint when parsing a CSV file, because you can read it line by line.
+If it were in a format, where you always have to read the whole file before processing it (such as JSON), you would need more memory the bigger the index file gets.
 
 ## Contributions and Local development
 
