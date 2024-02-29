@@ -18,15 +18,15 @@ jobs:
 
     # Validate composer.json
     - name: Validate Composer files
-      run: composer validate --no-check-all --strict
+      run: cd run && composer validate --no-check-all --strict
 
     # Setup PHP environment (install dependencies etc.)
     - name: Install Composer dependencies
-      run: composer install --no-progress --no-suggest --prefer-dist --optimize-autoloader
+      run: cd run && composer install --no-progress --no-suggest --prefer-dist --optimize-autoloader
 
     # Static code analyser
     - name: Static Code Analysis
-      run: vendor/bin/phpstan analyse
+      run: cd run && vendor/bin/phpstan analyse
 
     # CSV linter
     - name: Lint index.csv
