@@ -1,5 +1,9 @@
 {
+    "name": "k00ni/govi",
+    "description": "The Global Ontology and Vocabulary Index (govi) is meant to be a Community-driven project to maintain an index of all available RDF ontologies and vocabularies.",
     "type": "project",
+    "keywords": ["RDF", "Semantic Web", "Linked Data", "Linked Open Data", "Ontology", "Vocabulary"],
+    "license": "GPL-2.0-only",
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
