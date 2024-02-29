@@ -115,3 +115,11 @@ But if you wanna help out with one of the topics, feel free to open an issue or 
 * [ ] add a way to manually provide entries via Github
 * [ ] Ping service: on update call a list of URLs to let them know that there was a change
 * [ ] generate statistics for each service read to build index.csv (contains number of entries etc.)
+
+## License
+
+Copyright (C) 2024 [Konrad Abicht](https://inspirito.de) and contributors.
+
+The code and development material (e.g. documentation) of GOVI is licenced under the terms of the [GNU GPL v2](./LICENSE).
+
+The content of the [index.csv](./index.csv) is licenced under the terms of the [CC0 1.0 DEED (Public Domain)](https://creativecommons.org/publicdomain/zero/1.0/).
