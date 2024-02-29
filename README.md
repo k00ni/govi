@@ -98,6 +98,7 @@ But if you wanna help out with one of the topics, feel free to open an issue or 
 * [x] Simple scripts to download, parse and read ontologies of interest and generate a CSV file in the end
   * [x] include DBpedia Archivo: https://archivo.dbpedia.org/list
   * [x] include LOV (Linked Open Vocabularies): https://lov.linkeddata.es/dataset/lov/vocabs
+    * [x] for latest access use http://purl.org/dc/terms/modified value
   * [ ] include BioPortal: https://bioportal.bioontology.org/
   * [ ] ...
 * the following meta data are of interest:

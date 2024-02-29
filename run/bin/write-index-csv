@@ -20,7 +20,8 @@ if (file_exists(INDEX_CSV_PATH)) {
  * open DB and get a list of all entries
  */
 $db = new PDO('sqlite:'.SQLITE_FILE_PATH);
-$sql = 'SELECT ontology_title, ontology_uri, latest_ntriples_file, latest_rdfxml_file, latest_turtle_file,
+$sql = 'SELECT ontology_title, ontology_uri,
+               latest_n3_file, latest_ntriples_file, latest_rdfxml_file, latest_turtle_file,
                latest_access, source_title, source_url
           FROM entry
          ORDER BY ontology_title ASC';

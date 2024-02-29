@@ -12,6 +12,7 @@ class IndexEntry
 {
     private ?string $ontologyTitle;
     private ?string $ontologyUri;
+    private ?string $latestN3File = null;
     private ?string $latestNtFile = null;
     private ?string $latestRdfXmlFile = null;
     private ?string $latestTtlFile = null;
@@ -72,6 +73,25 @@ class IndexEntry
         $this->latestAccess = $latestAccess;
 
         return $this;
+    }
+
+    public function getLatestN3File(): ?string
+    {
+        return $this->latestN3File;
+    }
+
+    /**
+     * @throws \Exception if latestN3File is nota valid URL.
+     */
+    public function setLatestN3File(string $latestN3File): self
+    {
+        if (isUrl($latestN3File) || isEmpty($latestN3File)) {
+            $this->latestN3File = $latestN3File;
+
+            return $this;
+        } else {
+            throw new Exception($latestN3File.' is not a valid URL');
+        }
     }
 
     public function getLatestNtFile(): ?string

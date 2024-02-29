@@ -72,6 +72,7 @@ function storeTemporaryIndexIntoSQLiteFile(array $temporaryIndex): void
     $db->exec('CREATE TABLE IF NOT EXISTS entry (
         ontology_uri TEXT PRIMARY KEY,
         ontology_title TEXT,
+        latest_n3_file TEXT,
         latest_ntriples_file TEXT,
         latest_rdfxml_file TEXT,
         latest_turtle_file TEXT,
@@ -88,19 +89,21 @@ function storeTemporaryIndexIntoSQLiteFile(array $temporaryIndex): void
     $stmt = $db->prepare('INSERT INTO entry (
             ontology_uri,
             ontology_title,
+            latest_n3_file,
             latest_ntriples_file,
             latest_rdfxml_file,
             latest_turtle_file,
             latest_access,
             source_title,
             source_url
-        ) VALUES (?,?,?,?,?,?,?,?);');
+        ) VALUES (?,?,?,?,?,?,?,?,?);');
 
     foreach ($temporaryIndex as $indexEntry) {
         try {
             $stmt->execute([
                 $indexEntry->getOntologyUri(),
                 addslashes((string) $indexEntry->getOntologyTitle()),
+                $indexEntry->getLatestN3File(),
                 $indexEntry->getLatestNtFile(),
                 $indexEntry->getLatestRdfXmlFile(),
                 $indexEntry->getLatestTtlFile(),
