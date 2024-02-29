@@ -1,0 +1,122 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Read ontology information from Linked Open Vocabularies:
+ *
+ * https://lov.linkeddata.es/dataset/lov/
+ */
+
+use App\IndexEntry;
+use quickRdf\DataFactory;
+use quickRdfIo\Util;
+
+use function App\isUrl;
+use function App\storeTemporaryIndexIntoSQLiteFile;
+use function App\uncompressGzArchive;
+
+require 'bootstrap.php';
+
+$lovDumpUrl = 'https://lov.linkeddata.es/lov.n3.gz';
+
+// time limit for script
+\set_time_limit(3600);
+
+echo 'ask LOV API for vocabulary list';
+
+/*
+ * 1. get a list of all vocabularies (prefix + title + URI)
+ */
+$url = 'https://lov.linkeddata.es/dataset/lov/api/v2/vocabulary/list';
+$json = file_get_contents($url);
+$entriesArr = json_decode($json, true);
+$miniVocabularyIndex = [];
+
+foreach ($entriesArr as $arr) {
+    $entry = new IndexEntry('Linked Open Vocabularies', $lovDumpUrl);
+    $entry->setOntologyTitle($arr['titles'][0]['value']); // TODO: handle case: multiple title entries
+    $entry->setOntologyUri($arr['uri']); // TODO: handle case: multiple title entries
+
+    $miniVocabularyIndex[$arr['uri']] = [
+        'entry_instance' => $entry,
+        'available_file_uris' => [],
+    ];
+}
+
+/*
+ * 2. Download latest LOV dump (.gz file) and uncompress it.
+ *
+ * We assume it contains all vocabulary meta data.
+ *
+ * TODO if this takes too long, use gunzip for alternatives instead.
+ */
+$n3Filepath = ROOT_DIR_PATH.'var'.DIRECTORY_SEPARATOR.'lov.n3';
+
+if (file_exists($n3Filepath)) {
+    unlink($n3Filepath);
+}
+
+echo PHP_EOL.'uncompress .gz file';
+
+uncompressGzArchive($lovDumpUrl, $n3Filepath);
+
+/*
+ * 3. Read N3 file (triple by triple) and for each vocabulary entry look for the latest raw data file
+ * (predicate http://www.w3.org/ns/dcat#distribution).
+ */
+$dataFactory = new DataFactory();
+$iterator = Util::parse($n3Filepath, $dataFactory, 'turtle', 'http://base/');
+
+echo PHP_EOL.'read n3 dump file';
+
+foreach ($iterator as $quad) {
+    // found vocabulary entry
+    $s = $quad->getSubject()->getValue();
+    if (
+        isset($miniVocabularyIndex[$s])
+        && 'http://www.w3.org/ns/dcat#distribution' == $quad->getPredicate()->getValue()
+    ) {
+        $miniVocabularyIndex[$s]['available_file_uris'][] = $quad->getObject()->getValue();
+    }
+}
+
+/*
+ * 4. Determine latest file URI per vocabulary
+ *
+ * cases:
+ *
+ *      1. only one file is referenced with http://www.w3.org/ns/dcat#distribution
+ *      2. multiple files are referenced with http://www.w3.org/ns/dcat#distribution
+ *          - check each one and take the latest one
+ */
+echo PHP_EOL.'prepare mini index';
+
+foreach ($miniVocabularyIndex as $uri => $entry) {
+    if (0 < count($entry['available_file_uris'])) {
+        // reverse sort URIs so the one with the latest date comes first
+        rsort($entry['available_file_uris']);
+        // store that file URI
+        $fileUri = array_shift($entry['available_file_uris']);
+    } else {
+        // no file URIs found, use vocabulary URI for now
+        $fileUri = $uri;
+    }
+
+    if (isUrl($fileUri)) {
+        $entry['entry_instance']->setLatestTtlFile($uri);
+        $miniVocabularyIndex[$uri] = $entry['entry_instance'];
+    } else {
+        echo PHP_EOL.'- IGNORE: Invalid N3 file URI ('.$fileUri.') found for '.$uri;
+        unset($miniVocabularyIndex[$uri]);
+        continue;
+    }
+}
+
+/*
+ * 5. Write temporary index to central SQLite file.
+ */
+storeTemporaryIndexIntoSQLiteFile($miniVocabularyIndex);
+
+echo PHP_EOL;

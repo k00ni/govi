@@ -1,23 +1,29 @@
 #!/usr/bin/env php
-
 <?php
+
+declare(strict_types=1);
 
 /**
  * Read ontology information from:
  *
  * https://archivo.dbpedia.org/list
+ *
+ * TODO:
+ * - take latest access from ontology list of the website
  */
 
 use App\IndexEntry;
 
 use function App\cleanTitle;
 use function App\isEmpty;
-use function App\mergeEntriesIntoIndexCSV;
+use function App\storeTemporaryIndexIntoSQLiteFile;
 
-require __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php';
+require 'bootstrap.php';
 
-// no time limit for script
+// time limit for script
 \set_time_limit(3600);
+
+echo 'load ontologies list and build temporary index';
 
 /*
  * 1. ask DBpedia archivo to the complete list of ontologies
@@ -29,6 +35,8 @@ $html = file_get_contents($url);
  * 2. build basic index for this provider
  */
 $numberOfOntologyEntries = preg_match_all('/<tr>(.*?)<\/tr>/sim', $html, $ontologyEntries);
+
+echo PHP_EOL.'found '.$numberOfOntologyEntries.' entries, processing ...';
 
 /*
  * 3. go through each ontology and build index
@@ -51,6 +59,8 @@ if (0 < $numberOfOntologyEntries) {
         if (isset($title[1]) && false === isEmpty($title[1])) {
             $newEntry->setOntologyTitle(cleanTitle($title[1]));
         } else {
+            echo PHP_EOL.'no ontology title, so ignore entry with HTML: '.$ontologyEntryHtml;
+
             // no title means, no valid meta data, therefore stop
             continue;
         }
@@ -59,10 +69,28 @@ if (0 < $numberOfOntologyEntries) {
         preg_match('/<td>\s*<a href="\/info\?o=(.*?)"/sim', $ontologyEntryHtml, $uri);
         if (isset($uri[1]) && false === isEmpty($uri[1])) {
             $newEntry->setOntologyUri($uri[1]);
+
+            if (isset($temporaryIndex[$newEntry->getOntologyUri()])) {
+                echo PHP_EOL.'- DUPLICATE: entry with ontology URI '.$uri[1].' already set!';
+            }
         } else {
+            echo PHP_EOL.'no ontology URI, so ignore entry with HTML: '.$ontologyEntryHtml;
+
             // no URI means, no valid meta data, therefore stop
             continue;
         }
+
+        // latest update date
+        preg_match('/nt<\/a>.*?>([0-9]{4})\.([0-9]{2})\.([0-9]{2})/sim', $ontologyEntryHtml, $latest);
+        if (isset($latest[1]) && false === isEmpty($latest[1])) {
+            $latestAccess = $latest[1].'-'.$latest[2].'-'.$latest[3].' 00:00:00';
+            $newEntry->setLatestAccess($latestAccess);
+        } else {
+            $message = 'Can not read latest timestamp field for '.$newEntry->getOntologyUri().' // RAW HTML : '.$ontologyEntryHtml;
+            throw new Exception($message);
+        }
+
+        echo '.';
 
         /*
          * latest OWL,TTL,... file
@@ -71,20 +99,22 @@ if (0 < $numberOfOntologyEntries) {
         $newEntry->setLatestRdfXmlFile('http://archivo.dbpedia.org/download?o='.$newEntry->getOntologyUri().'&f=owl');
         $newEntry->setLatestTtlFile('http://archivo.dbpedia.org/download?o='.$newEntry->getOntologyUri().'&f=ttl');
 
-        // store (use title as key to avoid doublings)
-        $temporaryIndex[$newEntry->getOntologyTitle()] = $newEntry;
+        // store (use URI as key to avoid doublings)
+        $temporaryIndex[$newEntry->getOntologyUri()] = $newEntry;
     }
 } else {
     // nothing found or error
     throw new Exception('No ontology entries found at '.$url);
 }
 
-// remove array keys from $temporaryIndex, because they are not needed in CSV
-$temporaryIndexWithoutKeys = array_values($temporaryIndex);
+echo PHP_EOL.'store temporary index in SQLite file';
 
 /*
- * 4. Merge in entries into index.csv
+ * 4. Store temporary index in SQLite file.
  */
-mergeEntriesIntoIndexCSV($url, $temporaryIndexWithoutKeys);
+storeTemporaryIndexIntoSQLiteFile($temporaryIndex);
 
-echo $url.' => '. $numberOfOntologyEntries.' entries'.PHP_EOL;
+echo PHP_EOL.'done, '.count($temporaryIndex).' entries processed (TODO move to stats)';
+
+echo PHP_EOL;
+echo PHP_EOL;

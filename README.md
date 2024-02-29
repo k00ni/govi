@@ -3,6 +3,17 @@
 The Global Ontology and Vocabulary Index (govi) is meant to be a Community-driven project to maintain an index of all available ontologies and vocabularies.
 The index is basically a list of links (URLs) to ontologies and vocabularies, plus a few meta data.
 
+Index: [**index.csv**](./index.csv)
+
+## Requirements and rules for an ontology-entry in the index
+
+An ontology is part of the index if it meets the following requirements:
+* ontology title
+* ontology URI
+* at least one RDF file
+
+If an entry is part of multiple sources, the one which appears first is taken.
+
 ## Why?
 
 There is **no** search engine or even a basic list of all ontologies/vocabularies available right now (*LOD graph and Internet in general*).
@@ -41,13 +52,15 @@ As long as the portal is online, everything is fine but as soon as it goes offli
 
 * [x] Simple scripts to download, parse and read ontologies of interest and generate a CSV file in the end
   * [x] include DBpedia Archivo: https://archivo.dbpedia.org/list
+  * [x] include LOV (Linked Open Vocabularies): https://lov.linkeddata.es/dataset/lov/vocabs
   * [ ] include BioPortal: https://bioportal.bioontology.org/
-  * [ ] include LOV (Linked Open Vocabularies): https://lov.linkeddata.es/dataset/lov/vocabs
   * [ ] ...
 * the following meta data are of interest:
-  * [ ] URL to latest version of RDF/XML-, Turtle-, NTriples- or KIF-file
+  * [x] URL to latest version of RDF/XML-, Turtle-, NTriples- or KIF-file
+    * [x] enforce valid URLs, avoid blank nodes (_: at the beginning)
   * [x] name / title
   * [x] date time of last check
+* [ ] implement basic logging
 
 ### Version 0.2
 
@@ -62,8 +75,19 @@ As long as the portal is online, everything is fine but as soon as it goes offli
   * [ ] used keywords
 * [ ] crawl Github repositories tagged with "ontology" etc.
 * [ ] Ping service: on update call a list of URLs to let them know that there was a change
+* [ ] generate statistics for each service read to build index.csv (contains number of entries etc.)
 
-## What this project is not
+## Information on each source
+
+### DBpedia Archivo
+
+* Used value of "Latest Timestamp" for latest access, "2020.06.10-175249" is interpreted as "2020-06-10 00:00:00"
+
+### Linked Open Vocabularies (LOV)
+
+* ...
+
+## FAQ
 
 ### No versioning information
 

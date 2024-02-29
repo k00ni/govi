@@ -6,7 +6,10 @@ default:
 	@echo ""
 
 index:
+	rm -f var/temporary-index.db
 	bin/read-dbpedia-archivo
+	bin/read-linked-open-vocabularies
+	bin/write-index-csv
 
 prepare:
 	vendor/bin/php-cs-fixer fix

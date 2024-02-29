@@ -1,0 +1,40 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Writes content of SQLite file into index.csv file.
+ */
+
+require 'bootstrap.php';
+
+echo PHP_EOL.'Start writing index.csv ...';
+
+// remove index.csv if it exists
+if (file_exists(INDEX_CSV_PATH)) {
+    unlink(INDEX_CSV_PATH);
+}
+
+/*
+ * open DB and get a list of all entries
+ */
+$db = new PDO('sqlite:'.SQLITE_FILE_PATH);
+$sql = 'SELECT ontology_title, ontology_uri, latest_ntriples_file, latest_rdfxml_file, latest_turtle_file,
+               latest_access, source_title, source_url
+          FROM entry
+         ORDER BY ontology_title ASC';
+$stmt = $db->prepare($sql);
+$stmt->execute();
+
+$dataToWrite = INDEX_CSV_HEAD_STRING.PHP_EOL;
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    echo '.';
+
+    $dataToWrite .= '"'.implode('","', $row).'"'.PHP_EOL;
+}
+
+file_put_contents(INDEX_CSV_PATH, $dataToWrite);
+
+echo PHP_EOL;
+echo PHP_EOL;
