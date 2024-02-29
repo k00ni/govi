@@ -8,7 +8,7 @@ define('INDEX_CSV_PATH', ROOT_DIR_PATH.'index.csv');
 // CSV
 define(
     'INDEX_CSV_HEAD_STRING',
-    '"ontology title","ontology uri","latest N3 file","latest ntriples file","latest rdf/xml file","latest turtle file","latest access","source title","source url"'
+    '"ontology title","ontology uri","latest n3 file","latest ntriples file","latest rdf/xml file","latest turtle file","latest access","source title","source url"'
 );
 
 define('SQLITE_FILE_PATH', RUN_DIR_PATH.'var'.DIRECTORY_SEPARATOR.'temporary-index.db');
