@@ -123,6 +123,7 @@ But if you wanna help out with one of the topics, feel free to open an issue or 
 
 ### Version 0.2
 
+* [ ] add doap file
 * [ ] add basic schema/ontology describing the fields in index.csv
 * [ ] check if owl:Ontology relation is found in source file (to make sure its an OWL ontology)
 * [ ] crawl Github repositories tagged with "ontology" etc.
