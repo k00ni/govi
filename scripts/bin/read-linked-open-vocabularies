@@ -54,7 +54,7 @@ foreach ($entriesArr as $arr) {
  *
  * TODO if this takes too long, use gunzip for alternatives instead.
  */
-$n3Filepath = RUN_DIR_PATH.'var'.DIRECTORY_SEPARATOR.'lov.n3';
+$n3Filepath = SCRIPTS_DIR_PATH.'var'.DIRECTORY_SEPARATOR.'lov.n3';
 
 if (file_exists($n3Filepath)) {
     unlink($n3Filepath);

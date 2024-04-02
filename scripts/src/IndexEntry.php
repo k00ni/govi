@@ -39,7 +39,7 @@ class IndexEntry
 
     public function setOntologyTitle(string $ontologyTitle): self
     {
-        $this->ontologyTitle = $ontologyTitle;
+        $this->ontologyTitle = trim($ontologyTitle);
 
         return $this;
     }
@@ -55,8 +55,7 @@ class IndexEntry
     public function setOntologyUri(string $ontologyUri): self
     {
         if (isUrl($ontologyUri)) {
-            $this->ontologyUri = $ontologyUri;
-
+            $this->ontologyUri = trim($ontologyUri);
             return $this;
         } else {
             throw new Exception($ontologyUri.' is not a valid URL');
@@ -70,7 +69,7 @@ class IndexEntry
 
     public function setLatestAccess(string $latestAccess): self
     {
-        $this->latestAccess = $latestAccess;
+        $this->latestAccess = trim($latestAccess);
 
         return $this;
     }
@@ -86,7 +85,7 @@ class IndexEntry
     public function setLatestN3File(string $latestN3File): self
     {
         if (isUrl($latestN3File) || isEmpty($latestN3File)) {
-            $this->latestN3File = $latestN3File;
+            $this->latestN3File = trim($latestN3File);
 
             return $this;
         } else {
@@ -105,7 +104,7 @@ class IndexEntry
     public function setLatestNtFile(string $latestNtFile): self
     {
         if (isUrl($latestNtFile) || isEmpty($latestNtFile)) {
-            $this->latestNtFile = $latestNtFile;
+            $this->latestNtFile = trim($latestNtFile);
 
             return $this;
         } else {
@@ -124,7 +123,7 @@ class IndexEntry
     public function setLatestRdfXmlFile(string $latestRdfXmlFile): self
     {
         if (isUrl($latestRdfXmlFile) || isEmpty($latestRdfXmlFile)) {
-            $this->latestRdfXmlFile = $latestRdfXmlFile;
+            $this->latestRdfXmlFile = trim($latestRdfXmlFile);
             return $this;
         } else {
             throw new Exception($latestRdfXmlFile.' is not a valid URL');
@@ -142,7 +141,7 @@ class IndexEntry
     public function setLatestTtlFile(string $latestTtlFile): self
     {
         if (isUrl($latestTtlFile) || isEmpty($latestTtlFile)) {
-            $this->latestTtlFile = $latestTtlFile;
+            $this->latestTtlFile = trim($latestTtlFile);
 
             return $this;
         } else {
