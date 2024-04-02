@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   CI:
-    scriptss-on: ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
     - name: Set up Git repository
       uses: actions/checkout@v3
@@ -18,15 +18,15 @@ jobs:
 
     # Validate composer.json
     - name: Validate Composer files
-      scripts: cd scripts && composer validate --no-check-all --strict
+      runs: cd scripts && composer validate --no-check-all --strict
 
     # Setup PHP environment (install dependencies etc.)
     - name: Install Composer dependencies
-      scripts: cd scripts && composer install --no-progress --no-suggest --prefer-dist --optimize-autoloader
+      runs: cd scripts && composer install --no-progress --no-suggest --prefer-dist --optimize-autoloader
 
     # Static code analyser
     - name: Static Code Analysis
-      scripts: cd scripts && vendor/bin/phpstan analyse
+      runs: cd scripts && vendor/bin/phpstan analyse
 
     # CSV linter
     - name: Lint index.csv
