@@ -30,7 +30,7 @@ jobs:
 
     # CSV linter
     - name: Lint index.csv
-      uses: kcheriyath/csvlinter@latest
+      uses: kcheriyath/csvlinter@V0.6.0
       with:
         file_list: "index.csv"
         find_pattern: "*.csv"
