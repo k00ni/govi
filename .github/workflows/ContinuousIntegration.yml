@@ -30,6 +30,9 @@ jobs:
 
     # CSV linter
     - name: Lint index.csv
-      uses: blackstar257/docker-csvlint@master
-      env:
-        ACTION_STATE_NAME: "index.csv"
+      uses: kcheriyath/csvlinter@latest
+      with:
+        file_list: "index.csv"
+        find_pattern: "*.csv"
+        find_path: "./"
+        fail_on_error: "true"
