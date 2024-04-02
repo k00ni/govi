@@ -113,6 +113,8 @@ But if you wanna help out with one of the topics, feel free to open an issue or 
   * [x] include LOV (Linked Open Vocabularies): https://lov.linkeddata.es/dataset/lov/vocabs
     * [x] for latest access use http://purl.org/dc/terms/modified value
   * [ ] include BioPortal: https://bioportal.bioontology.org/
+  * [ ] https://ontohub.org/
+  * [ ] https://data.ontocommons.linkeddata.es/index
 * [ ] provide a way to contribute meta data using Github Pull Requests (maybe via a JSON file?)
 * the following meta data are of interest:
   * [x] URL to latest version of RDF/XML-, Turtle-, NTriples- or KIF-file
@@ -124,6 +126,14 @@ But if you wanna help out with one of the topics, feel free to open an issue or 
 ### Version 0.2
 
 * [ ] add doap file
+* add further services:
+  * [ ] https://obofoundry.org/
+  * [ ] http://www.oegov.us/
+  * [ ] https://www.ebi.ac.uk/ols4
+  * [ ] http://ontologydesignpatterns.org/wiki/Main\_Page
+  * [ ] https://obofoundry.org/
+  * [ ] https://github.com/linkeddata/ontology-archiver
+* [ ] harmonize datetime information for latest access (all UTC?)
 * [ ] add basic schema/ontology describing the fields in index.csv
 * [ ] check if owl:Ontology relation is found in source file (to make sure its an OWL ontology)
 * [ ] crawl Github repositories tagged with "ontology" etc.
