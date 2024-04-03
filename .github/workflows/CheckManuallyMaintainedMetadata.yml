@@ -15,5 +15,9 @@ jobs:
         php-version: '8.2'
         ini-values: memory_limit=1G
 
+    # Setup PHP environment (install dependencies etc.)
+    - name: Install Composer dependencies
+      run: cd scripts && composer install --no-progress --no-suggest --prefer-dist --optimize-autoloader
+
     - name: Check
       run: scripts/bin/check-manually-maintained-metadata
