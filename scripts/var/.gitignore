@@ -1,3 +1,4 @@
 *.*
 !.gitignore
+cached_request
 merge_cache

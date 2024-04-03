@@ -68,9 +68,9 @@ if (0 < $numberOfOntologyEntries) {
         // URI of ontology
         preg_match('/<td>\s*<a href="\/info\?o=(.*?)"/sim', $ontologyEntryHtml, $uri);
         if (isset($uri[1]) && false === isEmpty($uri[1])) {
-            $newEntry->setOntologyUri($uri[1]);
+            $newEntry->setontologyIri($uri[1]);
 
-            if (isset($temporaryIndex[$newEntry->getOntologyUri()])) {
+            if (isset($temporaryIndex[$newEntry->getontologyIri()])) {
                 echo PHP_EOL.'- DUPLICATE: entry with ontology URI '.$uri[1].' already set!';
             }
         } else {
@@ -86,7 +86,7 @@ if (0 < $numberOfOntologyEntries) {
             $latestAccess = $latest[1].'-'.$latest[2].'-'.$latest[3].' 00:00:00';
             $newEntry->setLatestAccess($latestAccess);
         } else {
-            $message = 'Can not read latest timestamp field for '.$newEntry->getOntologyUri().' // RAW HTML : '.$ontologyEntryHtml;
+            $message = 'Can not read latest timestamp field for '.$newEntry->getontologyIri().' // RAW HTML : '.$ontologyEntryHtml;
             throw new Exception($message);
         }
 
@@ -95,12 +95,12 @@ if (0 < $numberOfOntologyEntries) {
         /*
          * latest OWL,TTL,... file
          */
-        $newEntry->setLatestNtFile('http://archivo.dbpedia.org/download?o='.$newEntry->getOntologyUri().'&f=nt');
-        $newEntry->setLatestRdfXmlFile('http://archivo.dbpedia.org/download?o='.$newEntry->getOntologyUri().'&f=owl');
-        $newEntry->setLatestTtlFile('http://archivo.dbpedia.org/download?o='.$newEntry->getOntologyUri().'&f=ttl');
+        $newEntry->setLatestNtFile('http://archivo.dbpedia.org/download?o='.$newEntry->getontologyIri().'&f=nt');
+        $newEntry->setLatestRdfXmlFile('http://archivo.dbpedia.org/download?o='.$newEntry->getontologyIri().'&f=owl');
+        $newEntry->setLatestTtlFile('http://archivo.dbpedia.org/download?o='.$newEntry->getontologyIri().'&f=ttl');
 
         // store (use URI as key to avoid doublings)
-        $temporaryIndex[$newEntry->getOntologyUri()] = $newEntry;
+        $temporaryIndex[$newEntry->getontologyIri()] = $newEntry;
     }
 } else {
     // nothing found or error

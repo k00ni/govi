@@ -1,0 +1,152 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use App\IndexEntry;
+use EasyRdf\Format;
+
+use function App\getOntologyDataAsArray;
+use function App\isEmpty;
+use function App\isUrl;
+use function App\loadQuadsIntoInMemoryStore;
+use function App\sendCachedRequest;
+use function App\storeTemporaryIndexIntoSQLiteFile;
+
+/**
+ * Read ontology information from OLS (https://www.ebi.ac.uk/ols4/):
+ *
+ * REST API: https://www.ebi.ac.uk/ols4/api/ontologies
+ *
+ * Swagger documentation: https://www.ebi.ac.uk/ols4/swagger-ui/index.html#/
+ */
+
+require 'bootstrap.php';
+
+// time limit for script
+\set_time_limit(3600);
+
+echo PHP_EOL.'Read ontology search';
+
+$temporaryIndex = [];
+
+/*
+ * 1. Get total number of available pages
+ */
+$url = 'https://www.ebi.ac.uk/ols4/api/ontologies?page=';
+$html = file_get_contents($url);
+$jsonArr = json_decode($html, true);
+$totalNumberOfPages = (int) $jsonArr['page']['totalPages'];
+
+if (0 < $totalNumberOfPages) {
+    // go through each page ...
+    for ($page = 0; $page <= $totalNumberOfPages; ++$page) {
+        $html = sendCachedRequest($url.$page);
+        $jsonArr = json_decode($html, true);
+
+        if (false === isset($jsonArr['_embedded'])) {
+            continue;
+        }
+
+        // go through ontology list ...
+        foreach ($jsonArr['_embedded']['ontologies'] as $ontology) {
+            $newEntry = new IndexEntry('Ontology Lookup Service (OLS)', 'https://www.ebi.ac.uk/ols4/api/ontologies');
+
+            // load to terms data with further information
+            $terms = sendCachedRequest($ontology['_links']['terms']['href']);
+            $termsJsonArr = json_decode($terms, true);
+
+            if (isset($termsJsonArr['status'])) {
+                echo PHP_EOL;
+                echo PHP_EOL;
+                echo PHP_EOL;
+                echo 'ERR with status: '.$termsJsonArr['status'];
+                echo PHP_EOL;
+                var_dump($termsJsonArr);
+                continue;
+            } elseif (false === isset($termsJsonArr['_embedded'])) {
+                echo PHP_EOL;
+                echo PHP_EOL;
+                echo PHP_EOL;
+                echo 'ERR: key _embedded not set:';
+                echo PHP_EOL;
+                var_dump($termsJsonArr);
+                continue;
+            }
+
+            // many terms are returned, but ontology IRI is available in each term entry
+            $newEntry->setOntologyIri($termsJsonArr['_embedded']['terms'][0]['ontology_iri']);
+
+            $fileLocation = $ontology['config']['fileLocation'] ?? null;
+            if (
+                null === $fileLocation
+                || false === isUrl($fileLocation)
+            ) {
+                // TODO find another way to get it included
+                continue;
+            }
+
+            // RDF file content
+            $fileContent = sendCachedRequest($fileLocation);
+            if (isEmpty($fileContent)) {
+                throw new Exception('No content found in fileLocation: '.$ontology['config']['fileLocation']);
+            } else {
+                // guess format; if that is not possible assume its rdfxml
+                $format = Format::guessFormat($fileContent)?->getName() ?? 'rdfxml';
+
+                if ('ntriples' == $format) {
+                    $newEntry->setLatestNtFile($ontology['config']['fileLocation']);
+                } elseif ('rdfxml' == $format) {
+                    $newEntry->setLatestRdfXmlFile($ontology['config']['fileLocation']);
+                } elseif ('turtle' == $format) {
+                    $newEntry->setLatestTtlFile($ontology['config']['fileLocation']);
+                } else {
+                    throw new Exception('No valid RDF notation found ('. $format.') for '.$fileLocation);
+                }
+            }
+
+            // if title is empty, try to load file and get it this way
+            if (isEmpty($ontology['config']['title'])) {
+                // load content into in memory store
+                $store = loadQuadsIntoInMemoryStore($ontology['config']['fileLocation']);
+                $arr = getOntologyDataAsArray($store, $newEntry->getOntologyIri());
+
+                // try to find a matching title property
+                foreach ($titleProperties as $property) {
+                    if (isset($arr[$property])) {
+                        $newEntry->setOntologyTitle($arr[$property]);
+                        break;
+                    }
+                }
+                if (isEmpty($newEntry->getOntologyTitle())) {
+                    echo PHP_EOL;
+                    echo PHP_EOL;
+                    echo 'WARN: '.$newEntry->getOntologyIri().' ignored, because no title found.';
+                    echo PHP_EOL;
+                    continue;
+                }
+            } else {
+                $newEntry->setOntologyTitle($ontology['config']['title']);
+            }
+
+            // set latest access
+            $uploaded = new DateTime($ontology['updated'], new DateTimeZone('UTC'));
+            $newEntry->setLatestAccess($uploaded->format('Y-m-d').' 00:00:00');
+
+            echo '.';
+            $temporaryIndex[] = $newEntry;
+        }
+    }
+} else {
+    throw new Exception('Could not determine total number of pages.');
+}
+
+/*
+ * Store temporary index in SQLite file.
+ */
+storeTemporaryIndexIntoSQLiteFile($temporaryIndex);
+
+echo PHP_EOL.'done, '.count($temporaryIndex).' entries processed (TODO move to stats)';
+
+echo PHP_EOL;
+echo PHP_EOL;

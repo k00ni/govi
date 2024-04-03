@@ -66,17 +66,25 @@ As long as the portal is online everything is fine but as soon as it goes offlin
 
 ### DBpedia Archivo
 
-Related script: [bin/read-dbpedia-archivo](bin/read-dbpedia-archivo)
+Related script: [scripts/bin/read-dbpedia-archivo](scripts/bin/read-dbpedia-archivo)
 
 **Notes:**
 * Used value of "Latest Timestamp" for latest access, "2020.06.10-175249" is interpreted as "2020-06-10 00:00:00"
 
 ### Linked Open Vocabularies (LOV)
 
-Related script: [bin/read-linked-open-vocabularies](bin/read-linked-open-vocabularies)
+Related script: [scripts/bin/read-linked-open-vocabularies](scripts/bin/read-linked-open-vocabularies)
 
 **Notes:**
 * Used value of `dct:modified` for latest access; because the field only contains the date, the time is always set to `00:00:00`.
+
+### Ontology Lookup Service (OLS)
+
+Related script: [scripts/bin/read-linked-open-vocabularies](scripts/bin/read-ontology-lookup-service)
+
+**Notes:**
+* Warning: Currently ignorign all ontologies with no `fileLocation` field set in ontology configuration
+* ontology.uploaded is used for latest access
 
 ## FAQ
 

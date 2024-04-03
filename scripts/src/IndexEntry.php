@@ -10,8 +10,8 @@ use Exception;
 
 class IndexEntry
 {
-    private ?string $ontologyTitle;
-    private ?string $ontologyUri;
+    private ?string $ontologyTitle = null;
+    private ?string $ontologyIri = null;
     private ?string $latestN3File = null;
     private ?string $latestNtFile = null;
     private ?string $latestRdfXmlFile = null;
@@ -44,21 +44,21 @@ class IndexEntry
         return $this;
     }
 
-    public function getOntologyUri(): ?string
+    public function getOntologyIri(): ?string
     {
-        return $this->ontologyUri;
+        return $this->ontologyIri;
     }
 
     /**
-     * @throws \Exception if ontologyUri is nota valid URL.
+     * @throws \Exception if ontologyIri is nota valid URL.
      */
-    public function setOntologyUri(string $ontologyUri): self
+    public function setOntologyIri(string $ontologyIri): self
     {
-        if (isUrl($ontologyUri)) {
-            $this->ontologyUri = trim($ontologyUri);
+        if (isUrl($ontologyIri)) {
+            $this->ontologyIri = trim($ontologyIri);
             return $this;
         } else {
-            throw new Exception($ontologyUri.' is not a valid URL');
+            throw new Exception($ontologyIri.' is not a valid URL');
         }
     }
 

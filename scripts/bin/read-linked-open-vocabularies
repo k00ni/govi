@@ -41,7 +41,7 @@ $miniVocabularyIndex = [];
 foreach ($entriesArr as $arr) {
     $entry = new IndexEntry('Linked Open Vocabularies', $lovDumpUrl);
     $entry->setOntologyTitle($arr['titles'][0]['value']); // TODO: handle case: multiple title entries
-    $entry->setOntologyUri($arr['uri']); // TODO: handle case: multiple title entries
+    $entry->setontologyIri($arr['uri']); // TODO: handle case: multiple title entries
 
     $miniVocabularyIndex[$arr['uri']] = $entry;
 }

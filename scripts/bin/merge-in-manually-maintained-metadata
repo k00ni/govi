@@ -23,7 +23,7 @@ $db = new PDO('sqlite:'.SQLITE_FILE_PATH);
 $sql = 'SELECT ontology_uri FROM entry ORDER BY ontology_title ASC';
 $stmt = $db->prepare($sql);
 $stmt->execute();
-$knownOntologyUris = $stmt->fetchAll(PDO::FETCH_COLUMN);
+$knownontologyIris = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
 /*
  * merge in all manually maintained metadata which is not already part of the SQLite file
@@ -38,14 +38,14 @@ foreach ($entries as $line => $row) {
         // ignore header
         continue;
     }
-    $ontologyUri = $row[1];
+    $ontologyIri = $row[1];
 
     // check if ontology URI is already known
-    $ontologyIsNotInSQLiteFileAlready = false === in_array($ontologyUri, $knownOntologyUris);
-    if ($ontologyIsNotInSQLiteFileAlready && isUrl($ontologyUri)) {
+    $ontologyIsNotInSQLiteFileAlready = false === in_array($ontologyIri, $knownontologyIris);
+    if ($ontologyIsNotInSQLiteFileAlready && isUrl($ontologyIri)) {
         $entry = new IndexEntry('Manually maintained', 'https://github.com/k00ni/govi');
         $entry->setOntologyTitle($row[0]);
-        $entry->setOntologyUri($ontologyUri);
+        $entry->setontologyIri($ontologyIri);
 
         // related files
         $entry->setLatestN3File($row[2]);
@@ -57,7 +57,7 @@ foreach ($entries as $line => $row) {
 
         $unkownIndexEntries[] = $entry;
     } else {
-        $msg = 'Ontology '.$row[0].' ('.$ontologyUri.') is known and does not have to be maintained manually!';
+        $msg = 'Ontology '.$row[0].' ('.$ontologyIri.') is known and does not have to be maintained manually!';
         $msg .= ' Please remove it from '.MANUALLY_MAINTAINED_METADATA_ABOUT_ONTOLOGIES_CSV;
         throw new Exception($msg);
     }
