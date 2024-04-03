@@ -1,6 +1,19 @@
 name: Check manually maintained metadata about ontologies
 
-on: [push, pull_request]
+on:
+  pull_request:
+    branches:
+      - master
+  schedule:
+    # FYI: https://pubs.opengroup.org/onlinepubs/9699919799/utilities/crontab.html
+    #
+    #                   ,- month of the year
+    # day of the month /
+    #        hour |   /
+    #    minute | |  / ,-- day of the week
+    #         | | | | |
+    - cron:  '* * * * 0'
+    #                 `-- 0 = Sunday
 
 jobs:
   CI:
