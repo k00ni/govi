@@ -66,6 +66,8 @@ As long as the portal is online everything is fine but as soon as it goes offlin
 
 ### DBpedia Archivo
 
+https://archivo.dbpedia.org/list
+
 Related script: [scripts/bin/read-dbpedia-archivo](scripts/bin/read-dbpedia-archivo)
 
 **Notes:**
@@ -73,12 +75,16 @@ Related script: [scripts/bin/read-dbpedia-archivo](scripts/bin/read-dbpedia-arch
 
 ### Linked Open Vocabularies (LOV)
 
+https://lov.linkeddata.es/dataset/lov/
+
 Related script: [scripts/bin/read-linked-open-vocabularies](scripts/bin/read-linked-open-vocabularies)
 
 **Notes:**
 * Used value of `dct:modified` for latest access; because the field only contains the date, the time is always set to `00:00:00`.
 
 ### Ontology Lookup Service (OLS)
+
+https://www.ebi.ac.uk/ols4/
 
 Related script: [scripts/bin/read-linked-open-vocabularies](scripts/bin/read-ontology-lookup-service)
 
@@ -116,23 +122,24 @@ But if you wanna help out with one of the topics, feel free to open an issue or 
 
 ### Version 0.1 (proof-of-concept)
 
+**Objective:** Build a basic prototype to see if the idea is doable and brings any significant value
+
 * [x] Simple scripts to download, parse and read ontologies of interest and generate a CSV file in the end
   * [x] include DBpedia Archivo: https://archivo.dbpedia.org/list
   * [x] include LOV (Linked Open Vocabularies): https://lov.linkeddata.es/dataset/lov/vocabs
     * [x] for latest access use http://purl.org/dc/terms/modified value
+  * [x] Linked Open Vocabularies: https://lov.linkeddata.es/dataset/lov/
   * [ ] include BioPortal: https://bioportal.bioontology.org/
-  * [ ] https://ontohub.org/
-  * [ ] https://data.ontocommons.linkeddata.es/index
-* [ ] provide a way to contribute meta data using Github Pull Requests (maybe via a JSON file?)
+* [x] provide a way to contribute meta data using Github Pull Requests (use CSV file as well) - see [manually-maintained-metadata-about-ontologies](./manually-maintained-metadata-about-ontologies.csv)
 * the following meta data are of interest:
-  * [x] URL to latest version of RDF/XML-, Turtle-, NTriples- or KIF-file
-    * [x] enforce valid URLs, avoid blank nodes (_: at the beginning)
+  * [x] URL to latest version of RDF/XML-, Turtle-, NTriples- or N3-file
+    * [x] enforce valid URLs, such as no blank nodes (_: at the beginning)
   * [x] name / title
   * [x] date time of last check
-* [ ] implement basic logging
 
 ### Version 0.2
 
+* [ ] implement basic logging
 * [ ] add doap file
 * add further services:
   * [ ] https://obofoundry.org/
@@ -155,5 +162,5 @@ Copyright (C) 2024 [Konrad Abicht](https://inspirito.de) and contributors.
 
 The code and development material (e.g. documentation) of GOVI is licenced under the terms of the [GNU GPL v2](./LICENSE).
 
-The content of the [index.csv](./index.csv) is licenced under the terms of the [CC0 1.0 DEED (Public Domain)](https://creativecommons.org/publicdomain/zero/1.0/), because it only contains content which was already published on the Internet.
+The content of the [index.csv](./index.csv) and [manually-maintained-metadata-about-ontologies.csv](./manually-maintained-metadata-about-ontologies.csv) is licenced under the terms of the [CC0 1.0 DEED (Public Domain)](https://creativecommons.org/publicdomain/zero/1.0/), because it only contains content which was already published on the Internet.
 The rights of the ontology/vocabulary authors shall remain reserved.
