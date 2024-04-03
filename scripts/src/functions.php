@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App;
 
+use Curl\Curl;
 use Exception;
 use PDO;
 use PDOException;
@@ -32,16 +33,6 @@ function cleanTitle(string $str): string
 }
 
 /**
- * Very basic approach to check if a given string is an URL.
- */
-function isUrl(string $str): bool
-{
-    return str_starts_with($str, 'http://')
-        || str_starts_with($str, 'https://')
-        || str_starts_with($str, 'www.');
-}
-
-/**
  * It seems that empty() is not enough to check, if something is really empty.
  * This function takes care of the edge cases.
  *
@@ -60,6 +51,16 @@ function isEmpty(string|null $input): bool
 }
 
 /**
+ * Very basic approach to check if a given string is an URL.
+ */
+function isUrl(string $str): bool
+{
+    return str_starts_with($str, 'http://')
+        || str_starts_with($str, 'https://')
+        || str_starts_with($str, 'www.');
+}
+
+/**
  * @param array<string,\App\IndexEntry> $temporaryIndex
  *
  * @throws \PDOException
@@ -69,6 +70,7 @@ function storeTemporaryIndexIntoSQLiteFile(array $temporaryIndex): void
     // create/open SQLite file (= our database)
     $db = new PDO('sqlite:'.SQLITE_FILE_PATH);
 
+    // TODO move to a better place to avoid unneccessary SQL commands
     $db->exec('CREATE TABLE IF NOT EXISTS entry (
         ontology_uri TEXT PRIMARY KEY,
         ontology_title TEXT,
@@ -153,5 +155,23 @@ function uncompressGzArchive(string $sourceFilepath, string $targetFilepath): vo
         }
     } else {
         throw new Exception('Uncompressing failed, could not open: '.$sourceFilepath);
+    }
+}
+
+function urlIsAccessible(string $url, int $timeout = 5, int $maximumRedirects = 10): bool
+{
+    $curl = new Curl();
+    $curl->setOpt(CURLOPT_CONNECT_ONLY, true);
+    $curl->setConnectTimeout($timeout);
+    $curl->setMaximumRedirects($maximumRedirects);
+    $curl->setOpt(CURLOPT_FOLLOWLOCATION, true); // follow redirects
+    $curl->setOpt(CURLOPT_SSL_VERIFYPEER, false);
+    $curl->setOpt(CURLOPT_SSL_VERIFYHOST, false);
+
+    $curl->get($url);
+    if ($curl->error) {
+        return false;
+    } else {
+        return true;
     }
 }

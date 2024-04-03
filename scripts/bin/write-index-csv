@@ -29,13 +29,18 @@ $stmt = $db->prepare($sql);
 $stmt->execute();
 
 $dataToWrite = INDEX_CSV_HEAD_STRING.PHP_EOL;
+$i = 0;
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     echo '.';
 
     $dataToWrite .= '"'.implode('","', $row).'"'.PHP_EOL;
+
+    ++$i;
 }
 
 file_put_contents(INDEX_CSV_PATH, $dataToWrite);
+
+echo PHP_EOL.PHP_EOL.'Wrote '.$i.' entries';
 
 echo PHP_EOL;
 echo PHP_EOL;

@@ -13,6 +13,7 @@ index:
 	rm -f scripts/var/temporary-index.db
 	scripts/bin/read-dbpedia-archivo
 	scripts/bin/read-linked-open-vocabularies
+	scripts/bin/merge-in-manually-maintained-metadata
 	scripts/bin/write-index-csv
 
 prepare:

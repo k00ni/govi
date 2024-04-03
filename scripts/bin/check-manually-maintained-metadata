@@ -1,0 +1,67 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * This file checks availability of all RDF files in manually-maintained-metadata-about-ontologies.csv
+ */
+
+declare(strict_types=1);
+
+use function App\isEmpty;
+use function App\urlIsAccessible;
+
+require_once 'bootstrap.php';
+
+echo PHP_EOL.'Check availability of referenced RDF files ...'.PHP_EOL;
+
+$failingRdfFiles = [];
+
+$csvFileEntries = array_map('str_getcsv', file(__DIR__.'/../../'.MANUALLY_MAINTAINED_METADATA_ABOUT_ONTOLOGIES_CSV));
+foreach ($csvFileEntries as $line => $entry) {
+    if (0 == $line) {
+        continue;
+    }
+
+    echo '.';
+
+    /** @var string|null */
+    $rdfFile = null;
+    // takes the first defined RDF file and checks it
+    foreach ([2, 3, 4, 5] as $key) {
+        if (isset($entry[$key]) && false === isEmpty($entry[$key])) {
+            $rdfFile = $entry[$key];
+            break;
+        }
+    }
+
+    if (isEmpty($rdfFile)) {
+        throw new Exception($entry[0].' has no related RDF File set');
+    } else {
+        if (urlIsAccessible($rdfFile, 30, 10)) {
+            // OK
+        } else {
+            $failingRdfFiles[] = [
+                'title' => $entry[0],
+                'rdf-file' => $rdfFile,
+            ];
+        }
+    }
+
+    sleep(1);
+}
+
+$failingRdfFilesWereFound = 0 < count($failingRdfFiles);
+if ($failingRdfFilesWereFound) {
+    echo PHP_EOL;
+    echo PHP_EOL;
+    echo 'The following RDF files are not accessible:';
+    echo PHP_EOL;
+    var_dump($failingRdfFiles);
+    echo PHP_EOL;
+    return 1;
+} else {
+    echo PHP_EOL;
+    echo PHP_EOL;
+
+    return 0;
+}

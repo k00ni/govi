@@ -1,0 +1,19 @@
+name: Check manually maintained metadata about ontologies
+
+on: [push, pull_request]
+
+jobs:
+  CI:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Set up Git repository
+      uses: actions/checkout@v3
+
+    - name: Install PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        ini-values: memory_limit=1G
+
+    - name: Check
+      run: scripts/bin/check-manually-maintained-metadata
