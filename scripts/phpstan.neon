@@ -17,7 +17,7 @@ parameters:
     parallel:
         maximumNumberOfProcesses: 2
 
-    tmpDir: ./cache
+    tmpDir: ./var/phpstan_cache
 
     reportUnmatchedIgnoredErrors: true
 

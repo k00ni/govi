@@ -158,6 +158,9 @@ function uncompressGzArchive(string $sourceFilepath, string $targetFilepath): vo
     }
 }
 
+/**
+ * @throws \Exception
+ */
 function urlIsAccessible(string $url, int $timeout = 5, int $maximumRedirects = 10): bool
 {
     $curl = new Curl();
