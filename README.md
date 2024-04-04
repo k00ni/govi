@@ -99,7 +99,7 @@ https://www.ebi.ac.uk/ols4/
 Related script: [scripts/bin/read-linked-open-vocabularies](scripts/bin/read-ontology-lookup-service)
 
 **Notes:**
-* Warning: Currently ignorign all ontologies with no `fileLocation` field set in ontology configuration
+* Warning: Currently ignoring all ontologies with no `fileLocation` field set in ontology configuration
 * ontology.uploaded is used for latest access
 
 ## FAQ
@@ -135,17 +135,17 @@ But if you wanna help out with one of the topics, feel free to open an issue or 
 **Objective:** Build a basic prototype to see if the idea is doable and brings any significant value
 
 * [x] Simple scripts to download, parse and read ontologies of interest and generate a CSV file in the end
-  * [x] include DBpedia Archivo: https://archivo.dbpedia.org/list
-  * [x] include LOV (Linked Open Vocabularies): https://lov.linkeddata.es/dataset/lov/vocabs
-    * [x] for latest access use http://purl.org/dc/terms/modified value
+* include ontology entries of the following services:
+  * [x] DBpedia Archivo: https://archivo.dbpedia.org/list
   * [x] Linked Open Vocabularies: https://lov.linkeddata.es/dataset/lov/
-  * [ ] include BioPortal: https://bioportal.bioontology.org/
+  * [x] Ontology Lookup Service: https://www.ebi.ac.uk/ols4/api/ontologies
+  * [x] BioPortal: https://bioportal.bioontology.org/
 * [x] provide a way to contribute meta data using Github Pull Requests (use CSV file as well) - see [manually-maintained-metadata-about-ontologies](./manually-maintained-metadata-about-ontologies.csv)
 * the following meta data are of interest:
-  * [x] URL to latest version of RDF/XML-, Turtle-, NTriples- or N3-file
-    * [x] enforce valid URLs, such as no blank nodes (_: at the beginning)
-  * [x] name / title
+  * [x] valid URL to latest version of RDF/XML-, Turtle-, NTriples- or N3-file
+  * [x] name
   * [x] date time of last check
+  * [x] data source info
 
 ### Version 0.2
 
