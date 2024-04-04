@@ -1,5 +1,6 @@
 cache
+composer.lock
 vendor
+.api_key_bioportal.php
 .~lock.*
 .php-cs-fixer.cache
-composer.lock

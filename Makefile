@@ -14,6 +14,7 @@ index:
 	scripts/bin/read-dbpedia-archivo
 	scripts/bin/read-linked-open-vocabularies
 	scripts/bin/read-ontology-lookup-service
+	scripts/bin/read-bioportal
 	scripts/bin/merge-in-manually-maintained-metadata
 	scripts/bin/write-index-csv
 

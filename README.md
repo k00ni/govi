@@ -64,6 +64,16 @@ As long as the portal is online everything is fine but as soon as it goes offlin
 
 ## Information on each source
 
+### BioPortal
+
+https://data.bioontology.org/documentation
+
+Related script: [scripts/bin/read-bioportal](scripts/bin/read-bioportal)
+
+**Notes:**
+* scripts tries frontend view of ontology first to get a RDF file, if no luck, it tries `ontology.links.download` (such as https://data.bioontology.org/ontologies/INFRARISK/download), because they come in non-RDF formats (e.g. obo)
+* further work is required to get more out of BioPortal (e.g. uncompress archives containing RDF data and check them)
+
 ### DBpedia Archivo
 
 https://archivo.dbpedia.org/list

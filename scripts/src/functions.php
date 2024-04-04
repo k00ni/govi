@@ -112,14 +112,11 @@ function loadQuadsIntoInMemoryStore(string $rdfFileUrl): InMemoryStoreSqlite|nul
     $rdfFileContent = sendCachedRequest($rdfFileUrl);
 
     $relevantQuads = [];
+    echo PHP_EOL;
+    echo PHP_EOL.'- loaded '.PHP_EOL;
     try {
         // parse a file
         $format = Format::guessFormat($rdfFileContent)?->getName();
-        // TODO: remove if clause after https://github.com/sweetrdf/quickRdfIo/pull/6 was merged
-        if ('rdfxml' == $format || null == $format) {
-            $format = 'xml';
-        }
-
         $iterator = Util::parse($rdfFileContent, new DataFactory(), $format);
         $i = 0;
         foreach ($iterator as $item) {
@@ -144,7 +141,7 @@ function loadQuadsIntoInMemoryStore(string $rdfFileUrl): InMemoryStoreSqlite|nul
  *
  * @throws \Psr\Cache\InvalidArgumentException
  */
-function sendCachedRequest(string $url, int $lifetimeInSec = 3600): string
+function sendCachedRequest(string $url, int $lifetimeInSec = 86400): string
 {
     $cache = new FilesystemAdapter('cached_request', $lifetimeInSec, __DIR__.'/../var');
 

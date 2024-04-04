@@ -7,12 +7,15 @@
 
 declare(strict_types=1);
 
+use EasyRdf\Format;
+
 use function App\isEmpty;
+use function App\sendCachedRequest;
 use function App\urlIsAccessible;
 
 require_once 'bootstrap.php';
 
-echo PHP_EOL.'Check availability of referenced RDF files ...'.PHP_EOL;
+echo PHP_EOL.'Check availability of referenced RDF files:'.PHP_EOL;
 
 $failingRdfFiles = [];
 
@@ -26,10 +29,18 @@ foreach ($csvFileEntries as $line => $entry) {
 
     /** @var string|null */
     $rdfFile = null;
+    /** @var string|null */
+    $format = null;
     // takes the first defined RDF file and checks it
-    foreach ([2, 3, 4, 5] as $key) {
+    foreach ([
+        2 => 'N3',
+        3 => 'ntriples',
+        4 => 'rdfxml',
+        5 => 'turtle'
+    ] as $key => $relatedFormat) {
         if (isset($entry[$key]) && false === isEmpty($entry[$key])) {
             $rdfFile = $entry[$key];
+            $format = $relatedFormat;
             break;
         }
     }
@@ -38,7 +49,15 @@ foreach ($csvFileEntries as $line => $entry) {
         throw new Exception($entry[0].' has no related RDF File set');
     } else {
         if (urlIsAccessible($rdfFile, 30, 10)) {
-            // OK
+            // URL accessible, check format
+            $content = sendCachedRequest($rdfFile);
+            $guessedFormat = Format::guessFormat($content)?->getName() ?? null;
+            if ($guessedFormat == $format || null == $guessedFormat) {
+                // OK
+            } else {
+                $msg = 'Formats differ: based on CSV its '.$format.', but guessFormat says '.$guessedFormat. ' > FILE: '.$rdfFile;
+                throw new Exception($msg);
+            }
         } else {
             $failingRdfFiles[] = [
                 'title' => $entry[0],
@@ -46,8 +65,6 @@ foreach ($csvFileEntries as $line => $entry) {
             ];
         }
     }
-
-    sleep(1);
 }
 
 $failingRdfFilesWereFound = 0 < count($failingRdfFiles);

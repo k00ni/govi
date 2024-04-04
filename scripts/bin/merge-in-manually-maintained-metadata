@@ -5,7 +5,6 @@ declare(strict_types=1);
 
 use App\IndexEntry;
 
-use function App\isUrl;
 use function App\storeTemporaryIndexIntoSQLiteFile;
 
 /**
@@ -42,7 +41,7 @@ foreach ($entries as $line => $row) {
 
     // check if ontology URI is already known
     $ontologyIsNotInSQLiteFileAlready = false === in_array($ontologyIri, $knownontologyIris);
-    if ($ontologyIsNotInSQLiteFileAlready && isUrl($ontologyIri)) {
+    if ($ontologyIsNotInSQLiteFileAlready) {
         $entry = new IndexEntry('Manually maintained', 'https://github.com/k00ni/govi');
         $entry->setOntologyTitle($row[0]);
         $entry->setontologyIri($ontologyIri);

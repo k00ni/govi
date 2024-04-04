@@ -49,17 +49,10 @@ class IndexEntry
         return $this->ontologyIri;
     }
 
-    /**
-     * @throws \Exception if ontologyIri is nota valid URL.
-     */
     public function setOntologyIri(string $ontologyIri): self
     {
-        if (isUrl($ontologyIri)) {
-            $this->ontologyIri = trim($ontologyIri);
-            return $this;
-        } else {
-            throw new Exception($ontologyIri.' is not a valid URL');
-        }
+        $this->ontologyIri = trim($ontologyIri);
+        return $this;
     }
 
     public function getLatestAccess(): string

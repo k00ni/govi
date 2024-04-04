@@ -22,5 +22,7 @@ $titleProperties = [
     'http://www.w3.org/2000/01/rdf-schema#label',
 ];
 
+$bioPortalApiKeyFile = ROOT_DIR_PATH.DIRECTORY_SEPARATOR.'scripts'.DIRECTORY_SEPARATOR.'.api_key_bioportal.php';
+
 // include vendor libraries
 require_once SCRIPTS_DIR_PATH.'vendor'.DIRECTORY_SEPARATOR.'autoload.php';

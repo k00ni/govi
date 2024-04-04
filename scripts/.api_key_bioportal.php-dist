@@ -1,0 +1,4 @@
+<?php
+
+// replace here with the API-key you got from https://bioportal.bioontology.org/account
+return 'here';
