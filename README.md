@@ -154,14 +154,12 @@ But if you wanna help out with one of the topics, feel free to open an issue or 
 * add further services:
   * [ ] https://obofoundry.org/
   * [ ] http://www.oegov.us/
-  * [ ] https://www.ebi.ac.uk/ols4
   * [ ] http://ontologydesignpatterns.org/wiki/Main\_Page
   * [ ] https://obofoundry.org/
   * [ ] https://github.com/linkeddata/ontology-archiver
+  * [ ] crawl Github repositories tagged with "ontology" etc.
 * [ ] harmonize datetime information for latest access (all UTC?)
 * [ ] add basic schema/ontology describing the fields in index.csv
-* [ ] check if owl:Ontology relation is found in source file (to make sure its an OWL ontology)
-* [ ] crawl Github repositories tagged with "ontology" etc.
 * [ ] add a way to manually provide entries via Github
 * [ ] Ping service: on update call a list of URLs to let them know that there was a change
 * [ ] generate statistics for each service read to build index.csv (contains number of entries etc.)
