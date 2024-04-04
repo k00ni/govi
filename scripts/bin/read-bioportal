@@ -9,6 +9,7 @@ use EasyRdf\Format;
 use function App\isEmpty;
 use function App\loadQuadsIntoInMemoryStore;
 use function App\sendCachedRequest;
+use function App\storeTemporaryIndexIntoSQLiteFile;
 
 /**
  * Read ontology information from BioPortals API:
@@ -103,9 +104,9 @@ foreach ($ontologies as $ontology) {
     }
 
     $temporaryIndex[] = $newEntry;
-
-    usleep(500);
 }
+
+storeTemporaryIndexIntoSQLiteFile($temporaryIndex);
 
 echo PHP_EOL.'done, '.count($temporaryIndex).' entries processed (TODO move to stats)';
 
