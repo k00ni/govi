@@ -29,7 +29,9 @@ class IndexEntry
         $this->sourceTitle = $sourceTitle;
         $this->sourceUrl = $sourceUrl;
 
-        $this->latestAccess = (new DateTime('now', new DateTimeZone('UTC')))->format('Y-m-d H:i:s');
+        // only date of the latest access
+        $now = (new DateTime('now', new DateTimeZone('UTC')));
+        $this->latestAccess = $now->format('Y-m-d').' 00:00:00';
     }
 
     public function getOntologyTitle(): ?string

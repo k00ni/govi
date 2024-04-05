@@ -17,9 +17,11 @@ define('SQLITE_FILE_PATH', SCRIPTS_DIR_PATH.'var'.DIRECTORY_SEPARATOR.'temporary
 
 // properties usually used to determine a title
 $titleProperties = [
+    'http://www.w3.org/2004/02/skos/core#prefLabel',
     'http://purl.org/dc/elements/1.1/title',
     'http://purl.org/dc/terms/title',
     'http://www.w3.org/2000/01/rdf-schema#label',
+    'http://xmlns.com/foaf/0.1/name',
 ];
 
 $bioPortalApiKeyFile = ROOT_DIR_PATH.DIRECTORY_SEPARATOR.'scripts'.DIRECTORY_SEPARATOR.'.api_key_bioportal.php';

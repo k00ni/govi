@@ -68,6 +68,10 @@ foreach ($ontologies as $ontology) {
         $newEntry->setOntologyIri($arr['uri']);
     }
 
+    // latest access (== latest_submission.released, but only year + month + day)
+    $released = new DateTime($arr['released']);
+    $newEntry->setLatestAccess($released->format('Y-m-d'));
+
     // get related RDF data
     $uiContent = sendCachedRequest($ontology['links']['ui']);
     $regex = "/href='(https:\/\/data\.bioontology\.org\/ontologies\/[a-zA-Z\-_]+\/download)\?apikey=.*?&(download_format=rdf)/smi";
