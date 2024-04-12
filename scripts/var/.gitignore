@@ -1,5 +1,5 @@
 *.*
 !.gitignore
-cached_request
-merge_cache
+downloaded_rdf_files/*
+extractor_*
 phpstan_cache
