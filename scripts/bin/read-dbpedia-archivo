@@ -13,9 +13,15 @@ declare(strict_types=1);
  */
 
 use App\IndexEntry;
+use quickRdf\DataFactory;
+use quickRdfIo\Util;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
+use function App\addFurtherMetadata;
 use function App\cleanTitle;
 use function App\isEmpty;
+use function App\loadQuadsIntoEasyRdfGraph;
+use function App\sendCachedRequest;
 use function App\storeTemporaryIndexIntoSQLiteFile;
 
 require 'bootstrap.php';
@@ -42,6 +48,8 @@ echo PHP_EOL.'found '.$numberOfOntologyEntries.' entries, processing ...';
  * 3. go through each ontology and build index
  */
 if (0 < $numberOfOntologyEntries) {
+    $dataFactory = new DataFactory();
+
     // this structure contains a temporary index which only holds data about received ontologies
     $temporaryIndex = [];
 
@@ -54,10 +62,13 @@ if (0 < $numberOfOntologyEntries) {
         // new entry in temporary index
         $newEntry = new IndexEntry('DBpedia Archivo', $url);
 
-        // title/name of ontology
-        preg_match('/<td>\s*\n*<a href="\/info\?o=.*?">(.*?)</sim', $ontologyEntryHtml, $title);
-        if (isset($title[1]) && false === isEmpty($title[1])) {
-            $newEntry->setOntologyTitle(cleanTitle($title[1]));
+        // info page + title/name of ontology
+        preg_match('/<td>\s*\n*<a href="(\/info\?o=.*?)">(.*?)</sim', $ontologyEntryHtml, $data);
+        if (isset($data[1]) && false === isEmpty($data[1])) {
+            $newEntry->setSourcePageUrl('https://archivo.dbpedia.org/'.$data[1]);
+        }
+        if (isset($data[1]) && false === isEmpty($data[2])) {
+            $newEntry->setOntologyTitle(cleanTitle($data[2]));
         } else {
             echo PHP_EOL.'no ontology title, so ignore entry with HTML: '.$ontologyEntryHtml;
 
@@ -70,7 +81,7 @@ if (0 < $numberOfOntologyEntries) {
         if (isset($uri[1]) && false === isEmpty($uri[1])) {
             $newEntry->setontologyIri($uri[1]);
 
-            if (isset($temporaryIndex[$newEntry->getontologyIri()])) {
+            if (isset($temporaryIndex[$newEntry->getOntologyIri()])) {
                 echo PHP_EOL.'- DUPLICATE: entry with ontology URI '.$uri[1].' already set!';
             }
         } else {
@@ -83,10 +94,10 @@ if (0 < $numberOfOntologyEntries) {
         // latest update date
         preg_match('/nt<\/a>.*?>([0-9]{4})\.([0-9]{2})\.([0-9]{2})/sim', $ontologyEntryHtml, $latest);
         if (isset($latest[1]) && false === isEmpty($latest[1])) {
-            $latestAccess = $latest[1].'-'.$latest[2].'-'.$latest[3].' 00:00:00';
+            $latestAccess = $latest[1].'-'.$latest[2].'-'.$latest[3];
             $newEntry->setLatestAccess($latestAccess);
         } else {
-            $message = 'Can not read latest timestamp field for '.$newEntry->getontologyIri().' // RAW HTML : '.$ontologyEntryHtml;
+            $message = 'Can not read latest timestamp field for '.$newEntry->getOntologyIri().' // RAW HTML : '.$ontologyEntryHtml;
             throw new Exception($message);
         }
 
@@ -95,12 +106,34 @@ if (0 < $numberOfOntologyEntries) {
         /*
          * latest OWL,TTL,... file
          */
-        $newEntry->setLatestNtFile('http://archivo.dbpedia.org/download?o='.$newEntry->getontologyIri().'&f=nt');
-        $newEntry->setLatestRdfXmlFile('http://archivo.dbpedia.org/download?o='.$newEntry->getontologyIri().'&f=owl');
-        $newEntry->setLatestTtlFile('http://archivo.dbpedia.org/download?o='.$newEntry->getontologyIri().'&f=ttl');
+        $iriUrlEncoded = urlencode($newEntry->getOntologyIri());
+        $newEntry->setLatestNtFile('http://archivo.dbpedia.org/download?o='.$iriUrlEncoded.'&f=nt');
+        $newEntry->setLatestRdfXmlFile('http://archivo.dbpedia.org/download?o='.$iriUrlEncoded.'&f=owl');
+        $newEntry->setLatestTtlFile('http://archivo.dbpedia.org/download?o='.$iriUrlEncoded.'&f=ttl');
+
+        // download TTL file to extract further meta data
+        try {
+            $graph = loadQuadsIntoEasyRdfGraph($newEntry->getLatestNtFile(), 'ntriples');
+        } catch (Exception $e) {
+            if (str_contains($e->getMessage(), 'CURLE_OPERATION_TIMEOUTED')) {
+                echo PHP_EOL.'Curl timeout for '.$newEntry->getLatestNtFile();
+                continue;
+            } else {
+                throw $e;
+            }
+        }
+
+        addFurtherMetadata($newEntry, $graph);
+        $graph = null;
 
         // store (use URI as key to avoid doublings)
-        $temporaryIndex[$newEntry->getontologyIri()] = $newEntry;
+        $temporaryIndex[$newEntry->getOntologyIri()] = $newEntry;
+
+        if (count($temporaryIndex) % 300 == 0) {
+            storeTemporaryIndexIntoSQLiteFile($temporaryIndex);
+            $temporaryIndex = [];
+            gc_collect_cycles();
+        }
     }
 } else {
     // nothing found or error

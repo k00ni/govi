@@ -6,15 +6,48 @@ namespace App;
 
 use Curl\Curl;
 use EasyRdf\Format;
+use EasyRdf\Graph;
 use Exception;
 use PDO;
 use PDOException;
 use quickRdf\DataFactory;
 use quickRdfIo\RdfIoException;
 use quickRdfIo\Util;
+use rdfInterface2easyRdf\AsEasyRdf;
 use sweetrdf\InMemoryStoreSqlite\Store\InMemoryStoreSqlite;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Contracts\Cache\ItemInterface;
+
+function addFurtherMetadata(IndexEntry $indexEntry, Graph $graph): void
+{
+    // short description / summary
+    $properties = ['skos:definition', 'dc11:description', 'dc:description', 'rdfs:comment'];
+    $valuesString = getLiteralValuesAsString($graph, $properties, $indexEntry->getOntologyIri());
+    $valuesString = strip_tags($valuesString); // remove HTML tags
+    $valuesString = preg_replace('/\n/', ' ', $valuesString); // remove newlines
+    $valuesString = str_replace(['"', "'"], '', $valuesString); // remove slashes, because of SQLite
+    $indexEntry->setSummary($valuesString);
+
+    // license
+    $properties = ['dc:license'];
+    $valuesString = getLiteralValuesAsString($graph, $properties, $indexEntry->getOntologyIri());
+    $indexEntry->setLicenseInformation($valuesString);
+
+    // authors
+    $properties = ['dc:creator', 'schema:author'];
+    $valuesString = getLiteralValuesAsString($graph, $properties, $indexEntry->getOntologyIri(), ',');
+    $indexEntry->setAuthors($valuesString);
+
+    // contributors
+    $properties = ['dc:contributor', 'schema:contributor'];
+    $valuesString = getLiteralValuesAsString($graph, $properties, $indexEntry->getOntologyIri(), ',');
+    $indexEntry->setContributors($valuesString);
+
+    // project page / homepage
+    $properties = ['foaf:homepage', 'schema:WebSite', 'schema:url'];
+    $valuesString = getLiteralValuesAsString($graph, $properties, $indexEntry->getOntologyIri());
+    $indexEntry->setProjectPage($valuesString);
+}
 
 /**
  * Removes certain characters from title string.
@@ -37,6 +70,28 @@ function cleanTitle(string $str): string
     $str = trim($str);
 
     return $str;
+}
+
+function getLiteralValuesAsString(
+    Graph $graph,
+    array $properties,
+    string $rootResourceIri,
+    string $delimiter = ' '
+): string {
+    $valuesString = '';
+
+    foreach ($properties as $prop) {
+        $values = $graph->resource($rootResourceIri)->allLiterals($prop, 'en');
+        if (0 == count($values)) {
+            // if not entries for english, try without a language
+            $values = $graph->resource($rootResourceIri)->allLiterals($prop);
+        }
+
+        $values = array_map(function($literal) { return $literal->getValue(); }, $values);
+        $valuesString .= implode($delimiter, $values);
+    }
+
+    return $valuesString;
 }
 
 /**
@@ -101,12 +156,63 @@ function isUrl(string $str): bool
 }
 
 /**
+ * Loads the content of a given RDF file into an EasyRdf Graph instance.
+ *
+ * Be aware: because some ontologies are over 1 GB+ in size, only first x triples are used,
+ *           which may result in incomplete meta data about the ontology.
+ */
+function loadQuadsIntoEasyRdfGraph(string $rdfFileUrl, string|null $format = null): Graph
+{
+    $maxAmountOfTriples = 1000;
+
+    $content = sendCachedRequest($rdfFileUrl);
+    if (isEmpty($format)) {
+        $format = Format::guessFormat($content)->getName();
+    }
+
+    try {
+        echo PHP_EOL.'Current: '.$rdfFileUrl.PHP_EOL;
+
+        /*
+         * use quickRdfIo's Util::parse
+         */
+        $iterator = Util::parse($content, new DataFactory(), $format);
+        $i = 0;
+        $list = [];
+        foreach ($iterator as $quad) {
+            $list[] = $quad;
+            if ($i++ > $maxAmountOfTriples) {
+                break;
+            }
+        }
+
+        $graph = AsEasyRdf::asEasyRdf($iterator);
+        $iterator = null;
+        return $graph;
+    } catch (RdfIoException $th) {
+        echo PHP_EOL.'WARN: quickRdfIo failed with >> '.$th->getMessage();
+        echo PHP_EOL.'- try raptor2-utils'.PHP_EOL;
+
+        /*
+         * use rapper command to read the RDF file and return nquads
+         */
+        $command = 'rapper -i '.$format .' -o ntriples '.$rdfFileUrl;
+        $nquads = (string) shell_exec($command);
+        // limit amount of entries
+        $triples = explode(PHP_EOL, $nquads);
+        $triples = array_slice($triples, 0, $maxAmountOfTriples);
+
+        return new Graph(null, implode(PHP_EOL, $triples), 'ntriples');
+    }
+}
+
+/**
  * @throws \Psr\Cache\InvalidArgumentException
  * @throws \quickRdfIo\RdfIoException
  */
 function loadQuadsIntoInMemoryStore(string $rdfFileUrl): InMemoryStoreSqlite|null
 {
-    $maxQuadAmount = 300;
+    $maxQuadAmount = 3000;
 
     // download file and read content
     $rdfFileContent = sendCachedRequest($rdfFileUrl);
@@ -139,29 +245,37 @@ function loadQuadsIntoInMemoryStore(string $rdfFileUrl): InMemoryStoreSqlite|nul
 /**
  * Cache responses for a while to reduce server load.
  *
+ * @throws \Exception if curl found an error
  * @throws \Psr\Cache\InvalidArgumentException
  */
-function sendCachedRequest(string $url, int $lifetimeInSec = 86400): string
+function sendCachedRequest(string $url): string
 {
-    $cache = new FilesystemAdapter('cached_request', $lifetimeInSec, __DIR__.'/../var');
+    $cache = new FilesystemAdapter('cached_request', 0, __DIR__.'/../var');
 
     $key = (string) preg_replace('/[\W]/', '_', $url);
 
     // ask cache for entry
     // if there isn't one, run HTTP request and return response content
     return $cache->get($key, function (ItemInterface $item) use ($url): string {
+        echo PHP_EOL;
+
         $curl = new Curl();
-        $curl->setConnectTimeout(30);
+
+        // timeout until conntected
+        $curl->setConnectTimeout(5);
+        // time of curl to execute
+        $curl->setTimeout(30);
+
         $curl->setMaximumRedirects(10);
         $curl->setOpt(CURLOPT_FOLLOWLOCATION, true); // follow redirects
         $curl->setOpt(CURLOPT_SSL_VERIFYPEER, false);
         $curl->setOpt(CURLOPT_SSL_VERIFYHOST, false);
 
-        // limit the size of downloaded file in case its file with GB of data
-        $rangeEnd = 1024 * 60; // 40 MB
-        $curl->setOpt(CURLOPT_HTTPHEADER, ['Range: bytes=0-'.$rangeEnd]);
-
         $curl->get($url);
+
+        if ($curl->isError()) {
+            throw new Exception('CURL error: '.$curl->getErrorMessage());
+        }
 
         // lazy approach: we dont care if link exists or not, just if it has parseable content
         return $curl->rawResponse;
@@ -182,6 +296,13 @@ function storeTemporaryIndexIntoSQLiteFile(array $temporaryIndex): void
     $db->exec('CREATE TABLE IF NOT EXISTS entry (
         ontology_uri TEXT PRIMARY KEY,
         ontology_title TEXT,
+        summary TEXT,
+        license_information TEXT,
+        authors TEXT,
+        contributors TEXT,
+        project_page TEXT,
+        source_page_url TEXT,
+        latest_json_ld_file TEXT,
         latest_n3_file TEXT,
         latest_ntriples_file TEXT,
         latest_rdfxml_file TEXT,
@@ -195,6 +316,13 @@ function storeTemporaryIndexIntoSQLiteFile(array $temporaryIndex): void
     $q = 'INSERT INTO entry (
         ontology_uri,
         ontology_title,
+        summary,
+        license_information,
+        authors,
+        contributors,
+        project_page,
+        source_page_url,
+        latest_json_ld_file,
         latest_n3_file,
         latest_ntriples_file,
         latest_rdfxml_file,
@@ -213,11 +341,20 @@ function storeTemporaryIndexIntoSQLiteFile(array $temporaryIndex): void
             $insertQ .= '"'.implode('","', [
                 $indexEntry->getOntologyIri(),
                 addslashes((string) $indexEntry->getOntologyTitle()),
+                addslashes((string) $indexEntry->getSummary()),
+                (string) $indexEntry->getLicenseInformation(),
+                addslashes((string) $indexEntry->getAuthors()),
+                addslashes((string) $indexEntry->getContributors()),
+                $indexEntry->getProjectPage(),
+                $indexEntry->getSourcePageUrl(),
+                // files
+                $indexEntry->getLatestJsonLdFile(),
                 $indexEntry->getLatestN3File(),
                 $indexEntry->getLatestNtFile(),
                 $indexEntry->getLatestRdfXmlFile(),
                 $indexEntry->getLatestTtlFile(),
                 $indexEntry->getLatestAccess(),
+                // source
                 $indexEntry->getSourceTitle(),
                 $indexEntry->getSourceUrl(),
             ]).'");';

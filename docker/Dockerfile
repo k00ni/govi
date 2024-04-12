@@ -2,7 +2,7 @@ FROM php:8.3-cli
 
 # install and setup required system library
 RUN apt-get update && apt-get install -y --no-install-recommends \
-        curl git gnupg libicu-dev libpng-dev libzip-dev nano net-tools sudo unzip wget zlib1g-dev
+        curl git gnupg libicu-dev libpng-dev libzip-dev nano net-tools raptor2-utils sudo unzip wget zlib1g-dev
 RUN docker-php-ext-install -j$(nproc) intl zip
 
 # install Composer globally (required to install PHP vendors)

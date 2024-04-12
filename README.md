@@ -146,6 +146,15 @@ But if you wanna help out with one of the topics, feel free to open an issue or 
   * [x] name
   * [x] date time of last check
   * [x] data source info
+  * [x] short description/summary
+  * [x] license
+  * [x] authors + contributors
+  * [x] project page / homepage
+  * [ ] data source url
+* [ ] check prior versions of an ontology to avoid adding the same ontology just with different versions
+  * [ ] http vs https
+  * [ ] / vs # at the end
+* [ ] mark entries if they contain SKOS entries
 
 ### Version 0.2
 
