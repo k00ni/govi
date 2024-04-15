@@ -3,12 +3,11 @@
 // paths
 define('ROOT_DIR_PATH', __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR);
 define('SCRIPTS_DIR_PATH', ROOT_DIR_PATH.'scripts'.DIRECTORY_SEPARATOR);
-define('INDEX_CSV_PATH', ROOT_DIR_PATH.'index.csv');
 
 // CSV
 define(
     'INDEX_CSV_HEAD_STRING',
-    '"ontology title","ontology iri","summary","authors","contributors","license information","project page","source page url","latest json-ld file","latest n3 file","latest ntriples file","latest rdf/xml file","latest turtle file","latest access","source title","source url"'
+    '"ontology title","ontology iri","summary","authors","contributors","license information","project page","source page","latest json-ld file","latest n3 file","latest ntriples file","latest rdf/xml file","latest turtle file","latest access","source title","source url"'
 );
 
 define('MANUALLY_MAINTAINED_METADATA_ABOUT_ONTOLOGIES_CSV', 'manually-maintained-metadata-about-ontologies.csv');

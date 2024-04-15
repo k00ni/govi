@@ -5,23 +5,32 @@ declare(strict_types=1);
 namespace App\Extractor;
 
 use App\IndexEntry;
-use EasyRdf\Graph;
 use Exception;
 use quickRdfIo\Util;
 
 use function App\isEmpty;
 use function App\uncompressGzArchive;
 
+/**
+ * Read ontology information from Linked Open Vocabularies:
+ *
+ * https://lov.linkeddata.es/dataset/lov/
+ */
 class LinkedOpenVocabularies extends AbstractExtractor
 {
     protected string $namespace = 'extractor_linked_open_vocabularies';
     protected string $lovN3Filepath = SCRIPTS_DIR_PATH.'var'.DIRECTORY_SEPARATOR.'lov.n3';
     private string $ontologyListUrl = 'https://lov.linkeddata.es/lov.n3.gz';
 
+    /**
+     * @throws \Exception
+     */
     public function run(): void
     {
         echo PHP_EOL;
-        echo 'Linked Open Vocabularies::run:';
+        echo '-------------------------------------------------';
+        echo PHP_EOL;
+        echo 'Linked Open Vocabularies - Extraction started ...';
         echo PHP_EOL;
 
         $ontologiesToProcess = $this->getOntologiesToProcess();
@@ -53,45 +62,56 @@ class LinkedOpenVocabularies extends AbstractExtractor
             $this->addFurtherMetadata($ontology, $graph);
 
             // get latest N3 file
-            $valuesString = $this->getLiteralValuesAsString($graph, ['dcat:distribution'], $ontology->getOntologyIri());
-            $valuesString = $this->cleanString($valuesString);
-            $ontology->setLatestN3File($valuesString);
-
-            $this->storeTemporaryIndexIntoSQLiteFile([$ontology]);
-        }
-
-        /*
-        $ontologyRelatedTriples = [];
-        $predicateWhitelist = ['http://purl.org/dc/terms/modified', 'http://www.w3.org/ns/dcat#distribution'];
-
-        // for performance reasons (dump file has over 200k triples), we only
-        // collect those which are relevant
-        foreach ($iterator as $quad) {
-            // found vocabulary entry
-            $s = $quad->getSubject()->getValue();
-            if (isset($ontologiesToProcess[$s]) && in_array($quad->getPredicate()->getValue(), $predicateWhitelist, true)) {
-                // determine object type
-                if ($quad->getObject() instanceof LiteralInterface) {
-                    $oType = 'uri';
-                } elseif ($quad->getObject() instanceof BlankNodeInterface) {
-                    $oType = 'bnode';
+            $values = $graph->resource($ontology->getOntologyIri())->allResources('dcat:distribution');
+            $n3Files = [];
+            foreach ($values as $value) {
+                // related object can be an URI or blank node
+                if (str_starts_with($value->getUri(), '_:')) {
+                    // ignore blank nodes
                 } else {
-                    $oType = 'literal';
+                    $n3Files[] = $value->getUri();
+                }
+            }
+            rsort($n3Files);
+
+            if (1 > count($n3Files)) {
+                echo PHP_EOL.'No N3 files found! Aborting ...';
+                continue;
+            }
+
+            // we take the first URL to be found
+            $ontology->setLatestN3File($n3Files[0]);
+
+            // read file to check if there are more meta data available
+            if (false == isEmpty($ontology->getLatestN3File()) && null != $ontology->getLatestN3File()) {
+                try {
+                    $fileHandle = $this->cache->getLocalFileResourceForFileUrl($ontology->getLatestN3File());
+                    if (false === is_resource($fileHandle)) {
+                        throw new Exception('Could not open related file for '.$ontology->getLatestN3File());
+                    }
+                } catch (\Throwable $th) {
+                    if (str_contains($th->getMessage(), 'HTTP/1.1 404 Not Found')) {
+                        echo PHP_EOL;
+                        echo PHP_EOL.$ontology->getLatestN3File().' not available: '.$th->getMessage();
+                        echo PHP_EOL;
+                        continue;
+                    } else {
+                        throw $th;
+                    }
                 }
 
-                $ontologyRelatedTriples[] = [
-                    's' => $quad->getSubject()->getValue(),
-                    's_type' => $quad->getSubject() instanceof BlankNodeInterface ? 'bnnode' : 'uri',
-                    'p' => $quad->getPredicate()->getValue(),
-                    'p_type' => $quad->getPredicate() instanceof BlankNodeInterface ? 'bnnode' : 'uri',
-                    'o' => $quad->getObject()->getValue(),
-                    'o_type' => $oType,
-                    'o_lang' => $quad->getObject() instanceof LiteralInterface ? $quad->getObject()->getLang() : '',
-                    'o_datatype' => $quad->getObject() instanceof LiteralInterface ? $quad->getObject()->getDatatype() : '',
-                ];
+                $ontologyGraph = $this->loadQuadsIntoEasyRdfGraph($fileHandle, $ontology->getLatestN3File(), 'n3');
+                fclose($fileHandle);
+
+                $this->addFurtherMetadata($ontology, $ontologyGraph);
             }
+
+            if (isEmpty($ontology->getLatestN3File())) {
+                throw new Exception('No related dcat:distribution found.');
+            }
+
+            $this->temporaryIndex->storeEntries([$ontology]);
         }
-        */
     }
 
     public function getPreparedIndexEntry(): IndexEntry
@@ -100,12 +120,15 @@ class LinkedOpenVocabularies extends AbstractExtractor
     }
 
     /**
-     * @return list<\App\IndexEntry>
+     * @return array<string,\App\IndexEntry>
+     *
+     * @throws \Exception
+     * @throws \PDOException
      */
     public function getOntologiesToProcess(): array
     {
         $url = 'https://lov.linkeddata.es/dataset/lov/api/v2/vocabulary/list';
-        $json = file_get_contents($url);
+        $json = (string) file_get_contents($url);
         $entriesArr = json_decode($json, true);
         $result = [];
 
@@ -115,9 +138,14 @@ class LinkedOpenVocabularies extends AbstractExtractor
             $title = $this->cleanString($arr['titles'][0]['value'], false);
             $entry->setOntologyTitle($title); // TODO: handle case: multiple title entries
 
-            $entry->setontologyIri($arr['uri']);
+            $entry->setOntologyIri($arr['uri']);
 
-            $result[$arr['uri']] = $entry;
+            if ($this->temporaryIndex->hasEntry($arr['uri'])) {
+                echo PHP_EOL.' - '.$arr['uri'].' already in index, skipping';
+                continue;
+            }
+
+            $result[(string) $entry->getOntologyIri()] = $entry;
         }
 
         return $result;

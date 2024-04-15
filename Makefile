@@ -11,12 +11,7 @@ composer:
 
 index:
 	rm -f scripts/var/temporary-index.db
-	scripts/bin/read-dbpedia-archivo
-	scripts/bin/read-linked-open-vocabularies
-	scripts/bin/read-ontology-lookup-service
-	scripts/bin/read-bioportal
-	scripts/bin/merge-in-manually-maintained-metadata
-	scripts/bin/write-index-csv
+	php scripts/bin/renew_index.php
 
 prepare:
 	cd scripts && vendor/bin/php-cs-fixer fix

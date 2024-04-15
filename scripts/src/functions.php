@@ -62,8 +62,10 @@ function isEmpty(string|null $input): bool
 /**
  * Very basic approach to check if a given string is an URL.
  */
-function isUrl(string $str): bool
+function isUrl(string|null $str): bool
 {
+    $str = (string) $str;
+
     return str_starts_with($str, 'http://')
         || str_starts_with($str, 'https://')
         || str_starts_with($str, 'www.');

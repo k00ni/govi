@@ -11,6 +11,9 @@ use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
 class Cache
 {
+    /**
+     * @var array<string,\Symfony\Component\Cache\Adapter\AbstractAdapter>
+     */
     private array $caches = [];
 
     private function getCacheInstance(string $namespace): AbstractAdapter
@@ -22,14 +25,24 @@ class Cache
         return $this->caches[$namespace];
     }
 
+    /**
+     * @return resource|false Return value of fopen(..., 'r')
+     *
+     * @throws \Exception in case of an CURL error
+     */
     public function getLocalFileResourceForFileUrl(string $fileUrl)
     {
         $filesFolder = __DIR__.'/../var/downloaded_rdf_files/';
 
+        // generate simplified filename for local storage
         $filename = preg_replace('/[^a-z0-9\-_]/ism', '_', $fileUrl);
+
         $filepath = $filesFolder.$filename;
 
+        echo PHP_EOL.$fileUrl.' >> '.$filename;
+
         if (false === file_exists($filepath)) {
+            echo ' ==> DOWNLOAD REQUIRED';
             $curl = new Curl();
 
             // timeout until conntected
@@ -51,6 +64,8 @@ class Cache
             if ($foundErrors) {
                 throw new Exception('Curl error for '.$fileUrl.' >>> '.$curl->getErrorMessage());
             }
+        } else {
+            echo ' ==> CACHE used';
         }
 
         return fopen($filepath, 'r');

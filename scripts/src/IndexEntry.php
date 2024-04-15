@@ -23,13 +23,13 @@ class IndexEntry
      * - https://archivo.dbpedia.org/info?o=http://ns.inria.fr/munc#
      * - https://bioportal.bioontology.org/ontologies/ICF
      */
-    private string|null $sourcePageUrl = null;
+    private string|null $sourcePage = null;
 
     private string|null $latestN3File = null;
     private string|null $latestNtFile = null;
     private string|null $latestRdfXmlFile = null;
     private string|null $latestJsonLdFile = null;
-    private string|null $latestTtlFile = null;
+    private string|null $latestTurtleFile = null;
 
     /**
      * Date of the latest access in format Y-m-d
@@ -45,7 +45,7 @@ class IndexEntry
 
         // only date of the latest access
         $now = (new DateTime('now', new DateTimeZone('UTC')));
-        $this->latestAccess = $now->format('Y-m-d').' 00:00:00';
+        $this->latestAccess = $now->format('Y-m-d');
     }
 
     public function getOntologyTitle(): string|null
@@ -53,11 +53,18 @@ class IndexEntry
         return $this->ontologyTitle;
     }
 
-    public function setOntologyTitle(string $ontologyTitle): self
+    /**
+     * @throws \Exception
+     */
+    public function setOntologyTitle(string|null $ontologyTitle): self
     {
-        $this->ontologyTitle = trim($ontologyTitle);
+        if (isUrl($ontologyTitle) || isEmpty($ontologyTitle)) {
+            $this->ontologyTitle = trim((string) $ontologyTitle);
 
-        return $this;
+            return $this;
+        } else {
+            throw new Exception('Ontology title can not be empty');
+        }
     }
 
     public function getOntologyIri(): string|null
@@ -65,11 +72,18 @@ class IndexEntry
         return $this->ontologyIri;
     }
 
-    public function setOntologyIri(string $ontologyIri): self
+    /**
+     * @throws \Exception
+     */
+    public function setOntologyIri(string|null $ontologyIri): self
     {
-        $this->ontologyIri = trim($ontologyIri);
+        if (isUrl($ontologyIri) || isEmpty($ontologyIri)) {
+            $this->ontologyIri = trim((string) $ontologyIri);
 
-        return $this;
+            return $this;
+        } else {
+            throw new Exception('Ontology IRI can not be empty');
+        }
     }
 
     public function getSummary(): string|null
@@ -79,7 +93,7 @@ class IndexEntry
 
     public function setSummary(string|null $summary): self
     {
-        $this->summary = trim($summary);
+        $this->summary = trim((string) $summary);
 
         return $this;
     }
@@ -91,7 +105,7 @@ class IndexEntry
 
     public function setLicenseInformation(string|null $licenseInformation): self
     {
-        $this->licenseInformation = trim($licenseInformation);
+        $this->licenseInformation = trim((string) $licenseInformation);
 
         return $this;
     }
@@ -103,7 +117,7 @@ class IndexEntry
 
     public function setAuthors(string|null $authors): self
     {
-        $this->authors = trim($authors);
+        $this->authors = trim((string) $authors);
 
         return $this;
     }
@@ -115,7 +129,7 @@ class IndexEntry
 
     public function setContributors(string|null $contributors): self
     {
-        $this->contributors = trim($contributors);
+        $this->contributors = trim((string) $contributors);
 
         return $this;
     }
@@ -127,19 +141,19 @@ class IndexEntry
 
     public function setProjectPage(string|null $projectPage): self
     {
-        $this->projectPage = trim($projectPage);
+        $this->projectPage = trim((string) $projectPage);
 
         return $this;
     }
 
-    public function getSourcePageUrl(): string|null
+    public function getSourcePage(): string|null
     {
-        return $this->sourcePageUrl;
+        return $this->sourcePage;
     }
 
-    public function setSourcePageUrl(string|null $sourcePageUrl): self
+    public function setSourcePage(string|null $sourcePage): self
     {
-        $this->sourcePageUrl = trim($sourcePageUrl);
+        $this->sourcePage = trim((string) $sourcePage);
 
         return $this;
     }
@@ -149,10 +163,10 @@ class IndexEntry
         return $this->latestAccess;
     }
 
-    public function setLatestAccess(string $latestAccess): self
+    public function setLatestAccess(string|null $latestAccess): self
     {
         // only save YYYY-MM-DD
-        $latestAccess = substr($latestAccess, 0, 10);
+        $latestAccess = substr((string) $latestAccess, 0, 10);
         $this->latestAccess = trim($latestAccess);
 
         return $this;
@@ -166,10 +180,10 @@ class IndexEntry
     /**
      * @throws \Exception if latestN3File is nota valid URL.
      */
-    public function setLatestN3File(string $latestN3File): self
+    public function setLatestN3File(string|null $latestN3File): self
     {
         if (isUrl($latestN3File) || isEmpty($latestN3File)) {
-            $this->latestN3File = trim($latestN3File);
+            $this->latestN3File = trim((string) $latestN3File);
 
             return $this;
         } else {
@@ -185,10 +199,10 @@ class IndexEntry
     /**
      * @throws \Exception if latestNtFile is nota valid URL.
      */
-    public function setLatestNtFile(string $latestNtFile): self
+    public function setLatestNtFile(string|null $latestNtFile): self
     {
         if (isUrl($latestNtFile) || isEmpty($latestNtFile)) {
-            $this->latestNtFile = trim($latestNtFile);
+            $this->latestNtFile = trim((string) $latestNtFile);
 
             return $this;
         } else {
@@ -204,32 +218,32 @@ class IndexEntry
     /**
      * @throws \Exception if latestRdfXmlFile is nota valid URL.
      */
-    public function setLatestRdfXmlFile(string $latestRdfXmlFile): self
+    public function setLatestRdfXmlFile(string|null $latestRdfXmlFile): self
     {
         if (isUrl($latestRdfXmlFile) || isEmpty($latestRdfXmlFile)) {
-            $this->latestRdfXmlFile = trim($latestRdfXmlFile);
+            $this->latestRdfXmlFile = trim((string) $latestRdfXmlFile);
             return $this;
         } else {
             throw new Exception($latestRdfXmlFile.' is not a valid URL');
         }
     }
 
-    public function getLatestTtlFile(): string|null
+    public function getLatestTurtleFile(): string|null
     {
-        return $this->latestTtlFile;
+        return $this->latestTurtleFile;
     }
 
     /**
-     * @throws \Exception if latestTtlFile is nota valid URL.
+     * @throws \Exception if latestTurtleFile is nota valid URL.
      */
-    public function setLatestTtlFile(string $latestTtlFile): self
+    public function setLatestTurtleFile(string|null $latestTurtleFile): self
     {
-        if (isUrl($latestTtlFile) || isEmpty($latestTtlFile)) {
-            $this->latestTtlFile = trim($latestTtlFile);
+        if (isUrl($latestTurtleFile) || isEmpty($latestTurtleFile)) {
+            $this->latestTurtleFile = trim((string) $latestTurtleFile);
 
             return $this;
         } else {
-            throw new Exception($latestTtlFile.' is not a valid URL');
+            throw new Exception($latestTurtleFile.' is not a valid URL');
         }
     }
 
@@ -241,10 +255,10 @@ class IndexEntry
     /**
      * @throws \Exception if latestJsonLdFile is nota valid URL.
      */
-    public function setLatestJsonLdFile(string|null $latestJsonLdFile)
+    public function setLatestJsonLdFile(string|null $latestJsonLdFile): self
     {
         if (isUrl($latestJsonLdFile) || isEmpty($latestJsonLdFile)) {
-            $this->latestJsonLdFile = trim($latestJsonLdFile);
+            $this->latestJsonLdFile = trim((string) $latestJsonLdFile);
 
             return $this;
         } else {
@@ -260,5 +274,24 @@ class IndexEntry
     public function getSourceUrl(): string
     {
         return $this->sourceUrl;
+    }
+
+    public function isValid(): bool
+    {
+        if (
+            isEmpty($this->getOntologyTitle())
+            || isEmpty($this->getOntologyIri())
+            || (
+                isEmpty($this->getLatestJsonLdFile())
+                && isEmpty($this->getLatestN3File())
+                && isEmpty($this->getLatestNtFile())
+                && isEmpty($this->getLatestRdfXmlFile())
+                && isEmpty($this->getLatestTurtleFile())
+            )
+        ) {
+            return false;
+        }
+
+        return true;
     }
 }

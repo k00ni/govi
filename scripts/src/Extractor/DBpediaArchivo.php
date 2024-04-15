@@ -9,38 +9,47 @@ use Exception;
 
 use function App\isEmpty;
 
+/**
+ * Read ontology information from:
+ *
+ * https://archivo.dbpedia.org/list
+ */
 class DBpediaArchivo extends AbstractExtractor
 {
     protected string $namespace = 'extractor_dbpedia_archivo';
     private string $ontologyListUrl = 'https://archivo.dbpedia.org/list';
 
+    /**
+     * @throws \Error
+     * @throws \Exception
+     */
     public function run(): void
     {
         echo PHP_EOL;
-        echo 'DBpediaArchivo::run:';
+        echo '----------------------------------------';
+        echo PHP_EOL;
+        echo 'DBpedia Archivo - Extraction started ...';
         echo PHP_EOL;
 
         foreach ($this->getOntologiesToProcess() as $indexEntry) {
             echo PHP_EOL;
-            $mem = number_format((memory_get_peak_usage(false) / 1024 / 1024), 2, ',', '.').' MB';
-            echo '------------------------------- '.$mem.' ----------------------------------';
+            echo '---------------------------------------------------------------------';
             echo PHP_EOL;
             echo 'Next: '.$indexEntry->getOntologyTitle();
             echo ' >> '.$indexEntry->getLatestNtFile();
 
-            $toBeIgnoredForNow = [
-                'PRotein Ontology',
-            ];
-            if (in_array($indexEntry->getOntologyTitle(), $toBeIgnoredForNow)) {
-                echo PHP_EOL.' - manual IGNORE, because they will run into timeout';
-                continue;
+            if (null === $indexEntry->getLatestNtFile() || isEmpty($indexEntry->getLatestNtFile())) {
+                throw new Exception('No ntriples file path set!');
             }
 
             // fill remaining metadata by downloading RDF file to extract further meta data
             try {
                 $fileHandle = $this->cache->getLocalFileResourceForFileUrl($indexEntry->getLatestNtFile());
+                if (false === is_resource($fileHandle)) {
+                    throw new Exception('Could not open related file for '.$indexEntry->getLatestNtFile());
+                }
+
                 $graph = $this->loadQuadsIntoEasyRdfGraph($fileHandle, $indexEntry->getLatestNtFile(), 'ntriples');
-                echo PHP_EOL.' - graph created';
             } catch (Exception $e) {
                 if (str_contains($e->getMessage(), 'CURLE_OPERATION_TIMEOUTED')) {
                     echo PHP_EOL.' - TIMEOUT, ignored';
@@ -54,10 +63,9 @@ class DBpediaArchivo extends AbstractExtractor
             }
 
             $this->addFurtherMetadata($indexEntry, $graph);
-            echo PHP_EOL.' - metadata added';
-            $graph = null;
+            fclose($fileHandle);
 
-            $this->storeTemporaryIndexIntoSQLiteFile([$indexEntry]);
+            $this->temporaryIndex->storeEntries([$indexEntry]);
         }
     }
 
@@ -70,11 +78,13 @@ class DBpediaArchivo extends AbstractExtractor
      * Ask DBpedia Archivo for the complete list of ontologies.
      *
      * @return list<\App\IndexEntry>
+     *
+     * @throws \Exception
      */
     public function getOntologiesToProcess(): array
     {
         $result = [];
-        $html = file_get_contents($this->ontologyListUrl);
+        $html = (string) file_get_contents($this->ontologyListUrl);
 
         $numberOfOntologyEntries = preg_match_all('/<tr>(.*?)<\/tr>/sim', $html, $ontologyEntries);
 
@@ -91,7 +101,7 @@ class DBpediaArchivo extends AbstractExtractor
                 // info page + title/name of ontology
                 preg_match('/<td>\s*\n*<a href="(\/info\?o=.*?)">(.*?)</sim', $ontologyEntryHtml, $data);
                 if (isset($data[1]) && false === isEmpty($data[1])) {
-                    $newEntry->setSourcePageUrl('https://archivo.dbpedia.org/'.$data[1]);
+                    $newEntry->setSourcePage('https://archivo.dbpedia.org/'.$data[1]);
                 }
                 if (isset($data[1]) && false === isEmpty($data[2])) {
                     $newEntry->setOntologyTitle($this->cleanString($data[2]));
@@ -105,10 +115,10 @@ class DBpediaArchivo extends AbstractExtractor
                 // URI of ontology
                 preg_match('/<td>\s*<a href="\/info\?o=(.*?)"/sim', $ontologyEntryHtml, $uri);
                 if (isset($uri[1]) && false === isEmpty($uri[1])) {
-                    $newEntry->setontologyIri($uri[1]);
+                    $newEntry->setOntologyIri($uri[1]);
 
                     // ignore entire entry if ontology is already known
-                    if ($this->hasOntology($newEntry->getOntologyIri())) {
+                    if ($this->temporaryIndex->hasEntry((string) $newEntry->getOntologyIri())) {
                         echo PHP_EOL.'IGNORE: already in temporary index > '.$newEntry->getOntologyTitle();
                         echo ' >> '. $newEntry->getOntologyIri();
                         continue;
@@ -134,10 +144,10 @@ class DBpediaArchivo extends AbstractExtractor
                 /*
                  * latest OWL,TTL,... file
                  */
-                $iriUrlEncoded = urlencode($newEntry->getOntologyIri());
+                $iriUrlEncoded = urlencode((string) $newEntry->getOntologyIri());
                 $newEntry->setLatestNtFile('http://archivo.dbpedia.org/download?o='.$iriUrlEncoded.'&f=nt');
                 $newEntry->setLatestRdfXmlFile('http://archivo.dbpedia.org/download?o='.$iriUrlEncoded.'&f=owl');
-                $newEntry->setLatestTtlFile('http://archivo.dbpedia.org/download?o='.$iriUrlEncoded.'&f=ttl');
+                $newEntry->setLatestTurtleFile('http://archivo.dbpedia.org/download?o='.$iriUrlEncoded.'&f=ttl');
 
                 $result[] = $newEntry;
             }
