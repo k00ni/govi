@@ -100,7 +100,8 @@ class LinkedOpenVocabularies extends AbstractExtractor
                     }
                 }
 
-                $ontologyGraph = $this->loadQuadsIntoEasyRdfGraph($fileHandle, $ontology->getLatestN3File(), 'n3');
+                $localFilePath = $this->cache->getCachedFilePathForFileUrl($ontology->getLatestN3File());
+                $ontologyGraph = $this->loadQuadsIntoEasyRdfGraph($fileHandle, $localFilePath);
                 fclose($fileHandle);
 
                 $this->addFurtherMetadata($ontology, $ontologyGraph);
@@ -110,7 +111,11 @@ class LinkedOpenVocabularies extends AbstractExtractor
                 throw new Exception('No related dcat:distribution found.');
             }
 
-            $this->temporaryIndex->storeEntries([$ontology]);
+            if ($this->ontologyFileContainsElementsOfCertainTypes($graph)) {
+                $this->temporaryIndex->storeEntries([$ontology]);
+            } else {
+                throw new Exception('File '.$localFilePath.' does not contain any ontology related instances');
+            }
         }
     }
 

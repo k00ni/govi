@@ -49,7 +49,9 @@ class DBpediaArchivo extends AbstractExtractor
                     throw new Exception('Could not open related file for '.$indexEntry->getLatestNtFile());
                 }
 
-                $graph = $this->loadQuadsIntoEasyRdfGraph($fileHandle, $indexEntry->getLatestNtFile(), 'ntriples');
+                $localFilePath = $this->cache->getCachedFilePathForFileUrl($indexEntry->getLatestNtFile());
+                $graph = $this->loadQuadsIntoEasyRdfGraph($fileHandle, $localFilePath);
+                fclose($fileHandle);
             } catch (Exception $e) {
                 if (str_contains($e->getMessage(), 'CURLE_OPERATION_TIMEOUTED')) {
                     echo PHP_EOL.' - TIMEOUT, ignored';
@@ -62,10 +64,12 @@ class DBpediaArchivo extends AbstractExtractor
                 }
             }
 
-            $this->addFurtherMetadata($indexEntry, $graph);
-            fclose($fileHandle);
-
-            $this->temporaryIndex->storeEntries([$indexEntry]);
+            if ($this->ontologyFileContainsElementsOfCertainTypes($graph)) {
+                $this->addFurtherMetadata($indexEntry, $graph);
+                $this->temporaryIndex->storeEntries([$indexEntry]);
+            } else {
+                throw new Exception('File '.$localFilePath.' does not contain any ontology related instances');
+            }
         }
     }
 
@@ -101,7 +105,7 @@ class DBpediaArchivo extends AbstractExtractor
                 // info page + title/name of ontology
                 preg_match('/<td>\s*\n*<a href="(\/info\?o=.*?)">(.*?)</sim', $ontologyEntryHtml, $data);
                 if (isset($data[1]) && false === isEmpty($data[1])) {
-                    $newEntry->setSourcePage('https://archivo.dbpedia.org/'.$data[1]);
+                    $newEntry->setSourcePage('https://archivo.dbpedia.org'.$data[1]);
                 }
                 if (isset($data[1]) && false === isEmpty($data[2])) {
                     $newEntry->setOntologyTitle($this->cleanString($data[2]));

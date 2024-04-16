@@ -128,7 +128,8 @@ class OntologyLookupService extends AbstractExtractor
                     }
 
                     $format = $this->guessFormatOnFile($ontologyFileLocation);
-                    $graph = $this->loadQuadsIntoEasyRdfGraph($fileHandle, $ontologyFileLocation, $format);
+                    $localFilePath = $this->cache->getCachedFilePathForFileUrl($ontologyFileLocation);
+                    $graph = $this->loadQuadsIntoEasyRdfGraph($fileHandle, $localFilePath);
                     fclose($fileHandle);
 
                     // if title is empty, try to load file and get it this way
@@ -152,8 +153,6 @@ class OntologyLookupService extends AbstractExtractor
                         $newEntry->setOntologyTitle($ontology['config']['title']);
                     }
 
-                    $this->addFurtherMetadata($newEntry, $graph);
-
                     // set latest access
                     $uploaded = new DateTime($ontology['updated'], new DateTimeZone('UTC'));
                     $newEntry->setLatestAccess($uploaded->format('Y-m-d'));
@@ -171,7 +170,12 @@ class OntologyLookupService extends AbstractExtractor
                         throw new Exception('Unknown file format ('.$format.') for '.$ontologyFileLocation);
                     }
 
-                    $this->temporaryIndex->storeEntries([$newEntry]);
+                    if ($this->ontologyFileContainsElementsOfCertainTypes($graph)) {
+                        $this->addFurtherMetadata($newEntry, $graph);
+                        $this->temporaryIndex->storeEntries([$ontology]);
+                    } else {
+                        throw new Exception('File '.$localFilePath.' does not contain any ontology related instances');
+                    }
                 }
             }
         } else {

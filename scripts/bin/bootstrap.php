@@ -23,7 +23,7 @@ $titleProperties = [
     'http://xmlns.com/foaf/0.1/name',
 ];
 
-$bioPortalApiKeyFile = ROOT_DIR_PATH.DIRECTORY_SEPARATOR.'scripts'.DIRECTORY_SEPARATOR.'.api_key_bioportal.php';
+define('BIOPORTAL_API_KEY_FILE', ROOT_DIR_PATH.DIRECTORY_SEPARATOR.'scripts'.DIRECTORY_SEPARATOR.'.api_key_bioportal.php');
 
 // include vendor libraries
 require_once SCRIPTS_DIR_PATH.'vendor'.DIRECTORY_SEPARATOR.'autoload.php';

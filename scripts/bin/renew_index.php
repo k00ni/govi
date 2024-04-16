@@ -21,6 +21,8 @@ $temporaryIndex = new TemporaryIndex();
 (new LinkedOpenVocabularies($cache, $dataFactory, $temporaryIndex))->run();
 (new DBpediaArchivo($cache, $dataFactory, $temporaryIndex))->run();
 (new OntologyLookupService($cache, $dataFactory, $temporaryIndex))->run();
+(new BioPortal($cache, $dataFactory, $temporaryIndex))->run();
+return;
 
 // finalize temporary index and write index.csv
 (new MergeInManuallyMaintainedMetadata($cache, $dataFactory, $temporaryIndex))->run();

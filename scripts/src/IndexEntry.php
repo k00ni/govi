@@ -58,7 +58,7 @@ class IndexEntry
      */
     public function setOntologyTitle(string|null $ontologyTitle): self
     {
-        if (isUrl($ontologyTitle) || isEmpty($ontologyTitle)) {
+        if (false === isEmpty($ontologyTitle)) {
             $this->ontologyTitle = trim((string) $ontologyTitle);
 
             return $this;
@@ -77,7 +77,7 @@ class IndexEntry
      */
     public function setOntologyIri(string|null $ontologyIri): self
     {
-        if (isUrl($ontologyIri) || isEmpty($ontologyIri)) {
+        if (false === isEmpty($ontologyIri)) {
             $this->ontologyIri = trim((string) $ontologyIri);
 
             return $this;

@@ -9,10 +9,11 @@ You can find the index file here: [**index.csv**](./index.csv) (**3000+** ontolo
 
 ### Requirements and rules for an ontology-entry in the index
 
-An RDF ontology/vocabulary is part of the index if it meets the following requirements:
+An RDF ontology / vocabulary is part of the index if it meets the following criteria:
 * non-empty, valid title
-* non-empty, valid URI
+* non-empty, valid IRI
 * at least one valid URL to a RDF file
+  * at least one RDFS/OWL class is defined or at least one instance of owl:Ontology is found
 
 If an entry is part of multiple sources (e.g. LOV and DBpedia Archivo), the one which appears first is taken.
 
@@ -150,11 +151,7 @@ But if you wanna help out with one of the topics, feel free to open an issue or 
   * [x] license
   * [x] authors + contributors
   * [x] project page / homepage
-  * [ ] data source url
-* [ ] check prior versions of an ontology to avoid adding the same ontology just with different versions
-  * [ ] http vs https
-  * [ ] / vs # at the end
-* [ ] mark entries if they contain SKOS entries
+  * [x] data source url
 
 ### Version 0.2
 
@@ -164,7 +161,6 @@ But if you wanna help out with one of the topics, feel free to open an issue or 
   * [ ] https://obofoundry.org/
   * [ ] http://www.oegov.us/
   * [ ] http://ontologydesignpatterns.org/wiki/Main\_Page
-  * [ ] https://obofoundry.org/
   * [ ] https://github.com/linkeddata/ontology-archiver
   * [ ] crawl Github repositories tagged with "ontology" etc.
 * [ ] harmonize datetime information for latest access (all UTC?)
@@ -172,6 +168,10 @@ But if you wanna help out with one of the topics, feel free to open an issue or 
 * [ ] add a way to manually provide entries via Github
 * [ ] Ping service: on update call a list of URLs to let them know that there was a change
 * [ ] generate statistics for each service read to build index.csv (contains number of entries etc.)
+* [ ] check prior versions of an ontology to avoid adding the same ontology just with different versions
+  * [ ] http vs https
+  * [ ] / vs # at the end
+* [ ] mark entries if they contain SKOS entries
 
 ## License
 

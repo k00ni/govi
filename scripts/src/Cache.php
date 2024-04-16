@@ -16,6 +16,8 @@ class Cache
      */
     private array $caches = [];
 
+    private string $filesFolder = __DIR__.'/../var/downloaded_rdf_files/';
+
     private function getCacheInstance(string $namespace): AbstractAdapter
     {
         if (false === isset($this->caches[$namespace])) {
@@ -25,6 +27,26 @@ class Cache
         return $this->caches[$namespace];
     }
 
+    private function createSimplifiedFilename(string $fileUrl): string
+    {
+        return preg_replace('/[^a-z0-9\-_]/ism', '_', $fileUrl);
+    }
+
+    /**
+     * @return non-empty-string
+     */
+    public function getCachedFilePathForFileUrl(string $fileUrl): string
+    {
+        $fileRes = $this->getLocalFileResourceForFileUrl($fileUrl);
+
+        if (is_resource($fileRes)) {
+            // generate simplified filename for local storage
+            return $this->filesFolder.$this->createSimplifiedFilename($fileUrl);
+        } else {
+            throw new Exception('Got no file resource for '.$fileUrl);
+        }
+    }
+
     /**
      * @return resource|false Return value of fopen(..., 'r')
      *
@@ -32,12 +54,8 @@ class Cache
      */
     public function getLocalFileResourceForFileUrl(string $fileUrl)
     {
-        $filesFolder = __DIR__.'/../var/downloaded_rdf_files/';
-
-        // generate simplified filename for local storage
-        $filename = preg_replace('/[^a-z0-9\-_]/ism', '_', $fileUrl);
-
-        $filepath = $filesFolder.$filename;
+        $filename = $this->createSimplifiedFilename($fileUrl);
+        $filepath = $this->filesFolder.$filename;
 
         echo PHP_EOL.$fileUrl.' >> '.$filename;
 
@@ -80,7 +98,7 @@ class Cache
     public function sendCachedRequest(string $url, string $namespace): string
     {
         $cache = $this->getCacheInstance($namespace);
-        $key = (string) preg_replace('/[\W]/', '_', $url);
+        $key = $this->createSimplifiedFilename($url);
 
         // ask cache for entry
         // if there isn't one, run HTTP request and return response content

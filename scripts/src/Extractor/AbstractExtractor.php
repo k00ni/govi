@@ -55,7 +55,13 @@ abstract class AbstractExtractor
     public function addFurtherMetadata(IndexEntry $indexEntry, Graph $graph): void
     {
         // short description / summary
-        $properties = ['skos:definition', 'dc11:description', 'dc:description', 'rdfs:comment'];
+        $properties = [
+            'skos:definition',
+            'dc11:description',
+            'dc:description',
+            'rdfs:comment',
+            'schema:description',
+        ];
         $valuesString = $this->getLiteralValuesAsString($graph, $properties, (string) $indexEntry->getOntologyIri());
         $valuesString = $this->cleanString($valuesString);
         if (false === isEmpty($valuesString)) {
@@ -64,7 +70,7 @@ abstract class AbstractExtractor
 
         // license
         $valuesString = null;
-        foreach (['dc:license', 'dc11:rights'] as $prop) {
+        foreach (['dc:license', 'dc11:rights', 'schema:license'] as $prop) {
             $valuesString = $this->getLiteralValuesAsString($graph, [$prop], (string) $indexEntry->getOntologyIri(), ' ', true);
             $valuesString = $this->getAlignedLicenseInformation($valuesString);
 
@@ -93,7 +99,7 @@ abstract class AbstractExtractor
         }
 
         // project page / homepage
-        $properties = ['foaf:homepage', 'schema:WebSite', 'schema:url'];
+        $properties = ['foaf:homepage', 'schema:WebSite', 'schema:url', 'rdfs:seeAlso'];
         $valuesString = $this->getLiteralValuesAsString($graph, $properties, (string) $indexEntry->getOntologyIri());
         $valuesString = $this->cleanString($valuesString);
         if (false === isEmpty($valuesString)) {
@@ -103,7 +109,7 @@ abstract class AbstractExtractor
         /*
          * latest access (latest file)
          */
-        $properties = ['dc:modified', 'dc11:modified'];
+        $properties = ['dc:modified', 'dc11:modified', 'schema:dateModified'];
         foreach ($properties as $prop) {
             $values = $graph->resource($indexEntry->getOntologyIri())->allLiterals($prop);
 
@@ -111,7 +117,7 @@ abstract class AbstractExtractor
             $values = array_map(function ($value) {
                 if ($value instanceof DateTime || $value instanceof Date) {
                     return $value->format('Y-m-d');
-                } else {
+                } elseif(1 === preg_match('/[0-9]{4}\-[0-9]{2}\-[0-9]{4}/', $value->getValue())) {
                     return $value->getValue();
                 }
             }, $values);
@@ -192,34 +198,6 @@ abstract class AbstractExtractor
         }
 
         return $valuesString;
-    }
-
-    /**
-     * @param non-empty-string $fileUrl
-     *
-     * @throws \Exception
-     */
-    public function guessFormatOnFile(string $fileUrl): string|null
-    {
-        $fileHandle = $this->cache->getLocalFileResourceForFileUrl($fileUrl);
-        if (false === is_resource($fileHandle)) {
-            throw new Exception('Could not open related file for '.$fileUrl);
-        }
-
-        $lengthInMb = 1024 * 100;
-        $str = (string) fread($fileHandle, $lengthInMb);
-
-        fclose($fileHandle);
-
-        $format = Format::guessFormat($str)?->getName() ?? null;
-        if (null == $format) {
-            // it only uses the first 1024 bytes, ... try with more bytes
-            if (str_contains($str, '<rdf:')) {
-                $format = 'rdfxml';
-            }
-        }
-
-        return $format;
     }
 
     /**
@@ -329,6 +307,47 @@ abstract class AbstractExtractor
     }
 
     /**
+     * @param non-empty-string $fileUrl
+     *
+     * @throws \Exception
+     */
+    public function guessFormatOnFile(string $fileUrl): string|null
+    {
+        try {
+            $fileHandle = $this->cache->getLocalFileResourceForFileUrl($fileUrl);
+        } catch (Throwable $th) {
+            if (
+                str_contains($th->getMessage(), 'HTTP/1.1 403 Forbidden')
+                || str_contains($th->getMessage(), 'HTTP/1.1 504 Gateway Time-out')
+            ) {
+                echo PHP_EOL.$th->getMessage();
+                return null;
+            } else {
+                throw $th;
+            }
+        }
+
+        if (false === is_resource($fileHandle)) {
+            throw new Exception('Could not open related file for '.$fileUrl);
+        }
+
+        $lengthInMb = 1024 * 100;
+        $str = (string) fread($fileHandle, $lengthInMb);
+
+        fclose($fileHandle);
+
+        $format = Format::guessFormat($str)?->getName() ?? null;
+        if (null == $format) {
+            // it only uses the first 1024 bytes, ... try with more bytes
+            if (str_contains($str, '<rdf:')) {
+                $format = 'rdfxml';
+            }
+        }
+
+        return $format;
+    }
+
+    /**
      * Loads the content of a given RDF file into an EasyRdf Graph instance.
      *
      * Be aware: because some ontologies are over 1 GB+ in size, only first x triples are used,
@@ -338,12 +357,9 @@ abstract class AbstractExtractor
      *
      * @throws \Throwable
      */
-    protected function loadQuadsIntoEasyRdfGraph(
-        $fileHandle,
-        string $rdfFileUrl,
-        string|null $format = null
-    ): Graph {
-        $maxAmountOfTriples = 10000;
+    protected function loadQuadsIntoEasyRdfGraph($fileHandle, string $localFilePath): Graph
+    {
+        $maxAmountOfTriples = 50000;
 
         try {
             /*
@@ -351,7 +367,7 @@ abstract class AbstractExtractor
              */
             $i = 0;
             $list = [];
-            foreach (Util::parse($fileHandle, $this->dataFactory, $format) as $quad) {
+            foreach (Util::parse($fileHandle, $this->dataFactory) as $quad) {
                 $list[] = $quad;
                 if ($i++ > $maxAmountOfTriples) {
                     break;
@@ -364,18 +380,11 @@ abstract class AbstractExtractor
                 || str_contains($th->getMessage(), 'on line')
             ) {
                 echo PHP_EOL.' - quickRdfIo failed, trying rapper'.PHP_EOL;
-                /*
-                 * use rapper command to read the RDF file and return nquads
-                 */
-                if (isEmpty($format)) {
-                    // FYI: https://librdf.org/raptor/rapper.html
-                    $format = '--guess';
-                } else {
-                    $format = '-i '.substr((string) $format, 0, 20);
-                }
 
-                $command = 'rapper '.$format.' -o ntriples '.$rdfFileUrl;
+                // build and execute command using system shell
+                $command = 'rapper --guess -o ntriples '.$localFilePath;
                 $nquads = (string) shell_exec($command);
+
                 // limit amount of entries
                 $triples = explode(PHP_EOL, $nquads);
                 $triples = array_slice($triples, 0, $maxAmountOfTriples);
@@ -385,5 +394,17 @@ abstract class AbstractExtractor
                 throw $th;
             }
         }
+    }
+
+    /**
+     * Checks if ontology file contains elements of a certain type.
+     */
+    protected function ontologyFileContainsElementsOfCertainTypes(Graph $graph): bool
+    {
+        return
+            0 < count($graph->allOfType('owl:Ontology'))
+            || 0 < count($graph->allOfType('owl:Class'))
+            || 0 < count($graph->allOfType('rdfs:Class'))
+        ;
     }
 }
