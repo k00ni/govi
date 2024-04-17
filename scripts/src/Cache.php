@@ -29,11 +29,13 @@ class Cache
 
     private function createSimplifiedFilename(string $fileUrl): string
     {
-        return preg_replace('/[^a-z0-9\-_]/ism', '_', $fileUrl);
+        return (string) preg_replace('/[^a-z0-9\-_]/ism', '_', $fileUrl);
     }
 
     /**
      * @return non-empty-string
+     *
+     * @throws \Exception
      */
     public function getCachedFilePathForFileUrl(string $fileUrl): string
     {
@@ -41,7 +43,9 @@ class Cache
 
         if (is_resource($fileRes)) {
             // generate simplified filename for local storage
-            return $this->filesFolder.$this->createSimplifiedFilename($fileUrl);
+            /** @var non-empty-string */
+            $result = $this->filesFolder.$this->createSimplifiedFilename($fileUrl);
+            return $result;
         } else {
             throw new Exception('Got no file resource for '.$fileUrl);
         }
@@ -66,7 +70,7 @@ class Cache
             // timeout until conntected
             $curl->setConnectTimeout(5);
             // time of curl to execute (seconds)
-            $curl->setTimeout(300);
+            $curl->setTimeout(3000);
 
             $curl->setMaximumRedirects(10);
             $curl->setOpt(CURLOPT_FOLLOWLOCATION, true); // follow redirects
@@ -108,7 +112,7 @@ class Cache
             // timeout until conntected
             $curl->setConnectTimeout(5);
             // time of curl to execute
-            $curl->setTimeout(300);
+            $curl->setTimeout(3000);
 
             $curl->setMaximumRedirects(10);
             $curl->setOpt(CURLOPT_FOLLOWLOCATION, true); // follow redirects

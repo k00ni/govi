@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Extractor;
 
+use App\Graph;
 use App\IndexEntry;
 use Exception;
 use quickRdfIo\Util;
@@ -54,7 +55,11 @@ class LinkedOpenVocabularies extends AbstractExtractor
         $command = 'rapper -i turtle -o ntriples '.$this->lovN3Filepath;
         $nquads = (string) shell_exec($command);
         $iterator = Util::parse($nquads, $this->dataFactory, 'turtle');
-        $graph = $this->generateEasyRdfGraphForQuadList($iterator);
+        $list = [];
+        foreach ($iterator as $quad) {
+            $list[] = $quad;
+        }
+        $graph = new Graph($list);
 
         foreach ($ontologiesToProcess as $ontology) {
             echo PHP_EOL;
@@ -62,14 +67,14 @@ class LinkedOpenVocabularies extends AbstractExtractor
             $this->addFurtherMetadata($ontology, $graph);
 
             // get latest N3 file
-            $values = $graph->resource($ontology->getOntologyIri())->allResources('dcat:distribution');
             $n3Files = [];
-            foreach ($values as $value) {
+            foreach ($graph->getPropertyValues((string) $ontology->getOntologyIri(), 'dcat:distribution') as $value) {
                 // related object can be an URI or blank node
-                if (str_starts_with($value->getUri(), '_:')) {
+                if (str_starts_with($value, '_:')) {
                     // ignore blank nodes
+                    echo PHP_EOL.' - ignore blank nodes'.PHP_EOL;
                 } else {
-                    $n3Files[] = $value->getUri();
+                    $n3Files[] = $value;
                 }
             }
             rsort($n3Files);
@@ -81,6 +86,9 @@ class LinkedOpenVocabularies extends AbstractExtractor
 
             // we take the first URL to be found
             $ontology->setLatestN3File($n3Files[0]);
+
+            $localFilePath = null;
+            $ontologyGraph = new Graph([]);
 
             // read file to check if there are more meta data available
             if (false == isEmpty($ontology->getLatestN3File()) && null != $ontology->getLatestN3File()) {
@@ -101,7 +109,7 @@ class LinkedOpenVocabularies extends AbstractExtractor
                 }
 
                 $localFilePath = $this->cache->getCachedFilePathForFileUrl($ontology->getLatestN3File());
-                $ontologyGraph = $this->loadQuadsIntoEasyRdfGraph($fileHandle, $localFilePath);
+                $ontologyGraph = $this->loadQuadsIntoGraph($fileHandle, $localFilePath, 'n3');
                 fclose($fileHandle);
 
                 $this->addFurtherMetadata($ontology, $ontologyGraph);
@@ -111,10 +119,12 @@ class LinkedOpenVocabularies extends AbstractExtractor
                 throw new Exception('No related dcat:distribution found.');
             }
 
-            if ($this->ontologyFileContainsElementsOfCertainTypes($graph)) {
+            if ($this->ontologyFileContainsElementsOfCertainTypes($ontologyGraph)) {
                 $this->temporaryIndex->storeEntries([$ontology]);
             } else {
-                throw new Exception('File '.$localFilePath.' does not contain any ontology related instances');
+                echo PHP_EOL.' - Aborting, because file '.$localFilePath.' does not contain any ontology related instances';
+                echo PHP_EOL;
+                continue;
             }
         }
     }

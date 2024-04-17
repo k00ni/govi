@@ -5,21 +5,15 @@ declare(strict_types=1);
 namespace App\Extractor;
 
 use App\Cache;
+use App\Graph;
 use App\IndexEntry;
 use App\TemporaryIndex;
-use DateMalformedStringException;
 use DateTime;
 use EasyRdf\Format;
-use EasyRdf\Graph;
-use EasyRdf\Literal;
-use EasyRdf\Literal\Date;
 use Exception;
 use quickRdfIo\RdfIoException;
 use quickRdfIo\Util;
-use rdfInterface\BlankNodeInterface;
 use rdfInterface\DataFactoryInterface;
-use rdfInterface\LiteralInterface;
-use rdfInterface\NamedNodeInterface;
 use Throwable;
 
 use function App\isEmpty;
@@ -64,6 +58,7 @@ abstract class AbstractExtractor
         ];
         $valuesString = $this->getLiteralValuesAsString($graph, $properties, (string) $indexEntry->getOntologyIri());
         $valuesString = $this->cleanString($valuesString);
+        $valuesString = $this->enrichAndCorrectSummaryString($valuesString);
         if (false === isEmpty($valuesString)) {
             $indexEntry->setSummary($valuesString);
         }
@@ -100,25 +95,31 @@ abstract class AbstractExtractor
 
         // project page / homepage
         $properties = ['foaf:homepage', 'schema:WebSite', 'schema:url', 'rdfs:seeAlso'];
-        $valuesString = $this->getLiteralValuesAsString($graph, $properties, (string) $indexEntry->getOntologyIri());
+        $valuesString = $this->getLiteralValuesAsString($graph, $properties, (string) $indexEntry->getOntologyIri(), ',');
         $valuesString = $this->cleanString($valuesString);
         if (false === isEmpty($valuesString)) {
             $indexEntry->setProjectPage($valuesString);
         }
 
+        // version
+        $properties = ['owl:versionInfo', 'schema:schemaVersion', 'schema:version'];
+        $valuesString = $this->getLiteralValuesAsString($graph, $properties, (string) $indexEntry->getOntologyIri(), '', true);
+        $valuesString = $this->cleanString($valuesString);
+        if (false === isEmpty($valuesString)) {
+            $indexEntry->setVersion($valuesString);
+        }
+
         /*
-         * latest access (latest file)
+         * modified (latest file)
          */
         $properties = ['dc:modified', 'dc11:modified', 'schema:dateModified'];
         foreach ($properties as $prop) {
-            $values = $graph->resource($indexEntry->getOntologyIri())->allLiterals($prop);
+            $values = $graph->getPropertyValues((string) $indexEntry->getOntologyIri(), $prop);
 
             // create a list of datetime strings
             $values = array_map(function ($value) {
-                if ($value instanceof DateTime || $value instanceof Date) {
-                    return $value->format('Y-m-d');
-                } elseif(1 === preg_match('/[0-9]{4}\-[0-9]{2}\-[0-9]{4}/', $value->getValue())) {
-                    return $value->getValue();
+                if(1 === preg_match('/[0-9]{4}\-[0-9]{2}\-[0-9]{4}/', $value)) {
+                    return $value;
                 }
             }, $values);
 
@@ -128,7 +129,7 @@ abstract class AbstractExtractor
             });
 
             if (0 < count($values)) {
-                $indexEntry->setLatestAccess($values[0]);
+                $indexEntry->setModified($values[0]);
                 break;
             }
         }
@@ -162,12 +163,20 @@ abstract class AbstractExtractor
         return $str;
     }
 
+    private function enrichAndCorrectSummaryString(string $str): string
+    {
+        // Foo.Bar => Foo. Bar
+        $str = preg_replace('/([a-z]{1})([:\.])([a-z]{1})/sim', '${1}${2} ${3}', $str);
+
+        return (string) $str;
+    }
+
     /**
      * @param list<non-empty-string> $properties
      *
      * @throws \InvalidArgumentException
      */
-    protected function getLiteralValuesAsString(
+    public function getLiteralValuesAsString(
         Graph $graph,
         array $properties,
         string $rootResourceIri,
@@ -177,77 +186,28 @@ abstract class AbstractExtractor
         $valuesString = '';
 
         foreach ($properties as $prop) {
-            $values = $graph->resource($rootResourceIri)->allLiterals($prop, 'en');
+            $values = $graph->getPropertyValues($rootResourceIri, $prop, 'en');
             if (0 == count($values)) {
                 // if no entries for english, try without a language
-                $values = $graph->resource($rootResourceIri)->allLiterals($prop);
+                $values = $graph->getPropertyValues($rootResourceIri, $prop);
             }
 
-            if ($onlyUseFirstEntry && 1 < count($values)) {
-                $values = [array_values($values)[0]];
-            }
-
-            $values = array_map(function ($literal) {
-                if ($literal->getValue() instanceof DateTime) {
-                    return $literal->getValue()->format('Y-m-d');
-                } else {
-                    return $literal->getValue();
+            // remove blank nodes
+            $list = [];
+            foreach ($values as $val) {
+                if (false === str_contains($val, '_:')) {
+                    $list[] = $val;
                 }
-            }, $values);
-            $valuesString .= implode($delimiter, $values);
+            }
+
+            if ($onlyUseFirstEntry && 1 < count($list)) {
+                $list = [array_values($list)[0]];
+            }
+
+            $valuesString .= implode($delimiter, $list);
         }
 
         return $valuesString;
-    }
-
-    /**
-     * This part could be done more easily with AsEasyRdf::AsEasyRdf, but some ontologies
-     * contain triples, which have object values that don't correspond with their data types.
-     * EasyRdf trusts data types, which might lead to an exception if the transformation
-     * from the string value into an actual class fails (e.g. xsd:dateTime).
-     * e.g. DateMalformedStringException if value is not a valid datetime string.
-     *
-     * FYI: https://github.com/sweetrdf/quickRdfIo/issues/8
-     *
-     * @param list<\rdfInterface\QuadInterface> $list
-     *
-     * @throws \Exception
-     * @throws \InvalidArgumentException
-     */
-    protected function generateEasyRdfGraphForQuadList(iterable $list): Graph
-    {
-        $graph = new Graph();
-
-        foreach ($list as $quad) {
-            $res = $graph->resource($quad->getSubject()->getValue());
-            $o = $quad->getObject();
-
-            if ($o instanceof BlankNodeInterface || $o instanceof NamedNodeInterface) {
-                $object = $graph->resource($o->getValue());
-            } elseif ($o instanceof LiteralInterface) {
-                // check data type ...
-                $dataType = isEmpty($o->getLang()) ? $o->getDatatype() : null;
-                if ('http://www.w3.org/2001/XMLSchema#dateTime' == $dataType) {
-                    // if data type is xsd:dateTime, try to convert the value before using it to
-                    // avoid EasyRdf to fail when filling the Graph instance
-                    try {
-                        new DateTime($o->getValue());
-                    } catch (DateMalformedStringException) {
-                        // value is not a valid date time, therefore ignoring date type
-                        $dataType = null;
-                    }
-                }
-
-                $object = new Literal($o->getValue(), $o->getLang(), $dataType);
-            } else {
-                throw new Exception('This should never be reached...');
-            }
-
-            $res->add($quad->getPredicate()->getValue(), $object);
-        }
-
-
-        return $graph;
     }
 
     protected function getAlignedLicenseInformation(string $value): string
@@ -348,6 +308,32 @@ abstract class AbstractExtractor
     }
 
     /**
+     * @param resource $fileHandle
+     *
+     * @return array<\rdfInterface\QuadInterface>
+     *
+     * @throws \Throwable
+     */
+    protected function readQuadsFromFileHandleToList($fileHandle, string|null $format = null): array
+    {
+        $maxAmountOfTriples = 40000;
+
+        /*
+         * use quickRdfIo's Util::parse
+         */
+        $i = 0;
+        $list = [];
+        foreach (Util::parse($fileHandle, $this->dataFactory, $format) as $quad) {
+            $list[] = $quad;
+            if ($i++ > $maxAmountOfTriples) {
+                break;
+            }
+        }
+
+        return $list;
+    }
+
+    /**
      * Loads the content of a given RDF file into an EasyRdf Graph instance.
      *
      * Be aware: because some ontologies are over 1 GB+ in size, only first x triples are used,
@@ -357,39 +343,81 @@ abstract class AbstractExtractor
      *
      * @throws \Throwable
      */
-    protected function loadQuadsIntoEasyRdfGraph($fileHandle, string $localFilePath): Graph
+    protected function loadQuadsIntoGraph($fileHandle, string $localFilePath, string|null $format = null): Graph
     {
-        $maxAmountOfTriples = 50000;
-
         try {
-            /*
-             * use quickRdfIo's Util::parse
-             */
-            $i = 0;
-            $list = [];
-            foreach (Util::parse($fileHandle, $this->dataFactory) as $quad) {
-                $list[] = $quad;
-                if ($i++ > $maxAmountOfTriples) {
-                    break;
-                }
+            // TODO rethink that
+            if (
+                str_contains($localFilePath, 'data_bioontology_org_ontologies_TXPO')
+            ) {
+                throw new RdfIoException('quickRdfIo is known to fail to parse it, therefore jump to rapper');
             }
-            return $this->generateEasyRdfGraphForQuadList($list);
+
+            return new Graph($this->readQuadsFromFileHandleToList($fileHandle, $format));
         } catch (Throwable $th) {
             if (
                 $th instanceof RdfIoException
                 || str_contains($th->getMessage(), 'on line')
             ) {
-                echo PHP_EOL.' - quickRdfIo failed, trying rapper'.PHP_EOL;
+                if (isEmpty($format)) {
+                    $format = '--guess';
+                } else {
+                    $format = '-i '.$format;
+                }
+
+                /*
+                 * the following part takes the downloaded RDF file, parses it with rapper, transforms the content
+                 * to ntriples, stores it in a temp. file and reads it back in later on.
+                 *
+                 * this way we can compute big files without running out of memory, because only a chunk of the file
+                 * is taken to build the Graph instance.
+                 */
+                echo PHP_EOL.'quickRdfIo failed with ERROR: '.$th->getMessage();
+                echo PHP_EOL.'- trying rapper'.PHP_EOL;
+
+                $tempFilepath = tempnam(VAR_FOLDER_PATH.'temp_files'.DIRECTORY_SEPARATOR, '');
+                if (false === $tempFilepath) {
+                    throw new Exception('Could not create temp. file using tempnam function!');
+                }
+
+                echo PHP_EOL;
+                echo PHP_EOL;
+                echo 'Create temp. file: '.$tempFilepath;
 
                 // build and execute command using system shell
-                $command = 'rapper --guess -o ntriples '.$localFilePath;
-                $nquads = (string) shell_exec($command);
+                // given file will be outputed as ntriples into an temp file
+                $command = 'rapper '.$format.' -o ntriples '.$localFilePath.' > '.$tempFilepath;
 
-                // limit amount of entries
-                $triples = explode(PHP_EOL, $nquads);
-                $triples = array_slice($triples, 0, $maxAmountOfTriples);
+                echo PHP_EOL.'- executing command: '.$command;
+                echo PHP_EOL;
 
-                return new Graph(null, implode(PHP_EOL, $triples), 'ntriples');
+                shell_exec($command);
+
+                echo PHP_EOL.'- read from '.$tempFilepath;
+                echo PHP_EOL;
+
+                if (100 < filesize($tempFilepath)) {
+                    try {
+                        $tempFileHandle = fopen($tempFilepath, 'r');
+                        if (false == $tempFileHandle) {
+                            throw new Exception('Could not open temp. file named: '.$tempFilepath);
+                        }
+
+                        $list = $this->readQuadsFromFileHandleToList($tempFileHandle, 'ntriples');
+                        fclose($tempFileHandle);
+                        return new Graph($list);
+                    } catch(RdfIoException $th) {
+                        echo PHP_EOL;
+                        echo PHP_EOL.'- ERR: '.$th->getMessage();
+                        echo PHP_EOL;
+                        return new Graph([]);
+                    }
+
+                } else {
+                    echo PHP_EOL.'WARN: Temp file ('.$tempFilepath.') is empty, aborting here ...';
+                    return new Graph([]);
+                }
+
             } else {
                 throw $th;
             }
@@ -398,13 +426,17 @@ abstract class AbstractExtractor
 
     /**
      * Checks if ontology file contains elements of a certain type.
+     *
+     * @throws \InvalidArgumentException
      */
     protected function ontologyFileContainsElementsOfCertainTypes(Graph $graph): bool
     {
         return
-            0 < count($graph->allOfType('owl:Ontology'))
-            || 0 < count($graph->allOfType('owl:Class'))
-            || 0 < count($graph->allOfType('rdfs:Class'))
+            $graph->hasInstancesOfType('owl:Ontology')
+            || $graph->hasInstancesOfType('owl:Class')
+            || $graph->hasInstancesOfType('rdf:Property')
+            || $graph->hasInstancesOfType('rdfs:Class')
+            || $graph->hasInstancesOfType('skos:Concept')
         ;
     }
 }

@@ -69,7 +69,7 @@ As long as the portal is online everything is fine but as soon as it goes offlin
 
 https://data.bioontology.org/documentation
 
-Related script: [scripts/bin/read-bioportal](scripts/bin/read-bioportal)
+Related script: [scripts/src/Extractor/BioPortal.php](scripts/src/Extractor/BioPortal.php)
 
 **Notes:**
 * scripts tries frontend view of ontology first to get a RDF file, if no luck, it tries `ontology.links.download` (such as https://data.bioontology.org/ontologies/INFRARISK/download), because they come in non-RDF formats (e.g. obo)
@@ -79,7 +79,7 @@ Related script: [scripts/bin/read-bioportal](scripts/bin/read-bioportal)
 
 https://archivo.dbpedia.org/list
 
-Related script: [scripts/bin/read-dbpedia-archivo](scripts/bin/read-dbpedia-archivo)
+Related script: [scripts/src/Extractor/DBpediaArchivo.php](scripts/src/Extractor/DBpediaArchivo.php)
 
 **Notes:**
 * Used value of "Latest Timestamp" for latest access, "2020.06.10-175249" is interpreted as "2020-06-10 00:00:00"
@@ -88,7 +88,7 @@ Related script: [scripts/bin/read-dbpedia-archivo](scripts/bin/read-dbpedia-arch
 
 https://lov.linkeddata.es/dataset/lov/
 
-Related script: [scripts/bin/read-linked-open-vocabularies](scripts/bin/read-linked-open-vocabularies)
+Related script: [scripts/src/Extractor/LinkedOpenVocabularies.php](scripts/src/Extractor/LinkedOpenVocabularies.php)
 
 **Notes:**
 * Used value of `dct:modified` for latest access; because the field only contains the date, the time is always set to `00:00:00`.
@@ -97,11 +97,11 @@ Related script: [scripts/bin/read-linked-open-vocabularies](scripts/bin/read-lin
 
 https://www.ebi.ac.uk/ols4/
 
-Related script: [scripts/bin/read-linked-open-vocabularies](scripts/bin/read-ontology-lookup-service)
+Related script: [scripts/src/Extractor/OntologyLookupService.php](scripts/src/Extractor/OntologyLookupService.php)
 
 **Notes:**
 * Warning: Currently ignoring all ontologies with no `fileLocation` field set in ontology configuration
-* ontology.uploaded is used for latest access
+* Field `ontology.uploaded` is used for latest access
 
 ## FAQ
 

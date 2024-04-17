@@ -69,7 +69,8 @@ class MergeInManuallyMaintainedMetadata
                 $entry->setLatestRdfXmlFile($row[11]);
                 $entry->setLatestTurtleFile($row[12]);
 
-                $entry->setLatestAccess($row[13]);
+                $entry->setModified($row[13]);
+                $entry->setVersion($row[14]);
 
                 $this->temporaryIndex->storeEntries([$entry]);
             } elseif (is_array($entryData) && 'Manually maintained' === $entryData['source_title']) {

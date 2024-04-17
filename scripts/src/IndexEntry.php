@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App;
 
-use DateTime;
-use DateTimeZone;
 use Exception;
 
 class IndexEntry
@@ -25,16 +23,19 @@ class IndexEntry
      */
     private string|null $sourcePage = null;
 
+    private string|null $latestJsonLdFile = null;
     private string|null $latestN3File = null;
     private string|null $latestNtFile = null;
     private string|null $latestRdfXmlFile = null;
-    private string|null $latestJsonLdFile = null;
     private string|null $latestTurtleFile = null;
 
     /**
-     * Date of the latest access in format Y-m-d
+     * Date of the latest modification.
      */
-    private string $latestAccess;
+    private string|null $modified = null;
+
+    private string|null $version = null;
+
     private string $sourceTitle;
     private string $sourceUrl;
 
@@ -42,10 +43,6 @@ class IndexEntry
     {
         $this->sourceTitle = $sourceTitle;
         $this->sourceUrl = $sourceUrl;
-
-        // only date of the latest access
-        $now = (new DateTime('now', new DateTimeZone('UTC')));
-        $this->latestAccess = $now->format('Y-m-d');
     }
 
     public function getOntologyTitle(): string|null
@@ -158,20 +155,6 @@ class IndexEntry
         return $this;
     }
 
-    public function getLatestAccess(): string
-    {
-        return $this->latestAccess;
-    }
-
-    public function setLatestAccess(string|null $latestAccess): self
-    {
-        // only save YYYY-MM-DD
-        $latestAccess = substr((string) $latestAccess, 0, 10);
-        $this->latestAccess = trim($latestAccess);
-
-        return $this;
-    }
-
     public function getLatestN3File(): string|null
     {
         return $this->latestN3File;
@@ -264,6 +247,32 @@ class IndexEntry
         } else {
             throw new Exception($latestJsonLdFile.' is not a valid URL');
         }
+    }
+
+    public function getModified(): string|null
+    {
+        return $this->modified;
+    }
+
+    public function setModified(string|null $modified): self
+    {
+        // only save YYYY-MM-DD
+        $modified = substr((string) $modified, 0, 10);
+        $this->modified = trim($modified);
+
+        return $this;
+    }
+
+    public function getVersion(): string|null
+    {
+        return $this->version;
+    }
+
+    public function setVersion(string|null $version): self
+    {
+        $this->version = $version;
+
+        return $this;
     }
 
     public function getSourceTitle(): string

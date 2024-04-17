@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Cache;
 use App\Command\MergeInManuallyMaintainedMetadata;
+use App\Extractor\BioPortal;
 use App\Extractor\DBpediaArchivo;
 use App\Extractor\LinkedOpenVocabularies;
 use App\Extractor\OntologyLookupService;
@@ -22,7 +23,6 @@ $temporaryIndex = new TemporaryIndex();
 (new DBpediaArchivo($cache, $dataFactory, $temporaryIndex))->run();
 (new OntologyLookupService($cache, $dataFactory, $temporaryIndex))->run();
 (new BioPortal($cache, $dataFactory, $temporaryIndex))->run();
-return;
 
 // finalize temporary index and write index.csv
 (new MergeInManuallyMaintainedMetadata($cache, $dataFactory, $temporaryIndex))->run();

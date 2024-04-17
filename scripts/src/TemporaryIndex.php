@@ -14,8 +14,8 @@ class TemporaryIndex
      * @var non-empty-string
      */
     private string $insertIntoQueryHead = 'INSERT INTO entry (
-        ontology_iri,
         ontology_title,
+        ontology_iri,
         summary,
         license_information,
         authors,
@@ -27,7 +27,8 @@ class TemporaryIndex
         latest_ntriples_file,
         latest_rdfxml_file,
         latest_turtle_file,
-        latest_access,
+        modified,
+        version,
         source_title,
         source_url
     ) VALUES (';
@@ -42,8 +43,9 @@ class TemporaryIndex
         // create/open SQLite file with the temporary index
         $this->temporaryIndexDb = new PDO('sqlite:'.SQLITE_FILE_PATH);
         $this->temporaryIndexDb->exec('CREATE TABLE IF NOT EXISTS entry (
-            ontology_iri TEXT PRIMARY KEY,
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
             ontology_title TEXT,
+            ontology_iri TEXT UNIQUE,
             summary TEXT,
             license_information TEXT,
             authors TEXT,
@@ -55,7 +57,8 @@ class TemporaryIndex
             latest_ntriples_file TEXT,
             latest_rdfxml_file TEXT,
             latest_turtle_file TEXT,
-            latest_access TEXT,
+            modified TEXT,
+            version TEXT,
             source_title TEXT,
             source_url TEXT
         )');
@@ -120,8 +123,9 @@ class TemporaryIndex
                 //      Uncaught PDOException: SQLSTATE[HY000]: General error: 21 bad parameter or other API misuse
                 $insertQ = $this->insertIntoQueryHead;
                 $insertQ .= '"'.implode('","', [
-                    $indexEntry->getOntologyIri(),
                     addslashes((string) $indexEntry->getOntologyTitle()),
+                    $indexEntry->getOntologyIri(),
+                    // general information
                     addslashes((string) $indexEntry->getSummary()),
                     (string) $indexEntry->getLicenseInformation(),
                     addslashes((string) $indexEntry->getAuthors()),
@@ -134,7 +138,9 @@ class TemporaryIndex
                     $indexEntry->getLatestNtFile(),
                     $indexEntry->getLatestRdfXmlFile(),
                     $indexEntry->getLatestTurtleFile(),
-                    $indexEntry->getLatestAccess(),
+                    // misc
+                    $indexEntry->getModified(),
+                    $indexEntry->getVersion(),
                     // source
                     $indexEntry->getSourceTitle(),
                     $indexEntry->getSourceUrl(),
@@ -168,7 +174,7 @@ class TemporaryIndex
         $sql = 'SELECT ontology_title, ontology_iri,
                        summary, authors, contributors, license_information, project_page, source_page,
                        latest_json_ld_file, latest_n3_file, latest_ntriples_file, latest_rdfxml_file, latest_turtle_file,
-                       latest_access, source_title, source_url
+                       modified, version, source_title, source_url
                   FROM entry
                  ORDER BY ontology_title ASC';
         $stmt = $this->temporaryIndexDb->prepare($sql);

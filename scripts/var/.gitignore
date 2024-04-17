@@ -1,5 +1,6 @@
-*.*
-!.gitignore
 downloaded_rdf_files/*
+temp_files/*
 extractor_*
 phpstan_cache
+*.*
+!.gitignore

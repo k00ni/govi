@@ -129,20 +129,15 @@ class OntologyLookupService extends AbstractExtractor
 
                     $format = $this->guessFormatOnFile($ontologyFileLocation);
                     $localFilePath = $this->cache->getCachedFilePathForFileUrl($ontologyFileLocation);
-                    $graph = $this->loadQuadsIntoEasyRdfGraph($fileHandle, $localFilePath);
+                    $graph = $this->loadQuadsIntoGraph($fileHandle, $localFilePath);
                     fclose($fileHandle);
 
                     // if title is empty, try to load file and get it this way
                     if (isEmpty($ontology['config']['title'])) {
-                        $title = $graph->resource($newEntry->getOntologyIri())->label()?->getValue() ?? '';
-                        if (is_scalar($title)) {
-                            $newEntry->setOntologyTitle((string) $title);
+                        $title = (string) $graph->getLabel((string) $newEntry->getOntologyIri());
+                        if (false === isEmpty($title)) {
+                            $newEntry->setOntologyTitle($title);
                         } else {
-                            var_dump($title);
-                            throw new Exception('Title is not a scalar value.');
-                        }
-
-                        if (isEmpty($newEntry->getOntologyTitle())) {
                             echo PHP_EOL;
                             echo PHP_EOL;
                             echo 'WARN: '.$newEntry->getOntologyIri().' ignored, because no title found.';
@@ -155,7 +150,7 @@ class OntologyLookupService extends AbstractExtractor
 
                     // set latest access
                     $uploaded = new DateTime($ontology['updated'], new DateTimeZone('UTC'));
-                    $newEntry->setLatestAccess($uploaded->format('Y-m-d'));
+                    $newEntry->setModified($uploaded->format('Y-m-d'));
 
                     // set appropriate file
                     if ('json' == $format) {
@@ -172,9 +167,11 @@ class OntologyLookupService extends AbstractExtractor
 
                     if ($this->ontologyFileContainsElementsOfCertainTypes($graph)) {
                         $this->addFurtherMetadata($newEntry, $graph);
-                        $this->temporaryIndex->storeEntries([$ontology]);
+                        $this->temporaryIndex->storeEntries([$newEntry]);
                     } else {
-                        throw new Exception('File '.$localFilePath.' does not contain any ontology related instances');
+                        echo PHP_EOL.' - Aborting, because file '.$localFilePath.' does not contain any ontology related instances';
+                        echo PHP_EOL;
+                        continue;
                     }
                 }
             }

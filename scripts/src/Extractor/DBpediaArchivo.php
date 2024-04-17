@@ -50,7 +50,7 @@ class DBpediaArchivo extends AbstractExtractor
                 }
 
                 $localFilePath = $this->cache->getCachedFilePathForFileUrl($indexEntry->getLatestNtFile());
-                $graph = $this->loadQuadsIntoEasyRdfGraph($fileHandle, $localFilePath);
+                $graph = $this->loadQuadsIntoGraph($fileHandle, $localFilePath, 'ntriples');
                 fclose($fileHandle);
             } catch (Exception $e) {
                 if (str_contains($e->getMessage(), 'CURLE_OPERATION_TIMEOUTED')) {
@@ -68,7 +68,9 @@ class DBpediaArchivo extends AbstractExtractor
                 $this->addFurtherMetadata($indexEntry, $graph);
                 $this->temporaryIndex->storeEntries([$indexEntry]);
             } else {
-                throw new Exception('File '.$localFilePath.' does not contain any ontology related instances');
+                echo PHP_EOL.' - Aborting, because file '.$localFilePath.' does not contain any ontology related instances';
+                echo PHP_EOL;
+                continue;
             }
         }
     }
@@ -137,8 +139,8 @@ class DBpediaArchivo extends AbstractExtractor
                 // latest update date
                 preg_match('/nt<\/a>.*?>([0-9]{4})\.([0-9]{2})\.([0-9]{2})/sim', $ontologyEntryHtml, $latest);
                 if (isset($latest[1]) && false === isEmpty($latest[1])) {
-                    $latestAccess = $latest[1].'-'.$latest[2].'-'.$latest[3];
-                    $newEntry->setLatestAccess($latestAccess);
+                    $modified = $latest[1].'-'.$latest[2].'-'.$latest[3];
+                    $newEntry->setModified($modified);
                 } else {
                     $message = 'Can not read latest timestamp field for '.$newEntry->getOntologyIri();
                     $message .= ' // RAW HTML : '.$ontologyEntryHtml;
