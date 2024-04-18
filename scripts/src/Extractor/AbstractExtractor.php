@@ -8,7 +8,6 @@ use App\Cache;
 use App\Graph;
 use App\IndexEntry;
 use App\TemporaryIndex;
-use DateTime;
 use EasyRdf\Format;
 use Exception;
 use quickRdfIo\RdfIoException;
@@ -56,16 +55,15 @@ abstract class AbstractExtractor
             'rdfs:comment',
             'schema:description',
         ];
-        $valuesString = $this->getLiteralValuesAsString($graph, $properties, (string) $indexEntry->getOntologyIri());
+        $valuesString = $this->getLiteralValuesAsString($graph, $properties, (string) $indexEntry->getOntologyIri(), ' ', true);
         $valuesString = $this->cleanString($valuesString);
-        $valuesString = $this->enrichAndCorrectSummaryString($valuesString);
         if (false === isEmpty($valuesString)) {
             $indexEntry->setSummary($valuesString);
         }
 
         // license
         $valuesString = null;
-        foreach (['dc:license', 'dc11:rights', 'schema:license'] as $prop) {
+        foreach (['dc:license', 'dc11:license', 'dc:rights', 'dc11:rights', 'schema:license'] as $prop) {
             $valuesString = $this->getLiteralValuesAsString($graph, [$prop], (string) $indexEntry->getOntologyIri(), ' ', true);
             $valuesString = $this->getAlignedLicenseInformation($valuesString);
 
@@ -78,7 +76,7 @@ abstract class AbstractExtractor
         }
 
         // authors
-        $properties = ['dc:creator', 'dc11:creatror', 'schema:author'];
+        $properties = ['dc:creator', 'dc11:creator', 'schema:author'];
         $valuesString = $this->getLiteralValuesAsString($graph, $properties, (string) $indexEntry->getOntologyIri(), ',');
         $valuesString = $this->cleanString($valuesString);
         if (false === isEmpty($valuesString)) {
@@ -116,7 +114,7 @@ abstract class AbstractExtractor
         foreach ($properties as $prop) {
             $values = $graph->getPropertyValues((string) $indexEntry->getOntologyIri(), $prop);
 
-            // create a list of datetime strings
+            // create a list of date strings
             $values = array_map(function ($value) {
                 if(1 === preg_match('/[0-9]{4}\-[0-9]{2}\-[0-9]{4}/', $value)) {
                     return $value;
@@ -161,14 +159,6 @@ abstract class AbstractExtractor
         $str = trim($str);
 
         return $str;
-    }
-
-    private function enrichAndCorrectSummaryString(string $str): string
-    {
-        // Foo.Bar => Foo. Bar
-        $str = preg_replace('/([a-z]{1})([:\.])([a-z]{1})/sim', '${1}${2} ${3}', $str);
-
-        return (string) $str;
     }
 
     /**

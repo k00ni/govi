@@ -1,4 +1,4 @@
-"ontology title","ontology iri","summary","license information","authors","contributors","project page","source page","latest json-ld file","latest n3 file","latest ntriples file","latest rdf/xml file","latest turtle file","modified","version"
+"ontology title","ontology iri","summary","authors","contributors","license information","project page","source page","latest json-ld file","latest n3 file","latest ntriples file","latest rdf/xml file","latest turtle file","modified","version"
 "A vocabulary for BLCS stages","https://w3id.org/digitalconstruction/0.5/Stages",,,,,,,,,,,"https://digitalconstruction.github.io/Stages/v/0.5/stages.ttl",,
 "A vocabulary for LOD levels","https://w3id.org/digitalconstruction/0.5/Levels",,,,,,,,,,,"https://digitalconstruction.github.io/Levels/v/0.5/levels.ttl",,
 "Additive Manufacturing for Maintenance Operations Ontology","https://w3id.org/ammo/ont/",,,,,,,,,,"https://raw.githubusercontent.com/LA3D/ammo/main/development/ontology/ontology.rdf","https://raw.githubusercontent.com/LA3D/ammo/main/development/ontology/ontology.ttl",,

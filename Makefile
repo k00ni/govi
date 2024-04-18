@@ -10,7 +10,7 @@ composer:
 	cd scripts && composer update
 
 index:
-	rm -f scripts/var/temporary-index.db
+	rm -f scripts/var/index.db
 	php scripts/bin/renew_index.php
 
 prepare:

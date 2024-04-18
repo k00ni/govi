@@ -28,6 +28,10 @@ jobs:
     - name: Static Code Analysis
       run: cd scripts && vendor/bin/phpstan analyse
 
+    # Tests
+    - name: Tests
+      run: cd scripts && vendor/bin/phpunit
+
     # CSV linter
     - name: Lint index.csv
       uses: kcheriyath/csvlinter@V0.6.0

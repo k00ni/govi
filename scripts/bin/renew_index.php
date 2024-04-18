@@ -19,8 +19,8 @@ $dataFactory = new DataFactory();
 $temporaryIndex = new TemporaryIndex();
 
 // run extractors to fill temporary_index.db
-(new LinkedOpenVocabularies($cache, $dataFactory, $temporaryIndex))->run();
 (new DBpediaArchivo($cache, $dataFactory, $temporaryIndex))->run();
+(new LinkedOpenVocabularies($cache, $dataFactory, $temporaryIndex))->run();
 (new OntologyLookupService($cache, $dataFactory, $temporaryIndex))->run();
 (new BioPortal($cache, $dataFactory, $temporaryIndex))->run();
 
