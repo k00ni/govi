@@ -1,7 +1,5 @@
 # Global Ontology and Vocabulary Index (GOVI)
 
-![Tests](https://github.com/k00ni/govi/workflows/ContinuousIntegration/badge.svg)
-
 The Global Ontology and Vocabulary Index (GOVI) is meant to be a Community-driven project to maintain an index of all available RDF ontologies and vocabularies.
 The index is basically a big [CSV](https://en.wikipedia.org/wiki/Comma-separated_values) file, containing a list of URLs to ontologies and vocabularies, plus a few meta data (such as authors, license information and latest modification date).
 
@@ -10,7 +8,7 @@ You can use the GOVI-browser https://govi-browser.inspirito.de/ to easily browse
 
 ---
 
-**Overview:**
+### Overview
 
 * [Summary of the content of the index](#summary-of-the-content-of-the-index)
 * [Why?](#why)
@@ -79,6 +77,10 @@ As long as the portal is online, everything is fine, but as soon as it goes offl
 
 Contributions are welcome.
 Please use pull requests on Github.
+
+## Documentation
+
+Further information can be found in [doc](./doc/) folder.
 
 ## License
 
