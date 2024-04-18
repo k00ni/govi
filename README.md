@@ -65,6 +65,10 @@ As long as the portal is online everything is fine but as soon as it goes offlin
 
 ## Information on each source
 
+### General
+
+* if no modified information was found, it tries created related properties
+
 ### BioPortal
 
 https://data.bioontology.org/documentation

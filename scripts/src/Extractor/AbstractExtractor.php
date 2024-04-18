@@ -131,6 +131,29 @@ abstract class AbstractExtractor
                 break;
             }
         }
+
+        // if modified ist still empty but dcterms:created is available, used it
+        if (isEmpty($indexEntry->getModified())) {
+            $properties = ['dc:created', 'dc11:created', 'schema:dateCreated'];
+            foreach ($properties as $prop) {
+                $values = $graph->getPropertyValues((string) $indexEntry->getOntologyIri(), $prop);
+                // create a list of date strings
+                $values = array_map(function ($value) {
+                    if(1 === preg_match('/[0-9]{4}\-[0-9]{2}\-[0-9]{4}/', $value)) {
+                        return $value;
+                    }
+                }, $values);
+                // sort entries, take the latest one
+                usort($values, function ($a, $b) {
+                    return $a < $b ? -1 : 1;
+                });
+
+                if (0 < count($values)) {
+                    $indexEntry->setModified($values[0]);
+                    break;
+                }
+            }
+        }
     }
 
     /**
