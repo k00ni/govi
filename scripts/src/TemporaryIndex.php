@@ -181,7 +181,6 @@ class TemporaryIndex
         $stmt->execute();
 
         $dataToWrite = INDEX_CSV_HEAD_STRING.PHP_EOL;
-        $i = 0;
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             /** @var array<string|int,string|null> */
             $row = $row;
@@ -189,8 +188,6 @@ class TemporaryIndex
             echo '.';
 
             $dataToWrite .= '"'.implode('","', $row).'"'.PHP_EOL;
-
-            ++$i;
         }
 
         file_put_contents($csvPath, $dataToWrite);
