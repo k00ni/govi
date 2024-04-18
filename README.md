@@ -19,7 +19,7 @@ You can use the GOVI-browser https://govi-browser.inspirito.de/ to easily browse
 
 ---
 
-### Summary of the content of the index
+## Summary of the content of the index
 
 An RDF ontology (including vocabularies) is part of the index if it meets the following criteria:
 * non-empty, valid ontology title
@@ -41,8 +41,8 @@ But the question remains, and to answer it one has to manually check ontology po
 Each service covers only a subset of ontologies/vocabularies.
 This project aims to answer this question by providing a simplified list of RDF ontologies/vocabularies.
 The list was created by asking available ontology portals, archive services, etc. about their ontologies and vocabularies.
-**We're standingon the shoulders of giants here** because the teams behind these services do the hard work.
-Also, people can also provide metadata via this repository, although we recommend using a suitable service (like LOV) instead.
+**We're standing on the shoulders of giants here** because the teams behind these services do the hard work.
+Also, people can also provide metadata via this repository, although we recommend using a suitable service (like the ones mentioned) instead.
 Over time, this place could grow to reference (almost) all ontologies/vocabularies.
 
 ```
