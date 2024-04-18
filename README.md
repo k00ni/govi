@@ -8,14 +8,17 @@ You can use the GOVI-browser https://govi-browser.inspirito.de/ to easily browse
 
 ---
 
-### Overview
+## Overview
 
-* [Summary of the content of the index](#summary-of-the-content-of-the-index)
-* [Why?](#why)
-* Documentation:
-  * [Agenda](./doc/agenda.md)
-  * [FAQ](./doc/faq.md)
-  * [Information on each data source](./doc/information-on-each-data-source.md)
+- [Global Ontology and Vocabulary Index (GOVI)](#global-ontology-and-vocabulary-index-govi)
+  - [Overview](#overview)
+  - [Summary of the content of the index](#summary-of-the-content-of-the-index)
+  - [How to contribute?](#how-to-contribute)
+    - [Add/change ontology entry](#addchange-ontology-entry)
+    - [Add/change source code](#addchange-source-code)
+  - [Why?](#why)
+  - [Documentation](#documentation)
+  - [License](#license)
 
 ---
 
@@ -28,6 +31,25 @@ An RDF ontology (including vocabularies) is part of the index if it meets the fo
 * at least one instance/subclasses of one of the following classes was found: `owl:Ontology`, `owl:Class`, `rdf:Property`, `rdfs:Class`, `skos:Concept`
 
 If an entry is part of multiple sources (e.g. LOV and DBpedia Archivo), the one which appears first is taken.
+
+## How to contribute?
+
+There are various ways to contribute:
+1. Add/change ontology entry
+2. Add/change source code
+
+### Add/change ontology entry
+
+The index mostly consists of metadata read from an ontology service such as DBpedia Archivo.
+However, not all ontologies are registered in an ontology service and therefore need to be maintained manually.
+For this purpose adapt the file [manually-maintained-metadata-about-ontologies.csv](./manually-maintained-metadata-about-ontologies.csv).
+It has the same structure as the [index.csv](./index.csv) and its entries are only inserted at the end of the generation process.
+If you need any assistance, don't hesistate to open an issue or contact me (contact details at https://github.com/k00ni).
+
+### Add/change source code
+
+For source code changes use Pull Requests on Github.
+Further information can be found here: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request
 
 ## Why?
 
@@ -65,18 +87,13 @@ Over time, this place could grow to reference (almost) all ontologies/vocabulari
 
 ```
 
-### Whats wrong with Ontology portals, online catalogs, ...?
+**Whats wrong with Ontology portals, online catalogs, ...?**
 
-**Nothing**. Services such as BioPortal and DBpedia Archivo play an important role for the community because they provide user-friendly access to browse ontologies and provide additional services such as versioning, archives, etc.
+Nothing. Services such as BioPortal and DBpedia Archivo play an important role for the community because they provide user-friendly access to browse ontologies and provide additional services such as versioning, archives, etc.
 This project is **not** meant to replace them, on the contrary, we support services like [DBpedia Archivo](https://archivo.dbpedia.org/) because they address important challenges like link rot and inconsistent versioning.
 Portals such as BioPortal are also important because of their user-friendly approach (e.g. browsing class hierarchies, searching, etc.).
 But portals often provide ontologies as a data dump or SPARQL endpoint instead of a dereferenceable URL (for accessing the RDF/OWL code).
 As long as the portal is online, everything is fine, but as soon as it goes offline, all ontologies/vocabularies are gone unless there is a copy somewhere else.
-
-## Contributions
-
-Contributions are welcome.
-Please use pull requests on Github.
 
 ## Documentation
 
