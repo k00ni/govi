@@ -11,6 +11,7 @@ composer:
 
 index:
 	rm -f scripts/var/index.db
+	rm scripts/var/temp_files/*.*
 	php scripts/bin/renew_index.php
 
 prepare:

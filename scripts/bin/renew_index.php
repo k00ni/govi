@@ -19,10 +19,17 @@ $dataFactory = new DataFactory();
 $temporaryIndex = new TemporaryIndex();
 
 // run extractors to fill temporary_index.db
-(new DBpediaArchivo($cache, $dataFactory, $temporaryIndex))->run();
-(new LinkedOpenVocabularies($cache, $dataFactory, $temporaryIndex))->run();
-(new OntologyLookupService($cache, $dataFactory, $temporaryIndex))->run();
-(new BioPortal($cache, $dataFactory, $temporaryIndex))->run();
+foreach ([
+    DBpediaArchivo::class,
+    LinkedOpenVocabularies::class,
+    OntologyLookupService::class,
+    BioPortal::class,
+] as $class) {
+    /** @var \App\Extractor\AbstractExtractor */
+    $extractor = new $class($cache, $dataFactory, $temporaryIndex);
+    $extractor->run();
+    $extractor = null;
+}
 
 // finalize temporary index and write index.csv
 (new MergeInManuallyMaintainedMetadata($cache, $dataFactory, $temporaryIndex))->run();

@@ -56,9 +56,9 @@ class MergeInManuallyMaintainedMetadata
                 $entry->setOntologyIri($row[1]);
 
                 $entry->setSummary($row[2]);
-                $entry->setLicenseInformation($row[3]);
-                $entry->setAuthors($row[4]);
-                $entry->setContributors($row[5]);
+                $entry->setAuthors($row[3]);
+                $entry->setContributors($row[4]);
+                $entry->setLicenseInformation($row[5]);
                 $entry->setProjectPage($row[6]);
                 $entry->setSourcePage($row[7]);
 
