@@ -16,7 +16,7 @@ You can use the GOVI-browser https://govi-browser.inspirito.de/ to easily browse
   - [How to contribute?](#how-to-contribute)
     - [Add/change ontology entry](#addchange-ontology-entry)
     - [Add/change source code](#addchange-source-code)
-  - [Why?](#why)
+  - [Why this project?](#why-this-project)
   - [Documentation](#documentation)
   - [License](#license)
 
@@ -51,7 +51,7 @@ If you need any assistance, don't hesistate to open an issue or contact me (cont
 For source code changes use Pull Requests on Github.
 Further information can be found here: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request
 
-## Why?
+## Why this project?
 
 Where do you go if you wanna answer the following question:
 

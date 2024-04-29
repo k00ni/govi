@@ -7,7 +7,6 @@ namespace App\Command;
 use App\Cache;
 use App\IndexEntry;
 use App\TemporaryIndex;
-use Exception;
 use PDO;
 use rdfInterface\DataFactoryInterface;
 
@@ -50,38 +49,35 @@ class MergeInManuallyMaintainedMetadata
 
             // check if ontology URI is already known
             $entryData = $this->temporaryIndex->getEntryDataAsArray((string) $row[1]);
-            if (false === $this->temporaryIndex->hasEntry((string) $row[1])) {
-                $entry = $this->getPreparedIndexEntry();
-                $entry->setOntologyTitle($row[0]);
-                $entry->setOntologyIri($row[1]);
 
-                $entry->setSummary($row[2]);
-                $entry->setAuthors($row[3]);
-                $entry->setContributors($row[4]);
-                $entry->setLicenseInformation($row[5]);
-                $entry->setProjectPage($row[6]);
-                $entry->setSourcePage($row[7]);
+            // setup IndexEntry instance
+            $entry = $this->getPreparedIndexEntry();
+            $entry->setOntologyTitle($row[0]);
+            $entry->setOntologyIri($row[1]);
 
-                // related files
-                $entry->setLatestJsonLdFile($row[8]);
-                $entry->setLatestN3File($row[9]);
-                $entry->setLatestNtFile($row[10]);
-                $entry->setLatestRdfXmlFile($row[11]);
-                $entry->setLatestTurtleFile($row[12]);
+            $entry->setSummary($row[2]);
+            $entry->setAuthors($row[3]);
+            $entry->setContributors($row[4]);
+            $entry->setLicenseInformation($row[5]);
+            $entry->setProjectPage($row[6]);
+            $entry->setSourcePage($row[7]);
 
-                $entry->setModified($row[13]);
-                $entry->setVersion($row[14]);
+            // related files
+            $entry->setLatestJsonLdFile($row[8]);
+            $entry->setLatestN3File($row[9]);
+            $entry->setLatestNtFile($row[10]);
+            $entry->setLatestRdfXmlFile($row[11]);
+            $entry->setLatestTurtleFile($row[12]);
 
-                $this->temporaryIndex->storeEntries([$entry]);
-            } elseif (is_array($entryData) && 'Manually maintained' === $entryData['source_title']) {
+            $entry->setModified($row[13]);
+            $entry->setVersion($row[14]);
+
+            if ($this->temporaryIndex->hasEntry((string) $row[1])) {
                 echo PHP_EOL.$row[1].' is already in index (manually maintained)';
+                $this->temporaryIndex->updateEntry($entry);
             } else {
-                $msg = 'Ontology '.$row[0].' ('.$row[1].') is known (';
-                // @phpstan-ignore-next-line
-                $msg .= 'Source: '.$entryData['source_title'];
-                $msg .= ') and does not have to be maintained manually!';
-                $msg .= ' Please remove it from '.MANUALLY_MAINTAINED_METADATA_ABOUT_ONTOLOGIES_CSV;
-                throw new Exception($msg);
+                echo PHP_EOL.$row[1].' was added to the index';
+                $this->temporaryIndex->storeEntries([$entry]);
             }
         }
     }

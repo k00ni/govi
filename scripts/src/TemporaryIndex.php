@@ -11,27 +11,32 @@ use PDOException;
 class TemporaryIndex
 {
     /**
-     * @var non-empty-string
+     * @var string
      */
-    private string $insertIntoQueryHead = 'INSERT INTO entry (
-        ontology_title,
-        ontology_iri,
-        summary,
-        license_information,
-        authors,
-        contributors,
-        project_page,
-        source_page,
-        latest_json_ld_file,
-        latest_n3_file,
-        latest_ntriples_file,
-        latest_rdfxml_file,
-        latest_turtle_file,
-        modified,
-        version,
-        source_title,
-        source_url
-    ) VALUES (';
+    private string $insertIntoQueryHead = '';
+
+    /**
+     * @var array<string>
+     */
+    private array $columnList = [
+        'ontology_title',
+        'ontology_iri',
+        'summary',
+        'license_information',
+        'authors',
+        'contributors',
+        'project_page',
+        'source_page',
+        'latest_json_ld_file',
+        'latest_n3_file',
+        'latest_ntriples_file',
+        'latest_rdfxml_file',
+        'latest_turtle_file',
+        'modified',
+        'version',
+        'source_title',
+        'source_url'
+    ];
 
     protected PDO $temporaryIndexDb;
 
@@ -62,6 +67,8 @@ class TemporaryIndex
             source_title TEXT,
             source_url TEXT
         )');
+
+        $this->insertIntoQueryHead = 'INSERT INTO entry ('.implode(', ', $this->columnList).') VALUES (';
     }
 
     /**
@@ -78,14 +85,6 @@ class TemporaryIndex
         }
 
         return null;
-    }
-
-    /**
-     * @return non-empty-string
-     */
-    public function getInsertIntoQueryHead(): string
-    {
-        return $this->insertIntoQueryHead;
     }
 
     /**
@@ -162,6 +161,57 @@ class TemporaryIndex
     /**
      * @throws \PDOException
      */
+    public function updateEntry(IndexEntry $indexEntry): void
+    {
+        if ($this->hasEntry((string) $indexEntry->getOntologyIri())) {
+            // build UPDATE statement
+            $sql = 'UPDATE entry SET ';
+
+            $i = 0;
+            foreach ($this->columnList as $column) {
+                if (0 < $i++) {
+                    $sql .= ', ';
+                }
+                $sql .= $column.' = COALESCE('.$column.', ?)';
+            }
+
+            $sql .= ' WHERE ontology_iri = ?';
+
+            // prepare and execute update statement
+            $param = [
+                addslashes((string) $indexEntry->getOntologyTitle()),
+                addslashes((string) $indexEntry->getOntologyIri()),
+                // general information
+                isEmpty($indexEntry->getSummary()) ? null : addslashes((string) $indexEntry->getSummary()),
+                isEmpty($indexEntry->getLicenseInformation()) ? null : (string) $indexEntry->getLicenseInformation(),
+                isEmpty($indexEntry->getAuthors()) ? null : addslashes((string) $indexEntry->getAuthors()),
+                isEmpty($indexEntry->getContributors()) ? null : addslashes((string) $indexEntry->getContributors()),
+                isEmpty($indexEntry->getProjectPage()) ? null : $indexEntry->getProjectPage(),
+                isEmpty($indexEntry->getSourcePage()) ? null : $indexEntry->getSourcePage(),
+                // files
+                isEmpty($indexEntry->getLatestJsonLdFile()) ? null : $indexEntry->getLatestJsonLdFile(),
+                isEmpty($indexEntry->getLatestN3File()) ? null : $indexEntry->getLatestN3File(),
+                isEmpty($indexEntry->getLatestNtFile()) ? null : $indexEntry->getLatestNtFile(),
+                isEmpty($indexEntry->getLatestRdfXmlFile()) ? null : $indexEntry->getLatestRdfXmlFile(),
+                isEmpty($indexEntry->getLatestTurtleFile()) ? null : $indexEntry->getLatestTurtleFile(),
+                // misc
+                isEmpty($indexEntry->getModified()) ? null : $indexEntry->getModified(),
+                isEmpty($indexEntry->getVersion()) ? null : $indexEntry->getVersion(),
+                // source
+                $indexEntry->getSourceTitle(),
+                $indexEntry->getSourceUrl(),
+                $indexEntry->getOntologyIri(),
+            ];
+            echo PHP_EOL.' => '.$indexEntry->getContributors();
+            $this->temporaryIndexDb->prepare($sql)->execute($param);
+        } else {
+            // not there, do nothing
+        }
+    }
+
+    /**
+     * @throws \PDOException
+     */
     public function writeToIndexCsv(): void
     {
         $csvPath = ROOT_DIR_PATH.'index.csv';
@@ -184,9 +234,6 @@ class TemporaryIndex
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             /** @var array<string|int,string|null> */
             $row = $row;
-
-            echo '.';
-
             $dataToWrite .= '"'.implode('","', $row).'"'.PHP_EOL;
         }
 

@@ -10,9 +10,9 @@ composer:
 	cd scripts && composer update
 
 index:
-	rm -f scripts/var/index.db
-	rm scripts/var/temp_files/*.*
-	php scripts/bin/renew_index.php
+	rm -i -f ./scripts/var/index.db
+	rm -i -f ./scripts/var/temp_files/*
+	php ./scripts/bin/renew_index.php
 
 prepare:
 	cd scripts && vendor/bin/php-cs-fixer fix

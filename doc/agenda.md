@@ -13,6 +13,7 @@ The following list is more meant for internal usage, but if you wanna help out w
   * [x] Ontology Lookup Service: https://www.ebi.ac.uk/ols4/api/ontologies
   * [x] BioPortal: https://bioportal.bioontology.org/
 * [x] provide a way to contribute meta data using Github Pull Requests (use CSV file as well) - see [manually-maintained-metadata-about-ontologies](./manually-maintained-metadata-about-ontologies.csv)
+* [x] use manually maintained CSV file to fill in blanks in index.db (e.g. missing license info in OWL file)
 * the following meta data are of interest:
   * [x] valid URL to latest version of RDF/XML-, Turtle-, NTriples- or N3-file
   * [x] name
