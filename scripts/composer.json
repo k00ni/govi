@@ -13,6 +13,7 @@
         "sweetrdf/in-memory-store-sqlite": "^1.1.0",
         "sweetrdf/quick-rdf": "^2.0",
         "sweetrdf/quick-rdf-io": "^1.0",
+        "sweetrdf/quick-rdf-io-raptor": "^1.0.0-RC1",
         "symfony/cache": "^7"
     },
     "require-dev": {

@@ -10,6 +10,7 @@ use App\IndexEntry;
 use App\TemporaryIndex;
 use EasyRdf\Format;
 use Exception;
+use quickRdfIo\Raptor\Parser;
 use quickRdfIo\RdfIoException;
 use quickRdfIo\Util;
 use rdfInterface\DataFactoryInterface;
@@ -21,6 +22,7 @@ abstract class AbstractExtractor
 {
     protected Cache $cache;
     protected DataFactoryInterface $dataFactory;
+    protected Parser $raptorParser;
     protected TemporaryIndex $temporaryIndex;
 
     /**
@@ -35,6 +37,10 @@ abstract class AbstractExtractor
         $this->cache = $cache;
         $this->dataFactory = $dataFactory;
         $this->temporaryIndex = $temporaryIndex;
+
+        // setup Raptor Utils parser
+        $this->raptorParser = new Parser($this->dataFactory);
+        $this->raptorParser->setDirPathForTemporaryFiles(ROOT_DIR_PATH.'scripts/var/raptor_temp_files');
     }
 
     abstract public function getPreparedIndexEntry(): IndexEntry;
@@ -321,22 +327,26 @@ abstract class AbstractExtractor
     }
 
     /**
-     * @param resource $fileHandle
+     * @param resource|\rdfInterface\QuadIteratorInterface $input
      *
      * @return array<\rdfInterface\QuadInterface>
      *
      * @throws \Throwable
      */
-    protected function readQuadsFromFileHandleToList($fileHandle, string|null $format = null): array
+    protected function readQuadsToList($input, string|null $format = null): array
     {
         $maxAmountOfTriples = 40000;
+
+        if (is_resource($input)) {
+            $input = Util::parse($input, $this->dataFactory, $format);
+        }
 
         /*
          * use quickRdfIo's Util::parse
          */
         $i = 0;
         $list = [];
-        foreach (Util::parse($fileHandle, $this->dataFactory, $format) as $quad) {
+        foreach ($input as $quad) {
             $list[] = $quad;
             if ($i++ > $maxAmountOfTriples) {
                 break;
@@ -347,7 +357,7 @@ abstract class AbstractExtractor
     }
 
     /**
-     * Loads the content of a given RDF file into an EasyRdf Graph instance.
+     * Loads the content of a given RDF file into a Graph instance.
      *
      * Be aware: because some ontologies are over 1 GB+ in size, only first x triples are used,
      *           which may result in incomplete meta data about the ontology.
@@ -366,16 +376,17 @@ abstract class AbstractExtractor
                 throw new RdfIoException('quickRdfIo is known to fail to parse it, therefore jump to rapper');
             }
 
-            return new Graph($this->readQuadsFromFileHandleToList($fileHandle, $format));
+            return new Graph($this->readQuadsToList($fileHandle, $format));
         } catch (Throwable $th) {
             if (
                 $th instanceof RdfIoException
                 || str_contains($th->getMessage(), 'on line')
             ) {
                 if (isEmpty($format)) {
-                    $format = '--guess';
+                    // leave it to the parser
+                    $this->raptorParser->setFormat(null);
                 } else {
-                    $format = '-i '.$format;
+                    $this->raptorParser->setFormat($format);
                 }
 
                 /*
@@ -386,48 +397,22 @@ abstract class AbstractExtractor
                  * is taken to build the Graph instance.
                  */
                 echo PHP_EOL.'quickRdfIo failed with ERROR: '.$th->getMessage();
-                echo PHP_EOL.'- trying rapper'.PHP_EOL;
+                echo PHP_EOL.'- trying rapper (use format = '.$format.')'.PHP_EOL;
 
-                $tempFilepath = tempnam(VAR_FOLDER_PATH.'temp_files'.DIRECTORY_SEPARATOR, '');
-                if (false === $tempFilepath) {
-                    throw new Exception('Could not create temp. file using tempnam function!');
+                $fileHandle = fopen($localFilePath, 'r');
+                if (false == $fileHandle) {
+                    throw new Exception('Could not open file named: '.$localFilePath);
                 }
 
-                echo PHP_EOL;
-                echo PHP_EOL;
-                echo 'Create temp. file: '.$tempFilepath;
-
-                // build and execute command using system shell
-                // given file will be outputed as ntriples into an temp file
-                $command = 'rapper '.$format.' -o ntriples '.$localFilePath.' > '.$tempFilepath;
-
-                echo PHP_EOL.'- executing command: '.$command;
-                echo PHP_EOL;
-
-                shell_exec($command);
-
-                echo PHP_EOL.'- read from '.$tempFilepath;
-                echo PHP_EOL;
-
-                if (100 < filesize($tempFilepath)) {
-                    try {
-                        $tempFileHandle = fopen($tempFilepath, 'r');
-                        if (false == $tempFileHandle) {
-                            throw new Exception('Could not open temp. file named: '.$tempFilepath);
-                        }
-
-                        $list = $this->readQuadsFromFileHandleToList($tempFileHandle, 'ntriples');
-                        fclose($tempFileHandle);
-                        return new Graph($list);
-                    } catch(RdfIoException $th) {
-                        echo PHP_EOL;
-                        echo PHP_EOL.'- ERR: '.$th->getMessage();
-                        echo PHP_EOL;
-                        return new Graph([]);
-                    }
-
-                } else {
-                    echo PHP_EOL.'WARN: Temp file ('.$tempFilepath.') is empty, aborting here ...';
+                try {
+                    $iterator = $this->raptorParser->parseStream($fileHandle);
+                    $list = $this->readQuadsToList($iterator, 'ntriples');
+                    fclose($fileHandle);
+                    return new Graph($list);
+                } catch(Throwable $th) {
+                    echo PHP_EOL;
+                    echo PHP_EOL.'- ERR: '.$th->getMessage();
+                    echo PHP_EOL;
                     return new Graph([]);
                 }
 
