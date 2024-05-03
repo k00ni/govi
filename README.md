@@ -71,7 +71,10 @@ There are various ways to contribute:
 
 The index mostly consists of metadata read from an ontology service such as DBpedia Archivo.
 However, not all ontologies are registered in an ontology service and therefore need to be maintained manually.
-For this purpose adapt the file [manually-maintained-metadata-about-ontologies.csv](./manually-maintained-metadata-about-ontologies.csv).
+Before you continue, please try to submit your ontology to [DBpedia Archivo](https://archivo.dbpedia.org/add).
+Not only will the ontology be added to this index as well (in the next run) but it is also less work and the ontology gets versioned etc.
+
+If that is not feasible, adapt the file [manually-maintained-metadata-about-ontologies.csv](./manually-maintained-metadata-about-ontologies.csv).
 It has the same structure as the [index.csv](./index.csv) and its entries are only inserted at the end of the generation process.
 If you need any assistance, don't hesistate to open an issue or contact me (contact details at https://github.com/k00ni).
 
