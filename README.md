@@ -51,7 +51,7 @@ The list was created by gathering information from various services.
 People can also contribute metadata through this repository, but it is recommended to use appropriate services instead.
 Over time, this place could encompass almost all ontologies/vocabularies.
 
-![illustration govi and ontology services](./doc/images/illustration.svg)
+![illustration govi and ontology services](./doc/images/illustration.png)
 
 **Whats wrong with Ontology portals, online catalogs, ...?**
 
