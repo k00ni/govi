@@ -1,0 +1,573 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="170mm"
+   height="132mm"
+   viewBox="0 0 170 132"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   sodipodi:docname="illustration.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#cccccc"
+     borderopacity="1"
+     inkscape:pageshadow="0"
+     inkscape:pageopacity="1"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="1.3932941"
+     inkscape:cx="264.12227"
+     inkscape:cy="232.90129"
+     inkscape:window-width="1920"
+     inkscape:window-height="1016"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1"
+     inkscape:lockguides="false" />
+  <defs
+     id="defs2">
+    <marker
+       style="overflow:visible"
+       id="DiamondM"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="DiamondM"
+       inkscape:isstock="true">
+      <path
+         transform="scale(0.4)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 0,-7.0710768 -7.0710894,0 0,7.0710589 7.0710462,0 Z"
+         id="path9384" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="DotL"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="DotL"
+       inkscape:isstock="true">
+      <path
+         transform="matrix(0.8,0,0,0.8,5.92,0.8)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="m -2.5,-1 c 0,2.76 -2.24,5 -5,5 -2.76,0 -5,-2.24 -5,-5 0,-2.76 2.24,-5 5,-5 2.76,0 5,2.24 5,5 z"
+         id="path9363" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Arrow1Mend"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Mend"
+       inkscape:isstock="true">
+      <path
+         transform="matrix(-0.4,0,0,-0.4,-4,0)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path9311" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Arrow2Lend"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow2Lend"
+       inkscape:isstock="true">
+      <path
+         transform="matrix(-1.1,0,0,-1.1,-1.1,0)"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:0.625;stroke-linejoin:round"
+         id="path9323" />
+    </marker>
+    <rect
+       x="87.750122"
+       y="75.686195"
+       width="279.42999"
+       height="35.793659"
+       id="rect2256" />
+    <rect
+       x="87.750122"
+       y="75.686195"
+       width="450.41641"
+       height="19.20191"
+       id="rect2256-3" />
+    <rect
+       x="87.750122"
+       y="75.686195"
+       width="279.42999"
+       height="35.793659"
+       id="rect2256-7" />
+    <rect
+       x="87.750122"
+       y="75.686195"
+       width="450.41641"
+       height="19.20191"
+       id="rect2256-3-3" />
+    <marker
+       style="overflow:visible"
+       id="Arrow1Mend-6"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Mend"
+       inkscape:isstock="true">
+      <path
+         transform="matrix(-0.4,0,0,-0.4,-4,0)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path9311-2" />
+    </marker>
+    <rect
+       x="87.750122"
+       y="75.686195"
+       width="450.41641"
+       height="19.20191"
+       id="rect2256-3-2" />
+    <rect
+       x="87.750122"
+       y="75.686195"
+       width="450.41641"
+       height="19.20191"
+       id="rect2256-3-2-0" />
+    <rect
+       x="87.750122"
+       y="75.686195"
+       width="450.41641"
+       height="19.20191"
+       id="rect2256-3-2-0-3" />
+    <marker
+       style="overflow:visible"
+       id="Arrow1Mend-0"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Mend"
+       inkscape:isstock="true">
+      <path
+         transform="matrix(-0.4,0,0,-0.4,-4,0)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path9311-6" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Arrow1Mend-0-6"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Mend"
+       inkscape:isstock="true">
+      <path
+         transform="matrix(-0.4,0,0,-0.4,-4,0)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path9311-6-1" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Arrow1Mend-0-6-7"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Mend"
+       inkscape:isstock="true">
+      <path
+         transform="matrix(-0.4,0,0,-0.4,-4,0)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path9311-6-1-9" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Arrow1Mend-0-2"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Mend"
+       inkscape:isstock="true">
+      <path
+         transform="matrix(-0.4,0,0,-0.4,-4,0)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path9311-6-0" />
+    </marker>
+    <rect
+       x="87.750122"
+       y="75.686195"
+       width="450.41641"
+       height="19.20191"
+       id="rect2256-3-2-0-3-7" />
+    <marker
+       style="overflow:visible"
+       id="Arrow1Mend-0-6-7-9"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Mend"
+       inkscape:isstock="true">
+      <path
+         transform="matrix(-0.4,0,0,-0.4,-4,0)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path9311-6-1-9-2" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Arrow1Mend-0-6-7-9-9"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Mend"
+       inkscape:isstock="true">
+      <path
+         transform="matrix(-0.4,0,0,-0.4,-4,0)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path9311-6-1-9-2-7" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Arrow1Mend-6-6"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Mend"
+       inkscape:isstock="true">
+      <path
+         transform="matrix(-0.4,0,0,-0.4,-4,0)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path9311-2-1" />
+    </marker>
+    <rect
+       x="87.750122"
+       y="75.686195"
+       width="332.13156"
+       height="70.698853"
+       id="rect2256-3-2-0-9" />
+    <rect
+       x="87.750122"
+       y="75.686195"
+       width="107.70234"
+       height="23.61088"
+       id="rect2256-3-2-1" />
+    <rect
+       x="87.750122"
+       y="75.686195"
+       width="532.73596"
+       height="36.323963"
+       id="rect2256-3-2-0-9-7" />
+    <marker
+       style="overflow:visible"
+       id="Arrow1Mend-5"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Mend"
+       inkscape:isstock="true">
+      <path
+         transform="matrix(-0.4,0,0,-0.4,-4,0)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path9311-0" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="DiamondM-6"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="DiamondM"
+       inkscape:isstock="true">
+      <path
+         transform="scale(0.4)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 0,-7.0710768 -7.0710894,0 0,7.0710589 7.0710462,0 Z"
+         id="path9384-1" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="DiamondM-6-6"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="DiamondM"
+       inkscape:isstock="true">
+      <path
+         transform="scale(0.4)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 0,-7.0710768 -7.0710894,0 0,7.0710589 7.0710462,0 Z"
+         id="path9384-1-3" />
+    </marker>
+    <rect
+       x="87.750122"
+       y="75.686195"
+       width="172.06197"
+       height="79.593323"
+       id="rect2256-3-2-1-0" />
+    <rect
+       x="87.750122"
+       y="75.686195"
+       width="198.92892"
+       height="40.146561"
+       id="rect2256-3-2-1-0-1" />
+  </defs>
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <text
+       xml:space="preserve"
+       transform="matrix(0.26458333,0,0,0.26458333,-12.836626,-16.79976)"
+       id="text2254"
+       style="font-style:normal;font-weight:normal;font-size:13.3333px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect2256);fill:#000000;fill-opacity:1;stroke:none"
+       x="116.57198"
+       y="0"><tspan
+         x="108.55238"
+         y="87.482392"
+         id="tspan214"><tspan
+           style="-inkscape-font-specification:sans-serif;text-align:center;text-anchor:middle"
+           id="tspan212">What ontologies/vocabularies exist 
+</tspan></tspan><tspan
+         x="136.28018"
+         y="104.14902"
+         id="tspan218"><tspan
+           style="-inkscape-font-specification:sans-serif;text-align:center;text-anchor:middle"
+           id="tspan216">and where can I find them?</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       transform="matrix(0.26458333,0,0,0.26458333,17.721886,17.938986)"
+       id="text2254-6"
+       style="font-style:normal;font-weight:normal;font-size:13.3333px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect2256-3);fill:#000000;fill-opacity:1;stroke:none"><tspan
+         x="87.75"
+         y="87.482392"
+         id="tspan222"><tspan
+           style="font-weight:bold;-inkscape-font-specification:'sans-serif Bold'"
+           id="tspan220">Global Ontology and Vocabulary Index (GOVI)</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       transform="matrix(0.26458333,0,0,0.26458333,30.254005,57.370661)"
+       id="text2254-6-7"
+       style="font-style:normal;font-weight:normal;font-size:13.3333px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect2256-3-2);fill:#000000;fill-opacity:1;stroke:none"><tspan
+         x="87.75"
+         y="87.482392"
+         id="tspan226"><tspan
+           style="font-weight:bold;-inkscape-font-specification:'sans-serif Bold'"
+           id="tspan224">Ontology Services</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       transform="matrix(0.26458333,0,0,0.26458333,82.13339,87.580185)"
+       id="text2254-6-7-94"
+       style="font-style:normal;font-weight:normal;font-size:13.3333px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect2256-3-2-1);fill:#000000;fill-opacity:1;stroke:none"><tspan
+         x="87.75"
+         y="87.482392"
+         id="tspan230"><tspan
+           style="font-weight:bold;-inkscape-font-specification:'sans-serif Bold'"
+           id="tspan228">The Internet</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       transform="matrix(0.26458333,0,0,0.26458333,-15.445088,93.311327)"
+       id="text2254-6-7-94-6"
+       style="font-style:normal;font-weight:normal;font-size:13.3333px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect2256-3-2-1-0);fill:#000000;fill-opacity:1;stroke:none"><tspan
+         x="87.75"
+         y="87.482392"
+         id="tspan232">Some Ontology services </tspan><tspan
+         x="87.75"
+         y="104.14902"
+         id="tspan234">store their data in silos, </tspan><tspan
+         x="87.75"
+         y="120.81564"
+         id="tspan236">which are not directly
+</tspan><tspan
+         x="87.75"
+         y="137.48227"
+         id="tspan238">accessible.</tspan></text>
+    <text
+       xml:space="preserve"
+       transform="matrix(0.26458333,0,0,0.26458333,-3.8126221,86.930921)"
+       id="text2254-6-7-94-6-5"
+       style="font-style:normal;font-weight:normal;font-size:13.3333px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect2256-3-2-1-0-1);fill:#000000;fill-opacity:1;stroke:none"><tspan
+         x="87.75"
+         y="87.482392"
+         id="tspan242"><tspan
+           style="font-weight:bold;-inkscape-font-specification:'sans-serif Bold'"
+           id="tspan240">Data Silos</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       transform="matrix(0.26458333,0,0,0.26458333,-11.007339,64.388248)"
+       id="text2254-6-7-9"
+       style="font-style:normal;font-weight:normal;font-size:13.3333px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect2256-3-2-0);fill:#000000;fill-opacity:1;stroke:none"><tspan
+         x="87.75"
+         y="87.482392"
+         id="tspan244">BioPortal</tspan></text>
+    <text
+       xml:space="preserve"
+       transform="matrix(0.26458333,0,0,0.26458333,50.18968,95.239957)"
+       id="text2254-6-7-9-3"
+       style="font-style:normal;font-weight:normal;font-size:13.3333px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect2256-3-2-0-9);fill:#000000;fill-opacity:1;stroke:none"><tspan
+         x="87.75"
+         y="87.482392"
+         id="tspan246">Ontologies are spread over the Internet: they are
+</tspan><tspan
+         x="87.75"
+         y="104.14902"
+         id="tspan248">available in different file formats and located in </tspan><tspan
+         x="87.75"
+         y="120.81564"
+         id="tspan250">Github/GitLab repositories, project- and personal </tspan><tspan
+         x="87.75"
+         y="137.48227"
+         id="tspan252">websites etc.</tspan></text>
+    <text
+       xml:space="preserve"
+       transform="matrix(0.26458333,0,0,0.26458333,3.2054689,23.953926)"
+       id="text2254-6-7-9-3-8"
+       style="font-style:normal;font-weight:normal;font-size:13.3333px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect2256-3-2-0-9-7);fill:#000000;fill-opacity:1;stroke:none"
+       x="423.97678"
+       y="0" />
+    <text
+       xml:space="preserve"
+       transform="matrix(0.26458333,0,0,0.26458333,34.028745,64.146385)"
+       id="text2254-6-7-9-6"
+       style="font-style:normal;font-weight:normal;font-size:13.3333px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect2256-3-2-0-3);fill:#000000;fill-opacity:1;stroke:none"><tspan
+         x="87.75"
+         y="87.482392"
+         id="tspan254">DBpedia Archivo</tspan></text>
+    <text
+       xml:space="preserve"
+       transform="matrix(0.26458333,0,0,0.26458333,88.516608,65.465379)"
+       id="text2254-6-7-9-6-5"
+       style="font-style:normal;font-weight:normal;font-size:13.3333px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect2256-3-2-0-3-7);fill:#000000;fill-opacity:1;stroke:none"><tspan
+         x="87.75"
+         y="87.482392"
+         id="tspan256">...</tspan></text>
+    <text
+       xml:space="preserve"
+       transform="matrix(0.26458333,0,0,0.26458333,82.177674,-13.084781)"
+       id="text2254-6-5"
+       style="font-style:normal;font-weight:normal;font-size:13.3333px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect2256-3-3);fill:#000000;fill-opacity:1;stroke:none"><tspan
+         x="87.75"
+         y="87.482392"
+         id="tspan258">Third-Party Apps/Services</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.482;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Mend)"
+       d="M 46.053207,15.094621 V 31.782869"
+       id="path9243" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.34348;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#DiamondM)"
+       d="M 14.685947,51.273873 V 40.083941"
+       id="path9243-3" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.28562;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#DiamondM-6)"
+       d="M 20.229016,52.59429 V 44.856752"
+       id="path9243-3-0" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.28562;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#DiamondM-6-6)"
+       d="M 23.484593,50.87918 V 43.141642"
+       id="path9243-3-0-2" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.374155;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Mend-0)"
+       d="M 44.460904,62.401392 V 72.45725"
+       id="path9243-2" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.374155;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Mend-0-6)"
+       d="M 60.487602,62.599943 V 72.655801"
+       id="path9243-2-8" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.374155;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Mend-0-2)"
+       d="M 75.546823,62.525888 V 72.581746"
+       id="path9243-2-2" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.374155;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Mend-0-6-7)"
+       d="M 91.573568,62.724439 V 72.780297"
+       id="path9243-2-8-3" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.374155;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Mend-0-6-7-9)"
+       d="M 91.867968,93.306219 V 103.3621"
+       id="path9243-2-8-3-2" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.374155;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Mend-0-6-7-9-9)"
+       d="m 29.8431,92.84254 v 10.05588"
+       id="path9243-2-8-3-2-3" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.482;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Mend-6)"
+       d="M 128.93599,15.056106 V 31.744354"
+       id="path9243-9" />
+    <path
+       style="fill:none;stroke:#8a8a8a;stroke-width:1.3029;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Mend-6-6)"
+       d="M 147.86608,63.103701 V 100.07232"
+       id="path9243-9-2" />
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:1.04007;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect9672"
+       width="167.89345"
+       height="25.369087"
+       x="1.0492017"
+       y="34.827461"
+       ry="12.684544" />
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:0.76945;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect9672-1"
+       width="135.55008"
+       height="17.197859"
+       x="1.2249391"
+       y="74.404587"
+       ry="8.5989294" />
+    <rect
+       style="fill:none;stroke:#95f9ff;stroke-width:1.563;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect13794"
+       width="50.589844"
+       height="9.1721153"
+       x="103.33292"
+       y="4.1432815"
+       ry="1.3525478" />
+    <rect
+       style="fill:none;stroke:#ffce95;stroke-width:2.22322;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect13794-4"
+       width="78.104912"
+       height="12.019908"
+       x="7.2771392"
+       y="1.1116101"
+       ry="1.7724918" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.334706;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 67.266783,128.18281 V 105.44738 H 164.2228 v 23.99247"
+       id="path21956" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.288202;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 4.1612609,120.86913 V 105.06299 H 55.48658 v 16.68007"
+       id="path21956-8" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.200174px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 9.5649093,50.062431 10.7061967,-2.409271 9.33054,2.500111 -11.421608,6.229504 z"
+       id="path49543" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:3.52777px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="40.343609"
+       y="48.149433"
+       id="text53202"><tspan
+         sodipodi:role="line"
+         id="tspan53200"
+         style="stroke-width:0.264583"
+         x="40.343609"
+         y="48.149433">Put simply, GOVI is a map of ontologies. </tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.264583"
+         x="40.343609"
+         y="52.559147"
+         id="tspan53204">It tells you which ontologies exist and where you can find them.</tspan></text>
+  </g>
+</svg>

@@ -13,10 +13,10 @@ You can use the GOVI-browser https://govi-browser.inspirito.de/ to easily browse
 - [Global Ontology and Vocabulary Index (GOVI)](#global-ontology-and-vocabulary-index-govi)
   - [Overview](#overview)
   - [Summary of the content of the index](#summary-of-the-content-of-the-index)
+  - [Why this project?](#why-this-project)
   - [How to contribute?](#how-to-contribute)
     - [Add/change ontology entry](#addchange-ontology-entry)
     - [Add/change source code](#addchange-source-code)
-  - [Why this project?](#why-this-project)
   - [Documentation](#documentation)
   - [License](#license)
 
@@ -28,9 +28,38 @@ An RDF ontology (including vocabularies) is part of the index if it meets the fo
 * non-empty, valid ontology title
 * non-empty, valid ontology IRI
 * at least one valid URL to a RDF file is available (JSON-LD, N3, Ntriples, RDF/XML or Turtle)
-* at least one instance/subclasses of one of the following classes was found: `owl:Ontology`, `owl:Class`, `rdf:Property`, `rdfs:Class`, `skos:Concept`
+* at least one instance/subclass of one of the following classes were found: `owl:Ontology`, `owl:Class`, `rdf:Property`, `rdfs:Class`, `skos:Concept`
 
 If an entry is part of multiple sources (e.g. LOV and DBpedia Archivo), the one which appears first is taken.
+
+The file basically looks like:
+
+![small screenshot](./doc/images/short-view-index.png)
+
+## Why this project?
+
+Where do you go if you wanna answer the following question:
+
+> **What ontologies/vocabularies exist and where can I find them?**
+
+Currently, there is **no** search engine or list of all ontologies/vocabularies on the Internet.
+Such a list may never exist because ontologies/vocabularies often change (because of [link rot](https://en.wikipedia.org/wiki/Link_rot) etc.).
+To answer this question, one must manually search various services such as ontology portals and archive services, which only cover a part of the ontologies/vocabularies.
+This project aims to provide a simple list of RDF ontologies/vocabularies.
+The list was created by gathering information from various services.
+**We are building on the hard work of the teams behind these services.**
+People can also contribute metadata through this repository, but it is recommended to use appropriate services instead.
+Over time, this place could encompass almost all ontologies/vocabularies.
+
+![illustration govi and ontology services](./doc/images/illustration.svg)
+
+**Whats wrong with Ontology portals, online catalogs, ...?**
+
+Nothing. Services such as BioPortal and DBpedia Archivo play an important role for the community because they provide user-friendly access to browse ontologies and provide additional services such as versioning, archives, etc.
+This project is **not** meant to replace them, on the contrary, we support services like [DBpedia Archivo](https://archivo.dbpedia.org/) because they address important challenges like link rot and inconsistent versioning.
+Portals such as BioPortal are also important because of their user-friendly approach (e.g. browsing class hierarchies, searching, etc.).
+But portals often provide ontologies as a data dump or SPARQL endpoint instead of a dereferenceable URL (for accessing the RDF/OWL code).
+As long as the portal is online, everything is fine, but as soon as it goes offline, all ontologies/vocabularies are gone unless there is a copy somewhere else.
 
 ## How to contribute?
 
@@ -50,50 +79,6 @@ If you need any assistance, don't hesistate to open an issue or contact me (cont
 
 For source code changes use Pull Requests on Github.
 Further information can be found here: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request
-
-## Why this project?
-
-Where do you go if you wanna answer the following question:
-
-> **What ontologies/vocabularies exist and where can I find them?**
-
-There is currently **no** search engine or even a basic list of all ontologies/vocabularies (of the LOD graph or the Internet in general).
-There may never be such a list because ontologies/vocabularies come and go (e.g. [link rot](https://en.wikipedia.org/wiki/Link_rot)).
-But the question remains, and to answer it one has to manually check ontology portals (like BioPortal), archive services (like DBpedia Archivo) and similar services.
-Each service covers only a subset of ontologies/vocabularies.
-This project aims to answer this question by providing a simplified list of RDF ontologies/vocabularies.
-The list was created by asking available ontology portals, archive services, etc. about their ontologies and vocabularies.
-**We're standing on the shoulders of giants here** because the teams behind these services do the hard work.
-Also, people can also provide metadata via this repository, although we recommend using a suitable service (like the ones mentioned) instead.
-Over time, this place could grow to reference (almost) all ontologies/vocabularies.
-
-```
-
-        People: What ontologies/vocabularies exist and where can I find them?
-                                      ||
-                                      ||
-                                      \/
-  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|
-  |                                                                               |
-  |              Global Ontologies and Vocabulary Index (GOVI)                    |
-  |                                                                               |
-  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|
-        ||                      ||                                ||
-        ||                      ||                                ||
-        ||                      ||                                ||
-        \/                      \/                                \/
-  Ontology Portals      Ontology Archives           Ontology Catalogs       ...
-  (e.g. BioPortal)      (e.g. DBpedia Archivo)      (e.g. Linked Open Vocabularies)
-
-```
-
-**Whats wrong with Ontology portals, online catalogs, ...?**
-
-Nothing. Services such as BioPortal and DBpedia Archivo play an important role for the community because they provide user-friendly access to browse ontologies and provide additional services such as versioning, archives, etc.
-This project is **not** meant to replace them, on the contrary, we support services like [DBpedia Archivo](https://archivo.dbpedia.org/) because they address important challenges like link rot and inconsistent versioning.
-Portals such as BioPortal are also important because of their user-friendly approach (e.g. browsing class hierarchies, searching, etc.).
-But portals often provide ontologies as a data dump or SPARQL endpoint instead of a dereferenceable URL (for accessing the RDF/OWL code).
-As long as the portal is online, everything is fine, but as soon as it goes offline, all ontologies/vocabularies are gone unless there is a copy somewhere else.
 
 ## Documentation
 
