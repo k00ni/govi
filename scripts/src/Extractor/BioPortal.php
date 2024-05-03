@@ -30,6 +30,7 @@ class BioPortal extends AbstractExtractor
     private string $ontologyListUrl = 'https://data.bioontology.org/ontologies?include=all&display_context=false&display_links=true&apikey=';
 
     /**
+     * @throws \Error
      * @throws \Exception if no API key file was found
      */
     public function __construct(Cache $cache, DataFactoryInterface $dataFactory, TemporaryIndex $temporaryIndex)

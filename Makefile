@@ -17,3 +17,4 @@ index:
 prepare:
 	cd scripts && vendor/bin/php-cs-fixer fix
 	cd scripts && vendor/bin/phpstan
+	cd scripts && vendor/bin/phpunit

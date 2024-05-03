@@ -32,6 +32,10 @@ abstract class AbstractExtractor
      */
     protected string $namespace;
 
+    /**
+     * @throws \Error
+     * @throws \Exception
+     */
     public function __construct(Cache $cache, DataFactoryInterface $dataFactory, TemporaryIndex $temporaryIndex)
     {
         $this->cache = $cache;
