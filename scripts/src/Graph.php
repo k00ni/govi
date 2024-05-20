@@ -149,6 +149,31 @@ class Graph implements Countable
 
     /**
      * @throws \InvalidArgumentException
+     *
+     * @return array<non-empty-string>
+     */
+    public function getInstancesOfType(string $type): array
+    {
+        $fullTypeUri = RdfNamespace::expand($type);
+
+        $result = [];
+
+        foreach ($this->list as $quad) {
+            if (
+                $quad->getPredicate()->getValue() == 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'
+                && $quad->getObject()->getValue() == $fullTypeUri
+            ) {
+                /** @var non-empty-string */
+                $val = $quad->getSubject()->getValue();
+                $result[] = $val;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * @throws \InvalidArgumentException
      */
     public function hasInstancesOfType(string $type): bool
     {

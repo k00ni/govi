@@ -1,6 +1,7 @@
-downloaded_rdf_files/*
-temp_files/*
-extractor_*
-phpstan_cache
+/downloaded_rdf_files/*
+/extractor_*
+/phpstan_cache
+/sweet-master
+/temp_files/*
 *.*
 !.gitignore

@@ -8,6 +8,7 @@ use App\Extractor\BioPortal;
 use App\Extractor\DBpediaArchivo;
 use App\Extractor\LinkedOpenVocabularies;
 use App\Extractor\OntologyLookupService;
+use App\Extractor\SweetOntologies;
 use App\TemporaryIndex;
 use quickRdf\DataFactory;
 
@@ -24,6 +25,7 @@ foreach ([
     LinkedOpenVocabularies::class,
     OntologyLookupService::class,
     BioPortal::class,
+    SweetOntologies::class,
 ] as $class) {
     /** @var \App\Extractor\AbstractExtractor */
     $extractor = new $class($cache, $dataFactory, $temporaryIndex);

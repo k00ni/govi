@@ -21,7 +21,7 @@ https://archivo.dbpedia.org/list
 Related script: [scripts/src/Extractor/DBpediaArchivo.php](./../scripts/src/Extractor/DBpediaArchivo.php)
 
 **Notes:**
-* Used value of "Latest Timestamp" for latest access, "2020.06.10-175249" is interpreted as "2020-06-10 00:00:00"
+* Used value of "Latest Timestamp" for `modified` field, "2020.06.10-175249" is interpreted as "2020-06-10 00:00:00"
 
 ## Linked Open Vocabularies (LOV)
 
@@ -30,7 +30,7 @@ https://lov.linkeddata.es/dataset/lov/
 Related script: [scripts/src/Extractor/LinkedOpenVocabularies.php](./../scripts/src/Extractor/LinkedOpenVocabularies.php)
 
 **Notes:**
-* Used value of `dct:modified` for latest access; because the field only contains the date, the time is always set to `00:00:00`.
+* Used value of `dct:modified` for `modified` field; because the field only contains the date, the time is always set to `00:00:00`.
 
 ## Ontology Lookup Service (OLS)
 
@@ -40,4 +40,14 @@ Related script: [scripts/src/Extractor/OntologyLookupService.php](./../scripts/s
 
 **Notes:**
 * Warning: Currently ignoring all ontologies with no `fileLocation` field set in ontology configuration
-* Field `ontology.uploaded` is used for latest access
+* Field `ontology.uploaded` is used for `modified` field
+
+## Sweet Ontology Github Repository
+
+https://github.com/ESIPFed/sweet
+
+Related script: [scripts/src/Extractor/SweetOntologies.php](./../scripts/src/Extractor/SweetOntologies.php)
+
+**Notes:**
+* Here we are processing a Github repository and its files
+* Use latest file change date for `modified` field
