@@ -279,10 +279,10 @@ class TemporaryIndex
      */
     public function writeToIndexCsv(): void
     {
-        $csvPath = ROOT_DIR_PATH.'index.csv';
+        $filePath = ROOT_DIR_PATH.'index.csv';
 
-        if (file_exists($csvPath)) {
-            unlink($csvPath);
+        if (file_exists($filePath)) {
+            unlink($filePath);
         }
 
         // get a list of all entries
@@ -302,6 +302,35 @@ class TemporaryIndex
             $dataToWrite .= '"'.implode('","', $row).'"'.PHP_EOL;
         }
 
-        file_put_contents($csvPath, $dataToWrite);
+        file_put_contents($filePath, $dataToWrite);
+    }
+
+    /**
+     * @throws \PDOException
+     */
+    public function writeToIndexJsonl(): void
+    {
+        $filePath = ROOT_DIR_PATH.'index.jsonl';
+
+        if (file_exists($filePath)) {
+            unlink($filePath);
+        }
+
+        // get a list of all entries
+        $sql = 'SELECT ontology_title, ontology_iri,
+                       summary, authors, contributors, license_information, project_page, source_page,
+                       latest_json_ld_file, latest_n3_file, latest_ntriples_file, latest_rdfxml_file, latest_turtle_file,
+                       modified, version, source_title, source_url
+                  FROM entry
+                 ORDER BY ontology_title ASC';
+        $stmt = $this->temporaryIndexDb->prepare($sql);
+        $stmt->execute();
+
+        $dataToWrite = '';
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $dataToWrite .= json_encode($row).PHP_EOL;
+        }
+
+        file_put_contents($filePath, $dataToWrite);
     }
 }

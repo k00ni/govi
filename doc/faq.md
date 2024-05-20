@@ -15,4 +15,3 @@ For now we only aim to provide an index which is as complete as possible.
 CSV files are universally readable and easy to work with.
 People need almost no prior knowledge to understand the file structure.
 Another advantage is the low memory footprint when parsing a CSV file, because you can read it line by line.
-If it were in a format, where you always have to read the whole file before processing it (such as JSON), you would need more memory the bigger the index file gets.

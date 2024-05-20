@@ -17,7 +17,7 @@ require 'bootstrap.php';
 global $cache;
 $cache = new Cache();
 $dataFactory = new DataFactory();
-$temporaryIndex = new TemporaryIndex();
+$temporaryIndex = new TemporaryIndex(SQLITE_FILE_PATH);
 
 // run extractors to fill temporary_index.db
 foreach ([
@@ -36,7 +36,9 @@ foreach ([
 // finalize temporary index and write index.csv
 (new MergeInManuallyMaintainedMetadata($cache, $dataFactory, $temporaryIndex))->run();
 
+// create files
 $temporaryIndex->writeToIndexCsv();
+$temporaryIndex->writeToIndexJsonl();
 
 echo PHP_EOL;
 echo PHP_EOL;
