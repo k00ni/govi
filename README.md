@@ -46,20 +46,29 @@ Currently, there is **no** search engine or list of all ontologies/vocabularies 
 Such a list may never exist because ontologies/vocabularies often change (because of [link rot](https://en.wikipedia.org/wiki/Link_rot) etc.).
 To answer this question, one must manually search various services such as ontology portals and archive services, which only cover a part of the ontologies/vocabularies.
 This project aims to provide a simple list of RDF ontologies/vocabularies.
-The list was created by gathering information from various services.
+The list was created by gathering information from various services, such as DBpedia Archivo.
 **We are building on the hard work of the teams behind these services.**
 People can also contribute metadata through this repository, but it is recommended to use appropriate services instead.
 Over time, this place could encompass almost all ontologies/vocabularies.
 
 ![illustration govi and ontology services](./doc/images/illustration.png)
 
-**Whats wrong with Ontology portals, online catalogs, ...?**
+**Why another service? Why don't you just add the ontologies at DBpedia Archivo (or others)?**
 
-Nothing. Services such as BioPortal and DBpedia Archivo play an important role for the community because they provide user-friendly access to browse ontologies and provide additional services such as versioning, archives, etc.
+Services such as BioPortal and DBpedia Archivo play an important role for the community because they provide user-friendly access to browse ontologies and provide additional services such as versioning, archives, etc.
 This project is **not** meant to replace them, on the contrary, we support services like [DBpedia Archivo](https://archivo.dbpedia.org/) because they address important challenges like link rot and inconsistent versioning.
+But they all have some relevante limitations.
+
 Portals such as BioPortal are also important because of their user-friendly approach (e.g. browsing class hierarchies, searching, etc.).
 But portals often provide ontologies as a data dump or SPARQL endpoint instead of a dereferenceable URL (for accessing the RDF/OWL code).
 As long as the portal is online, everything is fine, but as soon as it goes offline, all ontologies/vocabularies are gone unless there is a copy somewhere else.
+
+One disadvantage of DBpedia is the fact that only the ontology file provided is evaluated.
+As an outsider, you cannot add any further information to an ontology entry.
+For example, it sometimes happened that license information was only displayed in the associated Github repository, but not in the ontology file itself.
+In these cases, it would not be possible to add this metadata to the ontology entry on DBpedia Archivo.
+
+We want to complement these services so in the end users have an as complete as possible ontology map.
 
 ## How to contribute?
 
