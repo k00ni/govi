@@ -156,7 +156,7 @@ class OntologyLookupService extends AbstractExtractor
                     if ('json' == $format) {
                         $newEntry->setLatestJsonLdFile($ontologyFileLocation);
                     } elseif ('ntriples' == $format) {
-                        $newEntry->setLatestNtFile($ontologyFileLocation);
+                        $newEntry->setLatestNtriplesFile($ontologyFileLocation);
                     } elseif ('rdfxml' == $format) {
                         $newEntry->setLatestRdfXmlFile($ontologyFileLocation);
                     } elseif ('turtle' == $format) {

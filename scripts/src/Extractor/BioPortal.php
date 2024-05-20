@@ -122,7 +122,7 @@ class BioPortal extends AbstractExtractor
 
             // set latest files based on format
             if ('ntriples' == $format) {
-                $newEntry->setLatestNtFile($ontologyFile);
+                $newEntry->setLatestNtriplesFile($ontologyFile);
             } elseif ('rdfxml' == $format) {
                 $newEntry->setLatestRdfXmlFile($ontologyFile);
             } elseif ('turtle' == $format) {

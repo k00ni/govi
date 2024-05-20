@@ -36,20 +36,20 @@ class DBpediaArchivo extends AbstractExtractor
             echo '---------------------------------------------------------------------';
             echo PHP_EOL;
             echo 'Next: '.$indexEntry->getOntologyTitle();
-            echo ' >> '.$indexEntry->getLatestNtFile();
+            echo ' >> '.$indexEntry->getLatestNtriplesFile();
 
-            if (null === $indexEntry->getLatestNtFile() || isEmpty($indexEntry->getLatestNtFile())) {
+            if (null === $indexEntry->getLatestNtriplesFile() || isEmpty($indexEntry->getLatestNtriplesFile())) {
                 throw new Exception('No ntriples file path set!');
             }
 
             // fill remaining metadata by downloading RDF file to extract further meta data
             try {
-                $fileHandle = $this->cache->getLocalFileResourceForFileUrl($indexEntry->getLatestNtFile());
+                $fileHandle = $this->cache->getLocalFileResourceForFileUrl($indexEntry->getLatestNtriplesFile());
                 if (false === is_resource($fileHandle)) {
-                    throw new Exception('Could not open related file for '.$indexEntry->getLatestNtFile());
+                    throw new Exception('Could not open related file for '.$indexEntry->getLatestNtriplesFile());
                 }
 
-                $localFilePath = $this->cache->getCachedFilePathForFileUrl($indexEntry->getLatestNtFile());
+                $localFilePath = $this->cache->getCachedFilePathForFileUrl($indexEntry->getLatestNtriplesFile());
                 $graph = $this->loadQuadsIntoGraph($fileHandle, $localFilePath, 'ntriples');
                 fclose($fileHandle);
             } catch (Exception $e) {
@@ -151,7 +151,7 @@ class DBpediaArchivo extends AbstractExtractor
                  * latest OWL,TTL,... file
                  */
                 $iriUrlEncoded = urlencode((string) $newEntry->getOntologyIri());
-                $newEntry->setLatestNtFile('http://archivo.dbpedia.org/download?o='.$iriUrlEncoded.'&f=nt');
+                $newEntry->setLatestNtriplesFile('http://archivo.dbpedia.org/download?o='.$iriUrlEncoded.'&f=nt');
                 $newEntry->setLatestRdfXmlFile('http://archivo.dbpedia.org/download?o='.$iriUrlEncoded.'&f=owl');
                 $newEntry->setLatestTurtleFile('http://archivo.dbpedia.org/download?o='.$iriUrlEncoded.'&f=ttl');
 

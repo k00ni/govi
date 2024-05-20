@@ -47,9 +47,6 @@ class MergeInManuallyMaintainedMetadata
                 continue;
             }
 
-            // check if ontology URI is already known
-            $entryData = $this->temporaryIndex->getEntryDataAsArray((string) $row[1]);
-
             // setup IndexEntry instance
             $entry = $this->getPreparedIndexEntry();
             $entry->setOntologyTitle($row[0]);
@@ -65,7 +62,7 @@ class MergeInManuallyMaintainedMetadata
             // related files
             $entry->setLatestJsonLdFile($row[8]);
             $entry->setLatestN3File($row[9]);
-            $entry->setLatestNtFile($row[10]);
+            $entry->setLatestNtriplesFile($row[10]);
             $entry->setLatestRdfXmlFile($row[11]);
             $entry->setLatestTurtleFile($row[12]);
 

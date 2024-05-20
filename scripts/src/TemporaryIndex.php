@@ -43,10 +43,11 @@ class TemporaryIndex
     /**
      * @throws \PDOException
      */
-    public function __construct()
+    public function __construct(string|null $customPath)
     {
         // create/open SQLite file with the temporary index
-        $this->temporaryIndexDb = new PDO('sqlite:'.SQLITE_FILE_PATH);
+        $this->temporaryIndexDb = new PDO('sqlite:'.$customPath);
+
         $this->temporaryIndexDb->exec('CREATE TABLE IF NOT EXISTS entry (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             ontology_title TEXT,
@@ -134,7 +135,7 @@ class TemporaryIndex
                     // files
                     $indexEntry->getLatestJsonLdFile(),
                     $indexEntry->getLatestN3File(),
-                    $indexEntry->getLatestNtFile(),
+                    $indexEntry->getLatestNtriplesFile(),
                     $indexEntry->getLatestRdfXmlFile(),
                     $indexEntry->getLatestTurtleFile(),
                     // misc
@@ -159,54 +160,118 @@ class TemporaryIndex
     }
 
     /**
+     * Attempts to update all changed fields of an entry in the DB.
+     *
+     * @throws \Exception
      * @throws \PDOException
      */
-    public function updateEntry(IndexEntry $indexEntry): void
+    public function updateEntry(IndexEntry $entry): void
     {
-        if ($this->hasEntry((string) $indexEntry->getOntologyIri())) {
-            // build UPDATE statement
-            $sql = 'UPDATE entry SET ';
+        $stmt = $this->temporaryIndexDb->prepare('SELECT * FROM entry WHERE ontology_iri = ?');
+        $stmt->execute([$entry->getOntologyIri()]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            $i = 0;
-            foreach ($this->columnList as $column) {
-                if (0 < $i++) {
-                    $sql .= ', ';
-                }
-                $sql .= $column.' = COALESCE('.$column.', ?)';
+        if (is_array($row)) {
+            $sql = 'UPDATE entry SET ';
+            $setEntries = [];
+            $params = [];
+
+            if ($entry->getOntologyTitle() != $row['ontology_title'] && isEmpty($row['ontology_title'])) {
+                $setEntries[] = 'ontology_title = ?';
+                $params[] = addslashes((string) $entry->getOntologyTitle());
             }
 
+            if ($entry->getSummary() != $row['summary'] && isEmpty($row['summary'])) {
+                $setEntries[] = 'summary = ?';
+                $params[] = addslashes((string) $entry->getSummary());
+            }
+
+            if ($entry->getLicenseInformation() != $row['license_information'] && isEmpty($row['license_information'])) {
+                $setEntries[] = 'license_information = ?';
+                $params[] = addslashes((string) $entry->getLicenseInformation());
+            }
+
+            if ($entry->getAuthors() != $row['authors'] && isEmpty($row['authors'])) {
+                $setEntries[] = 'authors = ?';
+                $params[] = addslashes((string) $entry->getAuthors());
+            }
+
+            if ($entry->getContributors() != $row['contributors'] && isEmpty($row['contributors'])) {
+                $setEntries[] = 'contributors = ?';
+                $params[] = addslashes((string) $entry->getContributors());
+            }
+
+            if ($entry->getProjectPage() != $row['project_page'] && isEmpty($row['project_page'])) {
+                $setEntries[] = 'ontology_title = ?';
+                $params[] = addslashes((string) $entry->getProjectPage());
+            }
+
+            if ($entry->getSourcePage() != $row['source_page'] && isEmpty($row['source_page'])) {
+                $setEntries[] = 'source_page = ?';
+                $params[] = addslashes((string) $entry->getSourcePage());
+            }
+
+            if ($entry->getLatestJsonLdFile() != $row['latest_json_ld_file'] && isEmpty($row['latest_json_ld_file'])) {
+                $setEntries[] = 'latest_json_ld_file = ?';
+                $params[] = addslashes((string) $entry->getLatestJsonLdFile());
+            }
+
+            if ($entry->getLatestN3File() != $row['latest_n3_file'] && isEmpty($row['latest_n3_file'])) {
+                $setEntries[] = 'latest_n3_file = ?';
+                $params[] = addslashes((string) $entry->getLatestN3File());
+            }
+
+            if ($entry->getLatestNtriplesFile() != $row['latest_ntriples_file'] && isEmpty($row['latest_ntriples_file'])) {
+                $setEntries[] = 'latest_ntriples_file = ?';
+                $params[] = addslashes((string) $entry->getLatestNtriplesFile());
+            }
+
+            if ($entry->getLatestRdfXmlFile() != $row['latest_rdfxml_file'] && isEmpty($row['latest_rdfxml_file'])) {
+                $setEntries[] = 'latest_rdfxml_file = ?';
+                $params[] = addslashes((string) $entry->getLatestRdfXmlFile());
+            }
+
+            if ($entry->getLatestTurtleFile() != $row['latest_turtle_file'] && isEmpty($row['latest_turtle_file'])) {
+                $setEntries[] = 'latest_turtle_file = ?';
+                $params[] = addslashes((string) $entry->getLatestTurtleFile());
+            }
+
+            if ($entry->getModified() != $row['modified'] && isEmpty($row['modified'])) {
+                $setEntries[] = 'modified = ?';
+                $params[] = addslashes((string) $entry->getModified());
+            }
+
+            if ($entry->getVersion() != $row['version'] && isEmpty($row['version'])) {
+                $setEntries[] = 'version = ?';
+                $params[] = addslashes((string) $entry->getVersion());
+            }
+
+            if (0 == count($setEntries)) {
+                return;
+            }
+
+            $params[] = $entry->getOntologyIri();
+
+            $sql .= implode(', ', $setEntries);
             $sql .= ' WHERE ontology_iri = ?';
 
-            // prepare and execute update statement
-            $param = [
-                addslashes((string) $indexEntry->getOntologyTitle()),
-                addslashes((string) $indexEntry->getOntologyIri()),
-                // general information
-                isEmpty($indexEntry->getSummary()) ? null : addslashes((string) $indexEntry->getSummary()),
-                isEmpty($indexEntry->getLicenseInformation()) ? null : (string) $indexEntry->getLicenseInformation(),
-                isEmpty($indexEntry->getAuthors()) ? null : addslashes((string) $indexEntry->getAuthors()),
-                isEmpty($indexEntry->getContributors()) ? null : addslashes((string) $indexEntry->getContributors()),
-                isEmpty($indexEntry->getProjectPage()) ? null : $indexEntry->getProjectPage(),
-                isEmpty($indexEntry->getSourcePage()) ? null : $indexEntry->getSourcePage(),
-                // files
-                isEmpty($indexEntry->getLatestJsonLdFile()) ? null : $indexEntry->getLatestJsonLdFile(),
-                isEmpty($indexEntry->getLatestN3File()) ? null : $indexEntry->getLatestN3File(),
-                isEmpty($indexEntry->getLatestNtFile()) ? null : $indexEntry->getLatestNtFile(),
-                isEmpty($indexEntry->getLatestRdfXmlFile()) ? null : $indexEntry->getLatestRdfXmlFile(),
-                isEmpty($indexEntry->getLatestTurtleFile()) ? null : $indexEntry->getLatestTurtleFile(),
-                // misc
-                isEmpty($indexEntry->getModified()) ? null : $indexEntry->getModified(),
-                isEmpty($indexEntry->getVersion()) ? null : $indexEntry->getVersion(),
-                // source
-                $indexEntry->getSourceTitle(),
-                $indexEntry->getSourceUrl(),
-                $indexEntry->getOntologyIri(),
-            ];
-            echo PHP_EOL.' => '.$indexEntry->getContributors();
-            $this->temporaryIndexDb->prepare($sql)->execute($param);
+            $this->sendUpdateStmt($sql, $params);
+
         } else {
-            // not there, do nothing
+            throw new Exception('No entry found for '.$entry->getOntologyIri());
         }
+    }
+
+    /**
+     * @param non-empty-string $sql
+     * @param array<string|int|float|null> $param
+     *
+     * @throws \PDOException
+     */
+    private function sendUpdateStmt(string $sql, array $param): void
+    {
+        $stmt = $this->temporaryIndexDb->prepare($sql);
+        $stmt->execute($param);
     }
 
     /**

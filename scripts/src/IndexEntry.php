@@ -25,7 +25,7 @@ class IndexEntry
 
     private string|null $latestJsonLdFile = null;
     private string|null $latestN3File = null;
-    private string|null $latestNtFile = null;
+    private string|null $latestNtriplesFile = null;
     private string|null $latestRdfXmlFile = null;
     private string|null $latestTurtleFile = null;
 
@@ -174,22 +174,22 @@ class IndexEntry
         }
     }
 
-    public function getLatestNtFile(): string|null
+    public function getLatestNtriplesFile(): string|null
     {
-        return $this->latestNtFile;
+        return $this->latestNtriplesFile;
     }
 
     /**
-     * @throws \Exception if latestNtFile is nota valid URL.
+     * @throws \Exception if latestNtriplesFile is nota valid URL.
      */
-    public function setLatestNtFile(string|null $latestNtFile): self
+    public function setLatestNtriplesFile(string|null $latestNtriplesFile): self
     {
-        if (isUrl($latestNtFile) || isEmpty($latestNtFile)) {
-            $this->latestNtFile = trim((string) $latestNtFile);
+        if (isUrl($latestNtriplesFile) || isEmpty($latestNtriplesFile)) {
+            $this->latestNtriplesFile = trim((string) $latestNtriplesFile);
 
             return $this;
         } else {
-            throw new Exception($latestNtFile.' is not a valid URL');
+            throw new Exception($latestNtriplesFile.' is not a valid URL');
         }
     }
 
@@ -293,7 +293,7 @@ class IndexEntry
             || (
                 isEmpty($this->getLatestJsonLdFile())
                 && isEmpty($this->getLatestN3File())
-                && isEmpty($this->getLatestNtFile())
+                && isEmpty($this->getLatestNtriplesFile())
                 && isEmpty($this->getLatestRdfXmlFile())
                 && isEmpty($this->getLatestTurtleFile())
             )

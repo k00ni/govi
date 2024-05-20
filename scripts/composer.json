@@ -8,6 +8,9 @@
     "prefer-stable": true,
     "require": {
         "php": ">=8.2",
+        "ext-curl": "*",
+        "ext-json": "*",
+        "ext-zip": "*",
         "php-curl-class/php-curl-class": "^9.19",
         "sweetrdf/easyrdf": "^1.13.0",
         "sweetrdf/in-memory-store-sqlite": "^1.1.0",
