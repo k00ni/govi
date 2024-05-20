@@ -30,8 +30,8 @@ The following list is more meant for internal usage, but if you wanna help out w
 * [ ] implement basic logging
 * [ ] add doap file
 * add further services:
-  * [ ] https://obofoundry.org/
-  * [ ] http://www.oegov.us/
+  * [x] ~~https://obofoundry.org/~~ - ontologies are also in BioPortal
+  * [x] ~~http://www.oegov.us/~~ - manually added, because of HTML structure and very old entries
   * [ ] http://ontologydesignpatterns.org/wiki/Main\_Page
   * [ ] https://github.com/linkeddata/ontology-archiver
   * [ ] crawl Github repositories tagged with "ontology" etc.

@@ -9,6 +9,9 @@
    id="svg5"
    inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
    sodipodi:docname="illustration.svg"
+   inkscape:export-filename="/home/ka/Dokumente/govi/doc/images/illustration.png"
+   inkscape:export-xdpi="120"
+   inkscape:export-ydpi="120"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -23,9 +26,9 @@
      inkscape:pagecheckerboard="0"
      inkscape:document-units="mm"
      showgrid="false"
-     inkscape:zoom="1.3932941"
-     inkscape:cx="264.12227"
-     inkscape:cy="232.90129"
+     inkscape:zoom="0.69664705"
+     inkscape:cx="157.89918"
+     inkscape:cy="359.5795"
      inkscape:window-width="1920"
      inkscape:window-height="1016"
      inkscape:window-x="0"
@@ -334,18 +337,21 @@
        id="text2254"
        style="font-style:normal;font-weight:normal;font-size:13.3333px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect2256);fill:#000000;fill-opacity:1;stroke:none"
        x="116.57198"
-       y="0"><tspan
+       y="0"
+       inkscape:export-filename="/home/ka/Dokumente/govi/doc/images/text2254.png"
+       inkscape:export-xdpi="120"
+       inkscape:export-ydpi="120"><tspan
          x="108.55238"
          y="87.482392"
-         id="tspan214"><tspan
+         id="tspan383"><tspan
            style="-inkscape-font-specification:sans-serif;text-align:center;text-anchor:middle"
-           id="tspan212">What ontologies/vocabularies exist 
+           id="tspan381">What ontologies/vocabularies exist 
 </tspan></tspan><tspan
          x="136.28018"
          y="104.14902"
-         id="tspan218"><tspan
+         id="tspan387"><tspan
            style="-inkscape-font-specification:sans-serif;text-align:center;text-anchor:middle"
-           id="tspan216">and where can I find them?</tspan></tspan></text>
+           id="tspan385">and where can I find them?</tspan></tspan></text>
     <text
        xml:space="preserve"
        transform="matrix(0.26458333,0,0,0.26458333,17.721886,17.938986)"
@@ -353,9 +359,9 @@
        style="font-style:normal;font-weight:normal;font-size:13.3333px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect2256-3);fill:#000000;fill-opacity:1;stroke:none"><tspan
          x="87.75"
          y="87.482392"
-         id="tspan222"><tspan
+         id="tspan391"><tspan
            style="font-weight:bold;-inkscape-font-specification:'sans-serif Bold'"
-           id="tspan220">Global Ontology and Vocabulary Index (GOVI)</tspan></tspan></text>
+           id="tspan389">Global Ontology and Vocabulary Index (GOVI)</tspan></tspan></text>
     <text
        xml:space="preserve"
        transform="matrix(0.26458333,0,0,0.26458333,30.254005,57.370661)"
@@ -363,9 +369,9 @@
        style="font-style:normal;font-weight:normal;font-size:13.3333px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect2256-3-2);fill:#000000;fill-opacity:1;stroke:none"><tspan
          x="87.75"
          y="87.482392"
-         id="tspan226"><tspan
+         id="tspan395"><tspan
            style="font-weight:bold;-inkscape-font-specification:'sans-serif Bold'"
-           id="tspan224">Ontology Services</tspan></tspan></text>
+           id="tspan393">Ontology Services</tspan></tspan></text>
     <text
        xml:space="preserve"
        transform="matrix(0.26458333,0,0,0.26458333,82.13339,87.580185)"
@@ -373,9 +379,9 @@
        style="font-style:normal;font-weight:normal;font-size:13.3333px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect2256-3-2-1);fill:#000000;fill-opacity:1;stroke:none"><tspan
          x="87.75"
          y="87.482392"
-         id="tspan230"><tspan
+         id="tspan399"><tspan
            style="font-weight:bold;-inkscape-font-specification:'sans-serif Bold'"
-           id="tspan228">The Internet</tspan></tspan></text>
+           id="tspan397">The Internet</tspan></tspan></text>
     <text
        xml:space="preserve"
        transform="matrix(0.26458333,0,0,0.26458333,-15.445088,93.311327)"
@@ -383,17 +389,17 @@
        style="font-style:normal;font-weight:normal;font-size:13.3333px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect2256-3-2-1-0);fill:#000000;fill-opacity:1;stroke:none"><tspan
          x="87.75"
          y="87.482392"
-         id="tspan232">Some Ontology services </tspan><tspan
+         id="tspan401">Some Ontology services </tspan><tspan
          x="87.75"
          y="104.14902"
-         id="tspan234">store their data in silos, </tspan><tspan
+         id="tspan403">store their data in silos, </tspan><tspan
          x="87.75"
          y="120.81564"
-         id="tspan236">which are not directly
+         id="tspan405">which are not directly
 </tspan><tspan
          x="87.75"
          y="137.48227"
-         id="tspan238">accessible.</tspan></text>
+         id="tspan407">accessible.</tspan></text>
     <text
        xml:space="preserve"
        transform="matrix(0.26458333,0,0,0.26458333,-3.8126221,86.930921)"
@@ -401,9 +407,9 @@
        style="font-style:normal;font-weight:normal;font-size:13.3333px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect2256-3-2-1-0-1);fill:#000000;fill-opacity:1;stroke:none"><tspan
          x="87.75"
          y="87.482392"
-         id="tspan242"><tspan
+         id="tspan411"><tspan
            style="font-weight:bold;-inkscape-font-specification:'sans-serif Bold'"
-           id="tspan240">Data Silos</tspan></tspan></text>
+           id="tspan409">Data Silos</tspan></tspan></text>
     <text
        xml:space="preserve"
        transform="matrix(0.26458333,0,0,0.26458333,-11.007339,64.388248)"
@@ -411,7 +417,7 @@
        style="font-style:normal;font-weight:normal;font-size:13.3333px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect2256-3-2-0);fill:#000000;fill-opacity:1;stroke:none"><tspan
          x="87.75"
          y="87.482392"
-         id="tspan244">BioPortal</tspan></text>
+         id="tspan413">BioPortal</tspan></text>
     <text
        xml:space="preserve"
        transform="matrix(0.26458333,0,0,0.26458333,50.18968,95.239957)"
@@ -419,17 +425,17 @@
        style="font-style:normal;font-weight:normal;font-size:13.3333px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect2256-3-2-0-9);fill:#000000;fill-opacity:1;stroke:none"><tspan
          x="87.75"
          y="87.482392"
-         id="tspan246">Ontologies are spread over the Internet: they are
+         id="tspan415">Ontologies are spread over the Internet: they are
 </tspan><tspan
          x="87.75"
          y="104.14902"
-         id="tspan248">available in different file formats and located in </tspan><tspan
+         id="tspan417">available in different file formats and located in </tspan><tspan
          x="87.75"
          y="120.81564"
-         id="tspan250">Github/GitLab repositories, project- and personal </tspan><tspan
+         id="tspan419">Github/GitLab repositories, project- and personal </tspan><tspan
          x="87.75"
          y="137.48227"
-         id="tspan252">websites etc.</tspan></text>
+         id="tspan421">websites etc.</tspan></text>
     <text
        xml:space="preserve"
        transform="matrix(0.26458333,0,0,0.26458333,3.2054689,23.953926)"
@@ -444,7 +450,7 @@
        style="font-style:normal;font-weight:normal;font-size:13.3333px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect2256-3-2-0-3);fill:#000000;fill-opacity:1;stroke:none"><tspan
          x="87.75"
          y="87.482392"
-         id="tspan254">DBpedia Archivo</tspan></text>
+         id="tspan423">DBpedia Archivo</tspan></text>
     <text
        xml:space="preserve"
        transform="matrix(0.26458333,0,0,0.26458333,88.516608,65.465379)"
@@ -452,7 +458,7 @@
        style="font-style:normal;font-weight:normal;font-size:13.3333px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect2256-3-2-0-3-7);fill:#000000;fill-opacity:1;stroke:none"><tspan
          x="87.75"
          y="87.482392"
-         id="tspan256">...</tspan></text>
+         id="tspan425">...</tspan></text>
     <text
        xml:space="preserve"
        transform="matrix(0.26458333,0,0,0.26458333,82.177674,-13.084781)"
@@ -460,7 +466,7 @@
        style="font-style:normal;font-weight:normal;font-size:13.3333px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect2256-3-3);fill:#000000;fill-opacity:1;stroke:none"><tspan
          x="87.75"
          y="87.482392"
-         id="tspan258">Third-Party Apps/Services</tspan></text>
+         id="tspan427">Third-Party Apps/Services</tspan></text>
     <path
        style="fill:none;stroke:#000000;stroke-width:0.482;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Mend)"
        d="M 46.053207,15.094621 V 31.782869"
