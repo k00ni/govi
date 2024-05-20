@@ -3,6 +3,8 @@
 The Global Ontology and Vocabulary Index (GOVI) is meant to be a Community-driven project to maintain an index of all available RDF ontologies and vocabularies.
 The index is basically a big file ([CSV](https://en.wikipedia.org/wiki/Comma-separated_values), [JSON Lines](https://jsonlines.org/), ...), containing a list of URLs to ontologies and vocabularies, plus a few meta data (such as authors, license information and latest modification date).
 
+Index contains **3280** ontologies and vocabularies currently.
+
 ---
 
 ## Overview
@@ -58,8 +60,8 @@ Services such as BioPortal and DBpedia Archivo play an important role for the co
 This project is **not** meant to replace them, on the contrary, we support services like [DBpedia Archivo](https://archivo.dbpedia.org/) because they address important challenges like link rot and inconsistent versioning.
 But they all have some relevante limitations.
 
-Portals such as BioPortal are also important because of their user-friendly approach (e.g. browsing class hierarchies, searching, etc.).
-But portals often provide ontologies as a data dump or SPARQL endpoint instead of a dereferenceable URL (for accessing the RDF/OWL code).
+Portals such as BioPortal are important because of their user-friendly approach (e.g. browsing class hierarchies, searching, etc.).
+But they often provide ontologies as a data dump or SPARQL endpoint instead of a dereferenceable URL (for accessing the RDF/OWL code).
 As long as the portal is online, everything is fine, but as soon as it goes offline, all ontologies/vocabularies are gone unless there is a copy somewhere else.
 
 One disadvantage of DBpedia is the fact that only the ontology file provided is evaluated.
