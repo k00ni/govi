@@ -35,6 +35,9 @@ The following list is more meant for internal usage, but if you wanna help out w
   * [ ] http://ontologydesignpatterns.org/wiki/Main\_Page
   * [ ] https://github.com/linkeddata/ontology-archiver
   * [ ] crawl Github repositories tagged with "ontology" etc.
+  * [ ] https://github.com/ozekik/awesome-ontology
+  * [ ] https://github.com/CLARIAH/awesome-humanities-ontologies
+  * [ ] https://ontobee.org/
 * [ ] harmonize datetime information for latest access (all UTC?)
 * [ ] add basic schema/ontology describing the fields in index.csv
 * [ ] add a way to manually provide entries via Github
