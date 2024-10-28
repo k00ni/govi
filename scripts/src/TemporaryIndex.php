@@ -93,6 +93,9 @@ class TemporaryIndex
      */
     public function hasEntry(string $iri): bool
     {
+        // to avoid IRIs such as https://w3id.org/AIRO and https://w3id.org/airo considered different
+        $iri = strtolower($iri);
+
         $stmt = $this->temporaryIndexDb->prepare('SELECT ontology_iri FROM entry WHERE ontology_iri = ?');
         $stmt->execute([$iri]);
         foreach ($stmt->getIterator() as $entry) {
