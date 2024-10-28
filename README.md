@@ -3,7 +3,7 @@
 The Global Ontology and Vocabulary Index (GOVI) is meant to be a Community-driven project to maintain an index of all available RDF ontologies and vocabularies.
 The index is basically a big file ([CSV](https://en.wikipedia.org/wiki/Comma-separated_values), [JSON Lines](https://jsonlines.org/), ...), containing a list of URLs to ontologies and vocabularies, plus a few meta data (such as authors, license information and latest modification date).
 
-Index contains **3280** ontologies and vocabularies currently.
+Index contains **3321** ontologies and vocabularies currently.
 
 ---
 
