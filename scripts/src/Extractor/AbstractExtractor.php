@@ -10,6 +10,7 @@ use App\IndexEntry;
 use App\TemporaryIndex;
 use EasyRdf\Format;
 use Exception;
+use PhpParser\Error;
 use quickRdfIo\Raptor\Parser;
 use quickRdfIo\RdfIoException;
 use quickRdfIo\Util;
@@ -126,7 +127,7 @@ abstract class AbstractExtractor
 
             // create a list of date strings
             $values = array_map(function ($value) {
-                if(1 === preg_match('/[0-9]{4}\-[0-9]{2}\-[0-9]{4}/', $value)) {
+                if (1 === preg_match('/[0-9]{4}\-[0-9]{2}\-[0-9]{4}/', $value)) {
                     return $value;
                 }
             }, $values);
@@ -149,7 +150,7 @@ abstract class AbstractExtractor
                 $values = $graph->getPropertyValues((string) $indexEntry->getOntologyIri(), $prop);
                 // create a list of date strings
                 $values = array_map(function ($value) {
-                    if(1 === preg_match('/[0-9]{4}\-[0-9]{2}\-[0-9]{4}/', $value)) {
+                    if (1 === preg_match('/[0-9]{4}\-[0-9]{2}\-[0-9]{4}/', $value)) {
                         return $value;
                     }
                 }, $values);
@@ -345,6 +346,10 @@ abstract class AbstractExtractor
             $input = Util::parse($input, $this->dataFactory, $format);
         }
 
+        if (false === is_iterable($input)) {
+            throw new Error('$input must be iterable to continue.');
+        }
+
         /*
          * use quickRdfIo's Util::parse
          */
@@ -413,7 +418,7 @@ abstract class AbstractExtractor
                     $list = $this->readQuadsToList($iterator, 'ntriples');
                     fclose($fileHandle);
                     return new Graph($list);
-                } catch(Throwable $th) {
+                } catch (Throwable $th) {
                     echo PHP_EOL;
                     echo PHP_EOL.'- ERR: '.$th->getMessage();
                     echo PHP_EOL;

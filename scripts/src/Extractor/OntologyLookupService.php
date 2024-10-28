@@ -73,7 +73,7 @@ class OntologyLookupService extends AbstractExtractor
                     // load to terms data with further information
                     try {
                         $terms = $this->cache->sendCachedRequest($ontology['_links']['terms']['href'], $this->namespace);
-                    } catch(Throwable $th) {
+                    } catch (Throwable $th) {
                         if (str_contains($th->getMessage(), 'CURL error: HTTP/1.1 500')) {
                             echo PHP_EOL.$th->getMessage();
                             continue;

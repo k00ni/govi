@@ -106,6 +106,10 @@ class DBpediaArchivo extends AbstractExtractor
 
                 // info page + title/name of ontology
                 preg_match('/<td>\s*\n*<a href="(\/info\?o=.*?)">(.*?)</sim', $ontologyEntryHtml, $data);
+
+                /** @var array<mixed> */
+                $data = $data;
+
                 if (isset($data[1]) && false === isEmpty($data[1])) {
                     $newEntry->setSourcePage('https://archivo.dbpedia.org'.$data[1]);
                 }
@@ -138,6 +142,9 @@ class DBpediaArchivo extends AbstractExtractor
 
                 // latest update date
                 preg_match('/nt<\/a>.*?>([0-9]{4})\.([0-9]{2})\.([0-9]{2})/sim', $ontologyEntryHtml, $latest);
+                /** @var array<mixed> */
+                $latest = $latest;
+
                 if (isset($latest[1]) && false === isEmpty($latest[1])) {
                     $modified = $latest[1].'-'.$latest[2].'-'.$latest[3];
                     $newEntry->setModified($modified);
