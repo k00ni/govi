@@ -58,7 +58,7 @@ Over time, this place could encompass almost all ontologies/vocabularies.
 
 Services such as BioPortal and DBpedia Archivo play an important role for the community because they provide user-friendly access to browse ontologies and provide additional services such as versioning, archives, etc.
 This project is **not** meant to replace them, on the contrary, we support services like [DBpedia Archivo](https://archivo.dbpedia.org/) because they address important challenges like link rot and inconsistent versioning.
-But they all have some relevante limitations.
+But they all have some limitations.
 
 Portals such as BioPortal are important because of their user-friendly approach (e.g. browsing class hierarchies, searching, etc.).
 But they often provide ontologies as a data dump or SPARQL endpoint instead of a dereferenceable URL (for accessing the RDF/OWL code).
